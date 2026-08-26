@@ -1,0 +1,114 @@
+---
+import { PERSONAS } from '../../../data/personas.mjs';
+import { DASHBOARDS } from '../../../data/dashboards.mjs';
+import '../../../styles/global.css';
+
+export function getStaticPaths() {
+  return PERSONAS.map((p) => ({ params: { persona: p.id } }));
+}
+
+const { persona } = Astro.params;
+const p = PERSONAS.find((x) => x.id === persona);
+const d = DASHBOARDS[persona];
+
+function escape(s) {
+  return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+const navGroups = [
+  ['Overview', 'Dashboards'],
+  ['Patients', 'Patient'],
+  ['Appointments', 'Scheduling'],
+  ['Clinical', 'Clinical'],
+  ['Protocols', 'Protocols'],
+  ['Trust & Governance', 'Compliance & Ledgers'],
+  ['Ogami', 'AI Assistant'],
+  ['Reports', 'Operations & Intelligence'],
+  ['Administration', 'Administration'],
+  ['Mobile', 'Mobile'],
+];
+const navHtml = navGroups
+  .map(([label, group]) => {
+    const active = (d && group === 'Dashboards') || (persona === 'patient' && group === 'Patient') || (persona === 'admin' && group === 'Administration');
+    return `<a class="nav-link${active ? ' active' : ''}" href="/app/dashboard/${persona}/">${label}</a>`;
+  })
+  .join('');
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>Atunse Health — {p.role}</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidenav">
+        <div class="nav-head">
+          <img src="/assets/atunse-logo.png" alt="Atunse Health" class="logo" />
+          <span class="brand">Atunse Health</span>
+        </div>
+        <div class="who">{p.name} · <b>{p.role}</b></div>
+        <nav class="nav">{navHtml}</nav>
+        <div class="nav-foot"><a class="btn-logout" href="/" onclick="localStorage.removeItem('atunse_demo_session');">Log out</a></div>
+      </aside>
+
+      <section class="stage">
+        <header class="stage-bar"><span class="crumb">{escape(p.role)} dashboard</span></header>
+        <div class="dash">
+          <h1 class="dash-greet">{escape(d.greeting)}</h1>
+          <p class="dash-sub">{escape(d.sub)}</p>
+
+          <div class="kpis">
+            {d.kpis.map((k) => (
+              <div class="kpi"><div class="n">{escape(k.n)}</div><div class="l">{escape(k.l)}</div></div>
+            ))}
+          </div>
+
+          <div class="dash-grid">
+            {d.sections.map((sec) => (
+              <div class={`card${sec.alert ? ' alert' : ''}`}>
+                <h3>{escape(sec.title)}</h3>
+                {sec.items.map((it) => (
+                  <div class="row">
+                    <div>
+                      <div class="t">{escape(it.t)}{it.tag ? ` <span class="tag">${escape(it.tag)}</span>` : ''}</div>
+                      <div class="s">{escape(it.s)}</div>
+                    </div>
+                    {it.time ? <div class="time">{escape(it.time)}</div> : null}
+                  </div>
+                ))}
+              </div>
+            ))}
+
+            {d.protocols && d.protocols.length ? (
+              <div class="card">
+                <h3>Protocols</h3>
+                {d.protocols.map((pr) => {
+                  const over = /overdue|book/i.test(pr.status);
+                  return (
+                    <div class="protocol">
+                      <div>
+                        <div class="pn">{escape(pr.name)}</div>
+                        <div class="ps">{escape(pr.step)}{pr.patient ? ` · ${escape(pr.patient)}` : ''}</div>
+                      </div>
+                      <div class={`pst ${over ? 'over' : 'ok'}`}>{escape(pr.status)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
+
+          <div class="actions">
+            {d.actions.map((a) => (
+              <button class={/book|message|view|quick|sync|add|review|staff/i.test(a) ? 'btn btn-ghost' : 'btn btn-primary'}>{escape(a)}</button>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

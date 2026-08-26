@@ -83,7 +83,7 @@ const year = new Date().getFullYear();
       function go(persona) {
         if (!persona) return fail('Unknown persona.');
         login(persona);
-        window.location.assign('/app/' + persona.landing + '/');
+        window.location.assign('/app/dashboard/' + persona.id + '/');
       }
 
       form.addEventListener('submit', (e) => {
