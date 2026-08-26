@@ -33,34 +33,54 @@ function renderBody(s) {
   return `<div class="card"><h3>${esc(s.title)}</h3><div class="row"><div><div class="t">${esc(s.title)}</div><div class="s">Atunse Health module.</div></div></div></div>`;
 }
 
-function patientCard(p) {
-  let html = `<div class="patient-head"><div class="avatar">${esc(p.name.split(' ').map((w) => w[0]).join('').slice(0, 2))}</div><div><div class="t-lg">${esc(p.name)}</div><div class="s">${esc(p.id)} · ${p.age}y ${esc(p.sex)} · DOB ${esc(p.dob)} · ${esc(p.blood)}</div></div></div>`;
-  html += `<div class="tags"><span class="tag ok">Consent ${esc(p.consent)}</span><span class="tag info">Protocol: ${esc(p.protocol)}</span><span class="tag">Balance ${p.balance}</span></div>`;
-  html += `<div class="card"><h3>Clinical summary</h3>`;
-  html += `<div class="sub-h">Active conditions</div>`;
-  p.conditions.forEach((c) => (html += `<div class="row"><div><div class="t">${esc(c.name)}</div><div class="s">${esc(c.detail)}</div></div><span class="tag">${esc(c.status)}</span></div>`));
-  html += `<div class="sub-h">Allergies</div>`;
-  p.allergies.forEach((a) => (html += `<div class="row"><div class="t">${esc(a.name)}</div><div class="s">${esc(a.severity)}</div></div>`));
-  html += `<div class="sub-h">Vitals</div>`;
-  html += `<div class="row"><div class="t">Blood Pressure</div><div class="s">${esc(p.vitals.bp)} — ${esc(p.vitals.bpNote)}</div></div>`;
-  html += `<div class="row"><div class="t">Heart Rate</div><div class="s">${esc(p.vitals.hr)} — ${esc(p.vitals.hrNote)}</div></div></div>`;
-  return html;
+function ptVitalsGrid(p) {
+  const v = p.vitals || {};
+  return `<div class="vitals-grid">
+    <div><span>BP</span><b>${esc(v.bp || '—')}</b><i>${esc(v.bpNote || '')}</i></div>
+    <div><span>HR</span><b>${esc(v.hr || '—')}</b><i>${esc(v.hrNote || '')}</i></div>
+    <div><span>Temp</span><b>${esc(v.temp || '—')}</b></div>
+    <div><span>SpO₂</span><b>${esc(v.spo2 || '—')}</b></div>
+  </div>`;
+}
+
+function patientFull(p) {
+  let h = `<div class="patient-head"><div class="avatar">${esc(p.name.split(' ').map((w) => w[0]).join('').slice(0, 2))}</div><div><div class="t-lg">${esc(p.name)}</div><div class="s">${esc(p.id)} · ${p.age}y ${esc(p.sex)} · DOB ${esc(p.dob)} · ${esc(p.blood)} · ${esc(p.phone || '')}</div></div></div>`;
+  h += `<div class="tags"><span class="tag ok">Consent ${esc(p.consent)}</span><span class="tag info">Protocol: ${esc(p.protocol)}</span><span class="tag">Balance ${p.balance}</span><span class="tag">${esc(p.nhis || '')}</span></div>`;
+  h += `<div class="card"><h3>Problem list</h3>`;
+  (p.conditions || []).forEach((c) => (h += `<div class="row"><div><div class="t">${esc(c.name)}</div><div class="s">${esc(c.detail)}</div></div><span class="tag">${esc(c.status)}</span></div>`));
+  h += `</div>`;
+  h += `<div class="card"><h3>Allergies &amp; risk</h3>`;
+  (p.allergies || []).forEach((a) => (h += `<div class="row"><div class="t">${esc(a.name)}</div><div class="s">${esc(a.severity)}</div></div>`));
+  (p.risk || []).forEach((r) => (h += `<div class="row"><div class="t">${esc(r.name)}</div><div class="s">${esc(r.detail || '')}</div></div>`));
+  h += `</div>`;
+  h += `<div class="card"><h3>Vitals</h3>${ptVitalsGrid(p)}</div>`;
+  h += `<div class="card"><h3>Care plan &amp; upcoming</h3>`;
+  if (p.upcoming) h += `<div class="row"><div><div class="t">${esc(p.upcoming.title)}</div><div class="s">${esc(p.upcoming.when)} · ${esc(p.upcoming.with)}</div></div></div><span class="tag">Next</span></div>`;
+  h += `</div>`;
+  h += `<div class="card"><h3>Care team</h3>`;
+  (p.careTeam || []).forEach((c) => (h += `<div class="row"><div><div class="t">${esc(c.name)}</div><div class="s">${esc(c.role)}</div></div></div>`));
+  h += `</div>`;
+  h += `<div class="card"><h3>Recent documents</h3><div class="row"><div class="t">Discharge summary</div><div class="s">PDF · ${esc(p.id)}</div></div><div class="row"><div class="t">Consent form</div><div class="s">Signed</div></div></div>`;
+  return h;
+}
+
+function patientSwitcher() {
+  const opts = D.patients.map((p) => `<option value="${esc(p.id)}">${esc(p.name)} · ${esc(p.id)}</option>`).join('');
+  return `<div class="pt-switch"><label>Patient</label><select id="ptSelect" onchange="ATUNSE_showPatient(this.value)">${opts}</select></div>`;
 }
 
 function patientView(s) {
-  const amina = D.patients[0];
-  const juliet = D.patients.find((x) => x.id === 'ATN-000201') || D.patients[1];
-  let html = `<div class="two-col">`;
-  html += `<div><div data-patient="amina">${patientCard(amina)}</div><div data-patient="juliet" hidden>${patientCard(juliet)}</div>`;
-  html += `<div class="card alert"><h3>Next actions</h3>`;
-  html += `<div class="row"><div><div class="t">Upcoming: ${esc(amina.upcoming.title)}</div><div class="s">${esc(amina.upcoming.when)} · ${esc(amina.upcoming.with)}</div></div><span class="tag">Appt</span></div>`;
-  html += `<div class="row"><div><div class="t">Protocol step overdue</div><div class="s">Dementia ADDSB · Annual Cognitive Assessment (MMSE)</div></div><span class="tag over">Overdue</span></div></div>`;
-  html += `<div class="card"><h3>Recent clinical timeline</h3>`;
-  amina.timeline.forEach((t) => (html += `<div class="row"><div><div class="t">${esc(t.type)}</div><div class="s">${esc(t.text)}</div></div><div class="time">${esc(t.date)}</div></div>`));
-  html += `</div></div>`;
-  html += `<div><div class="card"><h3>Care team</h3>`;
-  amina.careTeam.forEach((c) => (html += `<div class="row"><div><div class="t">${esc(c.name)}</div><div class="s">${esc(c.role)}</div></div></div>`));
-  html += `</div></div></div>`;
+  let html = patientSwitcher();
+  html += `<div class="two-col">`;
+  D.patients.forEach((p, i) => {
+    html += `<div data-patient="${esc(p.id)}"${i === 0 ? '' : ' hidden'}>`;
+    html += patientFull(p);
+    html += `<div class="card"><h3>Clinical timeline</h3>`;
+    (p.timeline || []).forEach((t) => (html += `<div class="row"><div><div class="t">${esc(t.type)}</div><div class="s">${esc(t.text)}</div></div><div class="time">${esc(t.date)}</div></div>`));
+    html += `</div></div>`;
+    html += `</div>`;
+  });
+  html += `</div>`;
   return html;
 }
 
@@ -78,12 +98,17 @@ function clinicalView(s) {
   }
   // Clinical Encounter (default)
   const p = D.patients[0];
-  return `<div class="card"><h3>Clinical encounter — ${esc(D.staff.clinician.name)}</h3>
-    <div class="row"><div><div class="t">Current patient</div><div class="s">${esc(p.name)} · ${esc(p.id)}</div></div><span class="tag">In encounter</span></div>
-    <div class="row"><div class="t">Presenting</div><div class="s">Hypertension follow-up. BP ${esc(p.vitals.bp)}.</div></div>
-    <div class="row"><div class="t">Plan</div><div class="s">Continue Lisinopril 10mg. Dietary consult ${esc(p.upcoming.when)}.</div></div>
-    <div class="row"><div class="t">Open protocol step</div><div class="s">Dementia ADDSB — Annual Cognitive Assessment (MMSE) · OVERDUE</div></div></div>`;
-}
+  let h = `<div class="card"><h3>Clinical encounter — ${esc(D.staff.clinician.name)}</h3>`;
+  h += `<div class="row"><div><div class="t">Current patient</div><div class="s">${esc(p.name)} · ${esc(p.id)}</div></div><span class="tag">In encounter</span></div>`;
+  h += `<div class="soap"><div class="soap-s"><b>S</b><div>Hypertension follow-up. Reports adherence to Lisinopril. Mild headaches on waking, resolved by midday.</div></div>`;
+  h += `<div class="soap-s"><b>O</b><div>BP ${esc(p.vitals.bp)} (${esc(p.vitals.bpNote)}). HR ${esc(p.vitals.hr)}. No acute distress. ${esc(p.protocol)} active.</div></div>`;
+  h += `<div class="soap-s"><b>A</b><div>Essential Hypertension — controlled. Pre-Diabetes — monitoring. Cognitive screen overdue.</div></div>`;
+  h += `<div class="soap-s"><b>P</b><div>Continue Lisinopril 10mg OD. Schedule MMSE (Dementia ADDSB). Dietary consult ${esc(p.upcoming.when)}.</div></div></div>`;
+  h += `<div class="sub-h">Orders</div><div class="row"><div class="t">Labs</div><div class="s">HbA1c, Lipid panel, eGFR</div></div></div><div class="row"><div class="t">Medication</div><div class="s">Lisinopril 10mg OD · 3-month supply</div></div></div><div class="row"><div class="t">Referral</div><div class="s">Nutritionist (dietary consult)</div></div></div>`;
+  h += `<div class="sub-h">Linked protocol step</div><div class="row"><div><div class="t">Dementia ADDSB — Annual Cognitive Assessment (MMSE)</div><div class="s">Owner: Dr. Sola · status Overdue</div></div><span class="tag over">Overdue</span></div>`;
+  h += `<div class="actions"><button class="btn btn-primary">Sign &amp; submit note</button><button class="btn btn-ghost">Add order</button></div>`;
+  h += `</div>`;
+  return h;
 
 function schedulingView() {
   let h = `<div class="card"><h3>This week</h3><div class="cal">`;
@@ -283,11 +308,19 @@ const ORDER = [
           '<div class="dash"><a class="back" href="/app/dashboard/' + me.id + '/">← Back to dashboard</a>' +
           '<h1 class="dash-greet">' + title + '</h1>' + BODY + '</div></section>';
 
-        // Patient-view: show the patient's own record (Juliet) instead of the clinician's (Amina)
-        if (me.id === 'patient') {
-          var aminaCard = root.querySelector('[data-patient="amina"]');
-          var julietCard = root.querySelector('[data-patient="juliet"]');
-          if (aminaCard && julietCard) { aminaCard.hidden = true; julietCard.hidden = false; }
+        // Multi-patient switcher (renders all patients, toggles by id)
+        window.ATUNSE_showPatient = function (id) {
+          root.querySelectorAll('[data-patient]').forEach(function (el) {
+            el.hidden = (el.getAttribute('data-patient') !== id);
+          });
+        };
+        if (group === 'Patient') {
+          if (me.id === 'patient') {
+            ATUNSE_showPatient('ATN-000201');
+            var sel = root.querySelector('#ptSelect');
+            if (sel) sel.value = 'ATN-000201';
+          }
+          // clinician/attending/mobile: first patient (Amina) already visible by default
         }
       })();
     </script>

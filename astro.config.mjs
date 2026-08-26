@@ -8,4 +8,9 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'ignore',
   compressHTML: true,
+  vite: {
+    build: { minify: false },
+    css: { devSourcemap: false },
+    esbuild: { legalComments: 'none' },
+  },
 });

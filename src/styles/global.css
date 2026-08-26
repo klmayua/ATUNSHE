@@ -235,3 +235,17 @@ button { font-family: inherit; cursor: pointer; }
 .chart.bars .bar { flex: 1; background: linear-gradient(180deg, var(--navy), #1f5fa8); border-radius: 5px 5px 0 0; height: var(--h); min-height: 6px; }
 .chart.line { align-items: center; gap: 0; height: 54px; position: relative; border-bottom: 1px solid var(--border-subtle); }
 .chart.line .dot { flex: 1; height: 8px; width: 8px; border-radius: 50%; background: var(--gold); position: relative; top: calc(-1 * var(--h) / 2); transform: translateY(20px); box-shadow: 0 0 0 3px rgba(212,175,55,0.18); }
+
+/* ---------- patient switcher + deep cards ---------- */
+.pt-switch { display: flex; align-items: center; gap: 10px; margin: 0 0 16px; }
+.pt-switch label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.pt-switch select { font: inherit; font-size: 14px; padding: 8px 12px; border-radius: 9px; border: 1px solid var(--border-subtle); background: var(--surface-card); color: var(--on-surface); min-width: 240px; }
+.vitals-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.vitals-grid > div { background: var(--bg); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 10px; text-align: center; }
+.vitals-grid span { display: block; font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .04em; }
+.vitals-grid b { display: block; font-size: 16px; font-weight: 700; margin: 3px 0; }
+.vitals-grid i { font-size: 11px; color: var(--danger); font-style: normal; }
+.soap { display: grid; gap: 8px; margin: 6px 0 4px; }
+.soap-s { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: start; background: var(--bg); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 10px 12px; }
+.soap-s b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--navy); color: #fff; font-size: 13px; }
+.soap-s div:last-child { font-size: 13.5px; line-height: 1.5; }
