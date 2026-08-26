@@ -66,10 +66,9 @@ const year = new Date().getFullYear();
       </main>
     </div>
 
-    <script>
-      import { PERSONAS, findPersona } from '../data/personas.mjs';
-      import { login } from '../lib/auth.mjs';
-
+    <script is:inline define:vars={{ personas: PERSONAS }}>
+      const PERSONAS = personas;
+      const KEY = 'atunse_demo_session';
       const form = document.getElementById('login-form');
       const errEl = document.getElementById('err');
       const userEl = document.getElementById('username');
@@ -79,13 +78,14 @@ const year = new Date().getFullYear();
         errEl.textContent = msg;
         errEl.style.display = 'block';
       }
-
       function go(persona) {
         if (!persona) return fail('Unknown persona.');
-        login(persona);
+        localStorage.setItem(KEY, JSON.stringify({
+          id: persona.id, name: persona.name, role: persona.role,
+          username: persona.username, initials: persona.initials, accent: persona.accent, at: Date.now(),
+        }));
         window.location.assign('/app/dashboard/' + persona.id + '/');
       }
-
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         errEl.style.display = 'none';
@@ -93,18 +93,13 @@ const year = new Date().getFullYear();
         const pw = passEl.value;
         const p = PERSONAS.find((x) => x.username === u);
         if (!p) return fail('No demo account matches that username.');
-        if (p.password !== pw) return fail('Incorrect demo password. (Hint: click the persona button to auto-fill.)');
+        if (p.password !== pw) return fail('Incorrect demo password. (Hint: tap a persona to auto-fill.)');
         go(p);
       });
-
       document.querySelectorAll('.persona').forEach((btn) => {
         btn.addEventListener('click', () => {
-          const p = findPersona(btn.dataset.id);
-          if (p) {
-            userEl.value = p.username;
-            passEl.value = p.password;
-            go(p);
-          }
+          const p = PERSONAS.find((x) => x.id === btn.dataset.id);
+          if (p) { userEl.value = p.username; passEl.value = p.password; go(p); }
         });
       });
     </script>

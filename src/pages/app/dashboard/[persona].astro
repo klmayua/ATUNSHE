@@ -1,6 +1,7 @@
 ---
 import { PERSONAS } from '../../../data/personas.mjs';
 import { DASHBOARDS } from '../../../data/dashboards.mjs';
+import { screens } from '../../../data/screens.mjs';
 import '../../../styles/global.css';
 
 export function getStaticPaths() {
@@ -12,25 +13,36 @@ const p = PERSONAS.find((x) => x.id === persona);
 const d = DASHBOARDS[persona];
 
 function escape(s) {
-  return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-const navGroups = [
+// RBAC-filtered nav: only groups this persona is allowed to view.
+const ORDER = [
   ['Overview', 'Dashboards'],
   ['Patients', 'Patient'],
   ['Appointments', 'Scheduling'],
   ['Clinical', 'Clinical'],
   ['Protocols', 'Protocols'],
   ['Trust & Governance', 'Compliance & Ledgers'],
+  ['Billing', 'Billing & Finance'],
   ['Ogami', 'AI Assistant'],
   ['Reports', 'Operations & Intelligence'],
   ['Administration', 'Administration'],
   ['Mobile', 'Mobile'],
 ];
-const navHtml = navGroups
+function canView(group) {
+  return !(p.deny || []).includes(group) && p.allow.includes(group);
+}
+function firstScreenHref(group) {
+  const s = screens.find((x) => x.html && !x.asset && x.group === group);
+  return s ? `/app/${s.id}/` : null;
+}
+const navHtml = ORDER
+  .filter(([, group]) => canView(group))
   .map(([label, group]) => {
-    const active = (d && group === 'Dashboards') || (persona === 'patient' && group === 'Patient') || (persona === 'admin' && group === 'Administration');
-    return `<a class="nav-link${active ? ' active' : ''}" href="/app/dashboard/${persona}/">${label}</a>`;
+    const href = group === 'Dashboards' ? `/app/dashboard/${persona}/` : firstScreenHref(group) || `/app/dashboard/${persona}/`;
+    const active = group === 'Dashboards';
+    return `<a class="nav-link${active ? ' active' : ''}" href="${href}">${label}</a>`;
   })
   .join('');
 ---
@@ -51,7 +63,7 @@ const navHtml = navGroups
           <span class="brand">Atunse Health</span>
         </div>
         <div class="who">{p.name} · <b>{p.role}</b></div>
-        <nav class="nav">{navHtml}</nav>
+        <nav class="nav" set:html={navHtml}></nav>
         <div class="nav-foot"><a class="btn-logout" href="/" onclick="localStorage.removeItem('atunse_demo_session');">Log out</a></div>
       </aside>
 
@@ -104,11 +116,39 @@ const navHtml = navGroups
 
           <div class="actions">
             {d.actions.map((a) => (
-              <button class={/book|message|view|quick|sync|add|review|staff/i.test(a) ? 'btn btn-ghost' : 'btn btn-primary'}>{escape(a)}</button>
+              <button class={/book|message|view|quick|sync|add|review|staff/i.test(a) ? 'btn btn-ghost' : 'btn btn-primary'} data-action={a}>{escape(a)}</button>
             ))}
           </div>
         </div>
       </section>
     </div>
+    <script is:inline define:vars={{ screens: screens, persona: persona }}>
+      const SCREENS = screens;
+      const PID = persona;
+      function hrefForGroup(group) {
+        const s = SCREENS.find((x) => x.html && !x.asset && x.group === group);
+        return s ? '/app/' + s.id + '/' : '/app/dashboard/' + PID + '/';
+      }
+      const MAP = {
+        'Start Encounter': 'Clinical',
+        'Book Appointment': 'Scheduling',
+        'Message care team': 'Patient',
+        'View records': 'Patient',
+        'Add staff': 'Administration',
+        'Review approvals': 'Administration',
+        'Billing ops': 'Billing & Finance',
+        'Review protocols': 'Protocols',
+        'Staff oversight': 'Administration',
+        'Quick lookup': 'Mobile',
+        'Sync now': 'Mobile',
+      };
+      document.querySelectorAll('button[data-action]').forEach((b) => {
+        b.addEventListener('click', () => {
+          const g = MAP[b.dataset.action];
+          if (g) window.location.assign(hrefForGroup(g));
+          else alert(b.dataset.action + ' — demo action');
+        });
+      });
+    </script>
   </body>
 </html>
