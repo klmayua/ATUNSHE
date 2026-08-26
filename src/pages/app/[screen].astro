@@ -1,5 +1,6 @@
 ---
 import { screens } from '../../data/screens.mjs';
+import { PERSONAS } from '../../data/personas.mjs';
 import '../../styles/global.css';
 
 export function getStaticPaths() {
@@ -7,6 +8,17 @@ export function getStaticPaths() {
     .filter((s) => s.html && !s.asset)
     .map((s) => ({ params: { screen: s.id } }));
 }
+
+// Inline lightweight data so the bootstrap script needs ZERO imports (no bundler risk).
+const DATA = JSON.stringify({
+  screens: screens.map((s) => ({
+    id: s.id, title: s.title, group: s.group, deviceType: s.deviceType, html: s.html,
+  })),
+  personas: PERSONAS.map((p) => ({
+    id: p.id, name: p.name, role: p.role, landing: p.landing, initials: p.initials,
+    allow: p.allow, deny: p.deny || [],
+  })),
+});
 ---
 
 <html lang="en">
@@ -20,77 +32,99 @@ export function getStaticPaths() {
   <body>
     <div id="root" class="loading">Loading demo session…</div>
 
-    <script>
-      import { guard, logout } from '../../lib/auth.mjs';
-      import { screens } from '../../data/screens.mjs';
-      import { canView } from '../../data/personas.mjs';
+    <script is:inline src="/demo-data.js"></script>
+    <script is:inline>
+      (function () {
+        var KEY = 'atunse_demo_session';
+        var DATA = window.__ATUNSE__;
+        if (!DATA) { document.getElementById('root').textContent = 'Failed to load demo data.'; return; }
 
-      const session = guard();
-      const activeId = location.pathname.split('/app/')[1]?.replace(/\/$/, '') || '';
+        function getSession() {
+          try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; }
+        }
+        function canView(p, group) {
+          if (!p) return false;
+          if (p.deny && p.deny.indexOf(group) !== -1) return false;
+          return p.allow.indexOf(group) !== -1;
+        }
+        function personaById(id) {
+          for (var i = 0; i < DATA.personas.length; i++) if (DATA.personas[i].id === id) return DATA.personas[i];
+          return null;
+        }
 
-      // Role-based deep-link guard: block groups this persona may not see.
-      const active = screens.find((s) => s.id === activeId);
-      if (active && !canView(session, active.group)) {
-        location.replace('/app/' + session.landing + '/');
-      }
+        var session = getSession();
+        if (!session) { window.location.replace('/'); return; }
+        var persona = personaById(session.id) || session;
 
-      const groupOrder = [
-        'Auth', 'Dashboards', 'Patient', 'Clinical', 'Protocols', 'Compliance & Ledgers',
-        'Scheduling', 'Billing & Finance', 'Administration', 'Operations & Intelligence',
-        'Mobile', 'AI Assistant', 'Assets & Docs',
-      ];
-      const visible = screens.filter((s) => s.html && !s.asset && canView(session, s.group));
-      const groups = {};
-      for (const s of visible) (groups[s.group] = groups[s.group] || []).push(s);
-      const orderedGroups = Object.keys(groups).sort((a, b) => groupOrder.indexOf(a) - groupOrder.indexOf(b));
+        var parts = location.pathname.split('/app/');
+        var activeId = (parts[1] || '').replace(/\/$/, '');
+        var active = null;
+        for (var i = 0; i < DATA.screens.length; i++) if (DATA.screens[i].id === activeId) active = DATA.screens[i];
 
-      const navHtml = orderedGroups.map((g) => {
-        const items = groups[g].map((s) => {
-          const cls = s.id === activeId ? 'nav-link active' : 'nav-link';
-          return `<a class="${cls}" href="/app/${s.id}/" data-id="${s.id}">${s.title}</a>`;
+        // Role-based deep-link guard.
+        if (active && !canView(persona, active.group)) {
+          window.location.replace('/app/' + persona.landing + '/');
+          return;
+        }
+
+        var groupOrder = ['Auth','Dashboards','Patient','Clinical','Protocols','Compliance & Ledgers','Scheduling','Billing & Finance','Administration','Operations & Intelligence','Mobile','AI Assistant','Assets & Docs'];
+        var visible = DATA.screens.filter(function (s) { return s.html && canView(persona, s.group); });
+        var groups = {};
+        visible.forEach(function (s) { (groups[s.group] = groups[s.group] || []).push(s); });
+        var ordered = Object.keys(groups).sort(function (a, b) { return groupOrder.indexOf(a) - groupOrder.indexOf(b); });
+
+        var navHtml = ordered.map(function (g) {
+          var items = groups[g].map(function (s) {
+            var cls = s.id === activeId ? 'nav-link active' : 'nav-link';
+            return '<a class="' + cls + '" href="/app/' + s.id + '/" data-id="' + s.id + '">' + s.title + '</a>';
+          }).join('');
+          return '<div class="nav-group">' + g + '</div>' + items;
         }).join('');
-        return `<div class="nav-group">${g}</div>${items}`;
-      }).join('');
 
-      const crumb = active ? active.title : 'Dashboard';
-      const isMobile = active && active.deviceType === 'MOBILE';
+        var crumb = active ? active.title : 'Dashboard';
+        var isMobile = active && active.deviceType === 'MOBILE';
+        var frameSrc = active ? active.html : '/stitch-screens/' + persona.landing + '.html';
 
-      document.getElementById('root').className = '';
-      document.getElementById('root').innerHTML = `
-        <div class="app-shell">
-          <header class="topbar">
-            <div class="tb-left">
-              <img src="/assets/atunse-logo.png" alt="Atunse Health" class="logo" />
-              <span class="brand">Atunse Health</span>
-              <span class="crumb">${crumb}${isMobile ? ' <span class="tag">MOBILE</span>' : ''}</span>
-            </div>
-            <div class="tb-right">
-              <span class="who">${session.name} · <b>${session.role}</b></span>
-              <button class="btn-logout" id="logout">Log out</button>
-            </div>
-          </header>
-          <div class="body">
-            <button class="nav-toggle" id="navtoggle" aria-label="Menu">☰</button>
-            <aside class="sidenav" id="sidenav">
-              <div class="login-as">
-                <span class="av">${session.initials}</span>
-                <div><div class="nm">${session.name}</div><div class="rl">${session.role}</div></div>
-              </div>
-              <nav class="nav">${navHtml}</nav>
-            </aside>
-            <section class="stage">
-              <div class="frame-host">
-                <iframe src="${active ? active.html : '/stitch-screens/' + session.landing + '.html'}" title="${crumb}"></iframe>
-              </div>
-            </section>
-          </div>
-        </div>
-      `;
+        var root = document.getElementById('root');
+        root.className = '';
+        root.innerHTML =
+          '<div class="app-shell">' +
+            '<header class="topbar">' +
+              '<div class="tb-left">' +
+                '<img src="/assets/atunse-logo.png" alt="Atunse Health" class="logo" />' +
+                '<span class="brand">Atunse Health</span>' +
+                '<span class="crumb">' + crumb + (isMobile ? ' <span class="tag">MOBILE</span>' : '') + '</span>' +
+              '</div>' +
+              '<div class="tb-right">' +
+                '<span class="who">' + persona.name + ' · <b>' + persona.role + '</b></span>' +
+                '<button class="btn-logout" id="logout">Log out</button>' +
+              '</div>' +
+            '</header>' +
+            '<div class="body">' +
+              '<button class="nav-toggle" id="navtoggle" aria-label="Menu">☰</button>' +
+              '<aside class="sidenav" id="sidenav">' +
+                '<div class="login-as">' +
+                  '<span class="av">' + persona.initials + '</span>' +
+                  '<div><div class="nm">' + persona.name + '</div><div class="rl">' + persona.role + '</div></div>' +
+                '</div>' +
+                '<nav class="nav">' + navHtml + '</nav>' +
+              '</aside>' +
+              '<section class="stage">' +
+                '<div class="frame-host">' +
+                  '<iframe src="' + frameSrc + '" title="' + crumb + '"></iframe>' +
+                '</div>' +
+              '</section>' +
+            '</div>' +
+          '</div>';
 
-      document.getElementById('logout').addEventListener('click', () => { logout(); location.replace('/'); });
-      const tog = document.getElementById('navtoggle');
-      const nav = document.getElementById('sidenav');
-      tog.addEventListener('click', () => nav.classList.toggle('open'));
+        document.getElementById('logout').addEventListener('click', function () {
+          localStorage.removeItem(KEY);
+          window.location.replace('/');
+        });
+        document.getElementById('navtoggle').addEventListener('click', function () {
+          document.getElementById('sidenav').classList.toggle('open');
+        });
+      })();
     </script>
   </body>
 </html>
