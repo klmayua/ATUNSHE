@@ -38,13 +38,6 @@ export const screens = [
     "html": "/stitch-screens/394b2dde61bf4fa18e0753b8d2bcc126.html"
   },
   {
-    "id": "16345503263987182624",
-    "title": "Atunse_Health_Prototype_Screen_Design_Specification.md",
-    "group": "Assets & Docs",
-    "deviceType": "DESKTOP",
-    "html": "/stitch-screens/16345503263987182624.html"
-  },
-  {
     "id": "9fa48db4ced94150b2bd8dffa41d5b7e",
     "title": "Atunse Health - Login",
     "group": "Auth",
@@ -103,21 +96,21 @@ export const screens = [
   {
     "id": "4a98aee24a83424db3010d3076a5a42c",
     "title": "Patient Portal - Home",
-    "group": "Clinical",
+    "group": "Patient",
     "deviceType": "DESKTOP",
     "html": "/stitch-screens/4a98aee24a83424db3010d3076a5a42c.html"
   },
   {
     "id": "e1c47f5b53fb4efeb13cd44e5e82cbfa",
     "title": "Patient Profile - Amina Okafor",
-    "group": "Clinical",
+    "group": "Patient",
     "deviceType": "DESKTOP",
     "html": "/stitch-screens/e1c47f5b53fb4efeb13cd44e5e82cbfa.html"
   },
   {
     "id": "eaeb377d6e70427195a93f5f7fae47f5",
     "title": "Patient Timeline - Amina Okafor",
-    "group": "Clinical",
+    "group": "Patient",
     "deviceType": "DESKTOP",
     "html": "/stitch-screens/eaeb377d6e70427195a93f5f7fae47f5.html"
   },

@@ -1,6 +1,31 @@
-// Demo persona logins + ROLE-BASED ACCESS.
-// Each persona may only see screens whose `group` is in `allow`. Deep links to other
-// groups are blocked and redirected to the persona's landing screen.
+// Demo persona logins + ROLE-BASED ACCESS (the product definition).
+//
+// WHAT EACH ROLE SEES — decided as the product owner, grounded in the
+// Atunse Health design spec (clinical EMR, protocol-driven care):
+//
+//  CLINICIAN (Dr. Adesenya, Physician)
+//    Overview · Appointments · Clinical (encounter/directory/profile/timeline/
+//    registration/facility) · Protocols · Compliance & Ledgers · Operations &
+//    Intelligence · Mobile · Ogami.  — NO Billing, NO Administration, NO Assets.
+//
+//  ATTENDING PHYSICIAN (Dr. Sola, Medical Director)
+//    Same clinical surface as Clinician, PLUS Administration (staff/people/
+//    institutions/config) for oversight.  — NO Billing (separation of duties).
+//
+//  FACILITY ADMINISTRATOR (Adaora, Administrator / HR)
+//    Overview · Administration (people/institutions/config) · Billing & Finance ·
+//    Compliance & Ledgers · Scheduling · Operations & Intelligence · Ogami.
+//    — NO Clinical, NO Protocols, NO Mobile (she manages the system, not patients).
+//
+//  PATIENT (Mrs Juliet Okafor)
+//    Her own Patient portal (Home/Profile/Timeline) · Mobile · Ogami.
+//    — NO Clinical/Protocols/Admin/Billing/Dashboards/Scheduling.
+//
+//  MOBILE REVIEWER (Field / Mobile)
+//    Overview · Mobile · Patient (read) · Clinical (read) · Scheduling · Ogami.
+//    — NO Protocols/Administration/Billing/Compliance/Ops.
+//
+// Deep links to a denied group are redirected to the persona's landing screen.
 // Mock only — a clickable demo gate backed by localStorage.
 
 export const PERSONAS = [
@@ -14,8 +39,8 @@ export const PERSONAS = [
     accent: '#002F5F',
     blurb: 'Rounds, encounters, vitals, protocols & the patient timeline.',
     initials: 'AD',
-    allow: ['Auth', 'Dashboards', 'Patient', 'Clinical', 'Protocols', 'Scheduling', 'Compliance & Ledgers', 'Mobile', 'AI Assistant', 'Operations & Intelligence', 'Assets & Docs'],
-    deny: [],
+    allow: ['Auth', 'Dashboards', 'Patient', 'Clinical', 'Protocols', 'Scheduling', 'Compliance & Ledgers', 'Mobile', 'AI Assistant', 'Operations & Intelligence'],
+    deny: ['Administration', 'Billing & Finance', 'Assets & Docs'],
   },
   {
     id: 'attending',
@@ -40,7 +65,7 @@ export const PERSONAS = [
     accent: '#735c00',
     blurb: 'People, institutions, billing, configuration & governance.',
     initials: 'AD',
-    allow: ['Auth', 'Dashboards', 'Patient', 'Scheduling', 'Administration', 'Billing & Finance', 'Compliance & Ledgers', 'Operations & Intelligence', 'Assets & Docs', 'AI Assistant'],
+    allow: ['Auth', 'Dashboards', 'Patient', 'Scheduling', 'Administration', 'Billing & Finance', 'Compliance & Ledgers', 'Operations & Intelligence', 'AI Assistant', 'Assets & Docs'],
     deny: ['Clinical', 'Protocols', 'Mobile'],
   },
   {
@@ -53,8 +78,8 @@ export const PERSONAS = [
     accent: '#003f7d',
     blurb: 'Your portal: appointments, records, results & consent.',
     initials: 'JO',
-    allow: ['Auth', 'Patient', 'Mobile', 'AI Assistant', 'Assets & Docs'],
-    deny: ['Dashboards', 'Clinical', 'Protocols', 'Scheduling', 'Administration', 'Billing & Finance', 'Compliance & Ledgers', 'Operations & Intelligence'],
+    allow: ['Auth', 'Patient', 'Mobile', 'AI Assistant'],
+    deny: ['Dashboards', 'Clinical', 'Protocols', 'Scheduling', 'Administration', 'Billing & Finance', 'Compliance & Ledgers', 'Operations & Intelligence', 'Assets & Docs'],
   },
   {
     id: 'mobile',
@@ -66,8 +91,8 @@ export const PERSONAS = [
     accent: '#735c00',
     blurb: 'The mobile companion: home, tasks, vitals & offline sync.',
     initials: 'MR',
-    allow: ['Auth', 'Dashboards', 'Patient', 'Clinical', 'Scheduling', 'Mobile', 'AI Assistant', 'Assets & Docs'],
-    deny: ['Protocols', 'Administration', 'Billing & Finance', 'Compliance & Ledgers', 'Operations & Intelligence'],
+    allow: ['Auth', 'Dashboards', 'Patient', 'Clinical', 'Scheduling', 'Mobile', 'AI Assistant'],
+    deny: ['Protocols', 'Administration', 'Billing & Finance', 'Compliance & Ledgers', 'Operations & Intelligence', 'Assets & Docs'],
   },
 ];
 

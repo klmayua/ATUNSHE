@@ -57,6 +57,8 @@ export function getStaticPaths() {
         var groups = {};
         visible.forEach(function (s) { (groups[s.group] = groups[s.group] || []).push(s); });
         var labelMap = { 'Dashboards':'Overview','Patient':'Patients','Clinical':'Clinical','Protocols':'Protocols','Billing & Finance':'Billing','Administration':'Administration','Scheduling':'Appointments','Compliance & Ledgers':'Trust & Governance','Operations & Intelligence':'Reports','Mobile':'Mobile','AI Assistant':'Ogami' };
+        // Auth (the raw Stitch login screen) is not a menu item — session exit is the Log out button.
+        delete groups['Auth'];
         var ordered = Object.keys(groups).sort(function (a, b) {
           var la = navOrder.indexOf(labelMap[a] || a), lb = navOrder.indexOf(labelMap[b] || b);
           return (la === -1 ? 99 : la) - (lb === -1 ? 99 : lb);
