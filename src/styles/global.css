@@ -231,3 +231,13 @@ button { font-family: inherit; cursor: pointer; }
 .bubble { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.45; }
 .msg.user .bubble { background: var(--navy); color: #fff; }
 .msg.ogami .bubble { background: #eef2f7; color: var(--on-surface); }
+
+/* ---------- KPI deltas + mini charts (dashboard depth) ---------- */
+.delta { font-size: 11.5px; font-weight: 600; margin-top: 4px; }
+.delta.up { color: var(--ok); }
+.delta.down { color: var(--danger); }
+.delta.flat { color: var(--text-secondary); }
+.chart { margin: 6px 0 12px; display: flex; align-items: flex-end; gap: 6px; height: 54px; }
+.chart.bars .bar { flex: 1; background: linear-gradient(180deg, var(--navy), #1f5fa8); border-radius: 5px 5px 0 0; height: var(--h); min-height: 6px; }
+.chart.line { align-items: center; gap: 0; height: 54px; position: relative; border-bottom: 1px solid var(--border-subtle); }
+.chart.line .dot { flex: 1; height: 8px; width: 8px; border-radius: 50%; background: var(--gold); position: relative; top: calc(-1 * var(--h) / 2); transform: translateY(20px); box-shadow: 0 0 0 3px rgba(212,175,55,0.18); }

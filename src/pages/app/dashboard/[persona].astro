@@ -75,7 +75,11 @@ const navHtml = ORDER
 
           <div class="kpis">
             {d.kpis.map((k) => (
-              <div class="kpi"><div class="n">{escape(k.n)}</div><div class="l">{escape(k.l)}</div></div>
+              <div class="kpi">
+                <div class="n">{escape(k.n)}</div>
+                <div class="l">{escape(k.l)}</div>
+                {k.delta ? <div class={`delta ${k.dir || 'flat'}`}>{escape(k.delta)}</div> : null}
+              </div>
             ))}
           </div>
 
@@ -83,6 +87,11 @@ const navHtml = ORDER
             {d.sections.map((sec) => (
               <div class={`card${sec.alert ? ' alert' : ''}`}>
                 <h3>{escape(sec.title)}</h3>
+                {sec.chart ? (
+                  sec.chart.type === 'bars'
+                    ? <div class="chart bars">{sec.chart.vals.split(',').map((v) => <span class="bar" style={`--h:${v}%`}></span>)}</div>
+                    : <div class="chart line">{sec.chart.vals.split(',').map((v) => <span class="dot" style={`--h:${v}%`}></span>)}</div>
+                ) : null}
                 {sec.items.map((it) => (
                   <div class="row">
                     <div>
@@ -126,7 +135,7 @@ const navHtml = ORDER
       const SCREENS = screens;
       const PID = persona;
       function hrefForGroup(group) {
-        const s = SCREENS.find((x) => x.html && !x.asset && x.group === group);
+        const s = SCREENS.find((x) => !x.asset && x.group === group);
         return s ? '/app/' + s.id + '/' : '/app/dashboard/' + PID + '/';
       }
       const MAP = {
