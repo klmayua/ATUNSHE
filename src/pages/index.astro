@@ -15,56 +15,42 @@ const year = new Date().getFullYear();
     <title>Atunse Health — Demo Login</title>
   </head>
   <body>
-    <div class="login-wrap">
-      <aside class="login-aside">
-        <div class="brand"><img src="/assets/atunse-logo.png" alt="Atunse Health" class="logo" /> Atunse Health</div>
-        <div>
-          <h1>Protocol-driven care.<br />One trusted record.</h1>
-          <p class="sub">Sign in to the Atunse Health clinical platform, or explore it as a persona.</p>
-        </div>
-        <div class="foot">Protected clinical environment</div>
-      </aside>
+    <main class="login-main">
+      <div class="login-card">
+        <img src="/assets/atunse_gold_transparent.png" alt="Atunse Health" class="logo-lg" />
+        <h2>Protocol-driven care.<br />One trusted record.</h2>
+        <p class="sub">Sign in to the clinical platform, or explore it as a persona.</p>
 
-      <main class="login-main">
-        <div class="login-card">
-          <h2>Sign in to the demo</h2>
-          <p class="sub">Use the username &amp; password, or tap a persona to auto-fill.</p>
+        <div id="err" class="err" style="display:none"></div>
 
-          <div id="err" class="err" style="display:none"></div>
-
-          <form id="login-form" autocomplete="off">
-            <div class="field">
-              <label for="username">Username</label>
-              <input id="username" name="username" type="text" placeholder="e.g. amina.okafor" />
-            </div>
-            <div class="field">
-              <label for="password">Password</label>
-              <input id="password" name="password" type="password" placeholder="••••••••" />
-            </div>
-            <button class="btn-primary" type="submit">Sign in</button>
-          </form>
-
-          <div class="divider">Or explore as a persona</div>
-
-          <div class="persona-grid" id="persona-grid">
-            {PERSONAS.map((p) => (
-              <button class="persona" type="button" data-id={p.id}>
-                <span class="av">{p.initials}</span>
-                <span>
-                  <span class="nm">{p.name}</span><br />
-                  <span class="rl">{p.role}</span>
-                  <span class="hint">tap to enter →</span>
-                </span>
-              </button>
-            ))}
+        <form id="login-form" autocomplete="off">
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" placeholder="e.g. amina.okafor" />
           </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="••••••••" />
+          </div>
+          <button class="btn-primary" type="submit">Sign in</button>
+        </form>
 
-          <p class="note">
-            Atunse Health — secure clinical platform.
-          </p>
+        <div class="divider">Or explore as a persona</div>
+
+        <div class="persona-grid" id="persona-grid">
+          {PERSONAS.map((p) => (
+            <button class="persona" type="button" data-id={p.id}>
+              <span class="av">{p.initials}</span>
+              <span>
+                <span class="nm">{p.name}</span><br />
+                <span class="rl">{p.role}</span>
+                <span class="hint">tap to enter →</span>
+              </span>
+            </button>
+          ))}
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
 
     <script is:inline define:vars={{ personas: PERSONAS }}>
       const PERSONAS = personas;
