@@ -264,10 +264,17 @@ const ORDER = [
   </head>
   <body>
     <div id="root" class="loading">Loading…</div>
-    <script is:inline define:vars={{ screenId: screen.id, group: screen.group, title: screen.title, bodyHtml: body, screens: screens, personas: PERSONAS }}>
+    <script type="application/json" id="screen-meta">{JSON.stringify({ screenId: screen.id, group: screen.group, title: screen.title })}</script>
+    <div id="body-src" hidden set:html={body}></div>
+    <script type="application/json" id="app-data">{JSON.stringify({ screens, personas: PERSONAS })}</script>
+    <script is:inline>
       (function () {
         var KEY = 'atunse_demo_session';
-        var SCREENS = screens, PERSONAS = personas, BODY = bodyHtml;
+        var META = JSON.parse(document.getElementById('screen-meta').textContent);
+        var BODY = document.getElementById('body-src').innerHTML;
+        var APP = JSON.parse(document.getElementById('app-data').textContent);
+        var SCREENS = APP.screens, PERSONAS = APP.personas;
+        var group = META.group, title = META.title, screenId = META.screenId;
         var sesh = null;
         try { sesh = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
         if (!sesh) { location.replace('/'); return; }
@@ -286,7 +293,7 @@ const ORDER = [
           ['Administration', 'Administration'], ['Mobile', 'Mobile']
         ];
         function firstHref(g) {
-          const sc = SCREENS.find(function (x) { return !x.asset && x.group === g; });
+          var sc = SCREENS.find(function (x) { return !x.asset && x.group === g; });
           return sc ? '/app/' + sc.id + '/' : '/app/dashboard/' + me.id + '/';
         }
         var nav = ORDER.filter(function (o) {
