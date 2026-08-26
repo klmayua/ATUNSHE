@@ -7,33 +7,6 @@ export function getStaticPaths() {
     .filter((s) => s.html && !s.asset)
     .map((s) => ({ params: { screen: s.id } }));
 }
-
-// Group screens by category for the sidebar nav.
-const groups = {};
-for (const s of screens) {
-  const g = s.group || 'Screens';
-  (groups[g] = groups[g] || []).push(s);
-}
-const groupOrder = [
-  'Auth',
-  'Dashboards',
-  'Patient',
-  'Clinical',
-  'Protocols',
-  'Compliance & Ledgers',
-  'Scheduling',
-  'Billing & Finance',
-  'Administration',
-  'Operations & Intelligence',
-  'Mobile',
-  'AI Assistant',
-  'Assets & Docs',
-  'Screens',
-];
-const orderedGroups = Object.keys(groups).sort(
-  (a, b) => groupOrder.indexOf(a) - groupOrder.indexOf(b)
-);
-const year = new Date().getFullYear();
 ---
 
 <html lang="en">
@@ -48,72 +21,76 @@ const year = new Date().getFullYear();
     <div id="root" class="loading">Loading demo session…</div>
 
     <script>
-      import { guard, logout, isAuthed } from '../../lib/auth.mjs';
+      import { guard, logout } from '../../lib/auth.mjs';
       import { screens } from '../../data/screens.mjs';
+      import { canView } from '../../data/personas.mjs';
 
       const session = guard();
-      const params = new URLSearchParams(location.search);
       const activeId = location.pathname.split('/app/')[1]?.replace(/\/$/, '') || '';
 
-      const groups = {};
-      for (const s of screens) {
-        const g = s.group || 'Screens';
-        (groups[g] = groups[g] || []).push(s);
+      // Role-based deep-link guard: block groups this persona may not see.
+      const active = screens.find((s) => s.id === activeId);
+      if (active && !canView(session, active.group)) {
+        location.replace('/app/' + session.landing + '/');
       }
+
       const groupOrder = [
-        'Auth','Dashboards','Patient','Clinical','Protocols','Compliance & Ledgers',
-        'Scheduling','Billing & Finance','Administration','Operations & Intelligence',
-        'Mobile','AI Assistant','Assets & Docs','Screens',
+        'Auth', 'Dashboards', 'Patient', 'Clinical', 'Protocols', 'Compliance & Ledgers',
+        'Scheduling', 'Billing & Finance', 'Administration', 'Operations & Intelligence',
+        'Mobile', 'AI Assistant', 'Assets & Docs',
       ];
-      const orderedGroups = Object.keys(groups).sort((a,b)=>groupOrder.indexOf(a)-groupOrder.indexOf(b));
+      const visible = screens.filter((s) => s.html && !s.asset && canView(session, s.group));
+      const groups = {};
+      for (const s of visible) (groups[s.group] = groups[s.group] || []).push(s);
+      const orderedGroups = Object.keys(groups).sort((a, b) => groupOrder.indexOf(a) - groupOrder.indexOf(b));
 
       const navHtml = orderedGroups.map((g) => {
         const items = groups[g].map((s) => {
           const cls = s.id === activeId ? 'nav-link active' : 'nav-link';
-          const url = '/app/' + s.id + '/';
-          return `<a class="${cls}" href="${url}" data-id="${s.id}">${s.title}</a>`;
+          return `<a class="${cls}" href="/app/${s.id}/" data-id="${s.id}">${s.title}</a>`;
         }).join('');
         return `<div class="nav-group">${g}</div>${items}`;
       }).join('');
 
-      const active = screens.find((s) => s.id === activeId);
       const crumb = active ? active.title : 'Dashboard';
       const isMobile = active && active.deviceType === 'MOBILE';
 
-      const root = document.getElementById('root');
-      root.className = '';
-      root.innerHTML = `
+      document.getElementById('root').className = '';
+      document.getElementById('root').innerHTML = `
         <div class="app-shell">
-          <aside class="sidebar">
-            <div class="s-head">
-              <span class="dot">A</span>
-              <div><div class="t">Atunse Health</div><div class="s">Demo walkthrough</div></div>
+          <header class="topbar">
+            <div class="tb-left">
+              <img src="/assets/atunse-logo.png" alt="Atunse Health" class="logo" />
+              <span class="brand">Atunse Health</span>
+              <span class="crumb">${crumb}${isMobile ? ' <span class="tag">MOBILE</span>' : ''}</span>
             </div>
-            <div class="login-as">
-              <span class="av">${session.initials}</span>
-              <div><div class="nm">${session.name}</div><div class="rl">${session.role}</div></div>
+            <div class="tb-right">
+              <span class="who">${session.name} · <b>${session.role}</b></span>
+              <button class="btn-logout" id="logout">Log out</button>
             </div>
-            <nav class="nav">${navHtml}</nav>
-          </aside>
-          <section class="stage">
-            <div class="stage-bar">
-              <div class="crumb">${crumb}${isMobile ? '<span class="tag">MOBILE</span>' : ''}</div>
-              <div class="right">
-                <span class="who">Signed in as <b>${session.username}</b></span>
-                <button class="btn-logout" id="logout">Log out</button>
+          </header>
+          <div class="body">
+            <button class="nav-toggle" id="navtoggle" aria-label="Menu">☰</button>
+            <aside class="sidenav" id="sidenav">
+              <div class="login-as">
+                <span class="av">${session.initials}</span>
+                <div><div class="nm">${session.name}</div><div class="rl">${session.role}</div></div>
               </div>
-            </div>
-            <div class="frame-host">
-              <iframe src="${active ? active.html : '/stitch-screens/' + session.landing + '.html'}" title="${crumb}"></iframe>
-            </div>
-          </section>
+              <nav class="nav">${navHtml}</nav>
+            </aside>
+            <section class="stage">
+              <div class="frame-host">
+                <iframe src="${active ? active.html : '/stitch-screens/' + session.landing + '.html'}" title="${crumb}"></iframe>
+              </div>
+            </section>
+          </div>
         </div>
       `;
 
-      document.getElementById('logout').addEventListener('click', () => {
-        logout();
-        location.replace('/');
-      });
+      document.getElementById('logout').addEventListener('click', () => { logout(); location.replace('/'); });
+      const tog = document.getElementById('navtoggle');
+      const nav = document.getElementById('sidenav');
+      tog.addEventListener('click', () => nav.classList.toggle('open'));
     </script>
   </body>
 </html>
