@@ -1,0 +1,12 @@
+node_modules
+dist
+.astro
+.DS_Store
+.env
+.env.*
+screens_list.json
+pull.log
+*.tmp
+
+# Atunse clinical docs (not part of the demo site)
+WorkingDocs/

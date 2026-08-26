@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patient Profile / EMR - Atunse Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#dcd9d9",
+                        "surface": "#F8F8F6",
+                        "on-tertiary-fixed": "#001b3c",
+                        "inverse-surface": "#313030",
+                        "surface-container-high": "#ebe7e7",
+                        "primary-fixed": "#d5e3ff",
+                        "primary-container": "#002f5f",
+                        "surface-tint": "#3d5f92",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary": "#ffffff",
+                        "text-secondary": "#667085",
+                        "inverse-primary": "#a8c8ff",
+                        "on-secondary-fixed-variant": "#574500",
+                        "secondary-fixed": "#ffe088",
+                        "status-success": "#2D8A39",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-container": "#002f60",
+                        "on-tertiary-fixed-variant": "#104685",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#001b3c",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "secondary-container": "#fed65b",
+                        "surface-container-low": "#f6f3f2",
+                        "on-secondary": "#ffffff",
+                        "status-info": "#005EB8",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#7798ce",
+                        "status-danger": "#C8372D",
+                        "on-secondary-container": "#745c00",
+                        "on-error-container": "#93000a",
+                        "secondary": "#735c00",
+                        "background": "#fcf9f8",
+                        "outline-variant": "#c3c6d0",
+                        "border-subtle": "#E4E7EC",
+                        "tertiary-fixed": "#d6e3ff",
+                        "on-primary-fixed-variant": "#234778",
+                        "surface-container-highest": "#e5e2e1",
+                        "tertiary": "#001a3b",
+                        "on-surface-variant": "#43474f",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e5e2e1",
+                        "status-warning": "#B76E00",
+                        "on-tertiary-container": "#6e98db",
+                        "tertiary-fixed-dim": "#a8c8ff",
+                        "on-secondary-fixed": "#241a00",
+                        "on-error": "#ffffff",
+                        "outline": "#737780",
+                        "primary": "#001a3a",
+                        "secondary-fixed-dim": "#e9c349",
+                        "on-background": "#1c1b1b",
+                        "surface-container": "#f0edec"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-compact": "8px",
+                        "margin-desktop": "24px",
+                        "control-min-height": "40px",
+                        "margin-mobile": "16px",
+                        "sidebar-width": "256px",
+                        "stack-relaxed": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "section-title": ["Inter"],
+                        "micro-label": ["Inter"],
+                        "supporting": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "card-title": ["Inter"],
+                        "body-default": ["Inter"],
+                        "table-data": ["Inter"],
+                        "body-medium": ["Inter"]
+                    },
+                    "fontSize": {
+                        "section-title": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "micro-label": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "supporting": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "card-title": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-default": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8F8F6; color: #1c1b1b; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .icon-fill { font-variation-settings: 'FILL' 1; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid #E4E7EC; }
+    </style>
+</head>
+<body class="flex min-h-screen bg-surface">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen fixed left-0 top-0 w-sidebar-width bg-primary dark:bg-tertiary border-r border-outline-variant dark:border-outline z-50">
+<div class="px-6 py-6 flex items-center gap-3 border-b border-outline-variant/20">
+<img class="w-8 h-8 object-contain" data-alt="A small, stylized golden leaf logo inside an infinity symbol, set against a dark navy background. Professional clinical brand identity. Minimalist and vector style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMIN6PA77EsoTUt_niT3d2ijmpX7etFfWzL2NrvxmpNhO8YNQf1yYY-m4RNVNMHFKRaFev8v-rBiULGYyhtzM0kJIn0HZ1rHFX0B5R_d0OLEBX-LWcv7bKQ8Nm5zM5eg8gvqXCDK-YcZWdEcy24MxsYVvsQlkqbrEjtW007QPA8xgnvD3AxMjuENtiU8LB71alXDlhjr08Rxf2f8IkbOiLf5gwzOJJY6H-IZ0fCJ6i9tTWhXJqddpn"/>
+<div>
+<h1 class="font-headline-lg text-[20px] text-secondary-container font-bold leading-tight">Atunse Health</h1>
+<p class="font-supporting text-supporting text-on-primary/70">Lagos General Hospital</p>
+</div>
+</div>
+<div class="px-4 py-4">
+<button class="w-full flex items-center justify-start gap-2 px-4 py-2 bg-primary-container/30 border border-primary-container text-on-primary rounded font-body-medium text-body-medium hover:bg-primary-container/50 transition-colors">
+<span class="material-symbols-outlined text-[18px]">search</span>
+                Global Search
+            </button>
+</div>
+<nav class="flex-1 overflow-y-auto py-2 flex flex-col gap-1">
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-body-medium text-body-medium">Overview</span>
+</a>
+<a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px] icon-fill">group</span>
+<span class="font-body-medium text-body-medium">Patients</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span>
+<span class="font-body-medium text-body-medium">Appointments</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">medical_services</span>
+<span class="font-body-medium text-body-medium">Clinical</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+<span class="font-body-medium text-body-medium">Protocols</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+<span class="font-body-medium text-body-medium">Billing</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+<span class="font-body-medium text-body-medium">People</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+<span class="font-body-medium text-body-medium">Institutions</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+<span class="font-body-medium text-body-medium">Trust &amp; Governance</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+<span class="font-body-medium text-body-medium">Ogami</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="font-body-medium text-body-medium">Reports</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">settings_suggest</span>
+<span class="font-body-medium text-body-medium">Admin</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant/20 py-2 flex flex-col gap-1">
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+<span class="font-body-medium text-body-medium">Help</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-body-medium text-body-medium">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-sidebar-width flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-6 py-3 h-[64px] bg-white dark:bg-black border-b border-border-subtle dark:border-outline-variant sticky top-0 z-40">
+<div class="flex items-center gap-6">
+<h2 class="font-section-title text-section-title text-primary dark:text-inverse-primary hidden lg:block">Atunse Health</h2>
+<nav class="hidden md:flex gap-6 h-full items-end">
+<a class="text-text-secondary dark:text-on-surface-variant font-body-medium text-body-medium hover:text-primary dark:hover:text-inverse-primary transition-colors duration-200 pb-[18px]" href="#">Dashboard</a>
+<a class="text-primary dark:text-inverse-primary border-b-2 border-secondary font-bold pb-[16px] font-body-medium text-body-medium" href="#">Patient Records</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center text-text-secondary hover:text-primary transition-colors rounded-full hover:bg-surface-dim">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-text-secondary hover:text-primary transition-colors rounded-full hover:bg-surface-dim">
+<span class="material-symbols-outlined text-[20px]">sync</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-text-secondary hover:text-primary transition-colors rounded-full hover:bg-surface-dim">
+<span class="material-symbols-outlined text-[20px]">cloud_off</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-text-secondary hover:text-primary transition-colors rounded-full hover:bg-surface-dim">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</button>
+</div>
+<div class="h-6 w-px bg-border-subtle mx-2 hidden sm:block"></div>
+<div class="flex gap-3">
+<button class="hidden sm:flex items-center px-4 h-control-min-height bg-white border border-border-subtle text-primary font-body-medium text-body-medium rounded hover:bg-surface-dim transition-colors">
+                        Book Appointment
+                    </button>
+<button class="flex items-center px-4 h-control-min-height bg-primary text-on-primary font-body-medium text-body-medium rounded hover:bg-tertiary transition-colors">
+                        Start Encounter
+                    </button>
+</div>
+<div class="ml-2 w-10 h-10 rounded-full bg-surface-dim border border-border-subtle overflow-hidden flex-shrink-0 cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="Professional headshot of Dr. Amina Okafor, a female medical professional in a clinical setting, wearing a lab coat and stethoscope. Clean, bright lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNZLtIk_B0xQsRDBOMCCxZplGIfFvZDQhqiqmU72hY_d6uxiQ5GNX63rpyRJECoP_xJN7B34ipj_IGH4uczYuYXMxX0v5sgdGqoZ8uohHnLQw1rEP6Dx-BqzposB8iEeUQJQMjSHo8M68ZopSGLz1VTzPHjC54tGs1uZYwT0xcrpatGWnURhIT6UVHYEMCd9Vjf8WUECuqJn3pr6uCL99WhKAl3MDS7QC-3OWP1S0kcToCZ_aDz5u3"/>
+</div>
+</div>
+</header>
+<!-- Canvas / Page Content -->
+<div class="flex-1 p-margin-mobile md:p-margin-desktop overflow-y-auto">
+<!-- Patient Header Profile -->
+<div class="bg-white rounded border border-border-subtle mb-stack-relaxed">
+<div class="p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
+<div class="flex items-start gap-6">
+<div class="w-20 h-20 rounded-lg bg-surface-dim border border-border-subtle overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="Portrait of Amina Okafor, a 34-year-old female patient, neutral expression, clear lighting, professional clinical record photo style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEqeC0PE0J1StOj_X3e-7oXDAhj1oU1MT3txkEtiHJZ5tUWv9fDPjLb6vX15YOmJpnGgEuzysCMUu1T5SLMEWSnEl2IymozzZfyHSqag_4vbIUSHj5I6-CwWkYKn5eDZFdWOsmhPAVSMKaIAGBd9QHGvzaIoHYkTLghoOo4umKsGapiUduVofp1J_xYIymEE-weDcR0QsXH2eP5nWjNGMcgsAr5D_dBmGzdV2FKxtTTioGf8Fal4n3"/>
+<div class="absolute bottom-0 right-0 bg-status-success w-4 h-4 rounded-full border-2 border-white"></div>
+</div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h1 class="font-headline-lg text-headline-lg text-primary m-0">Amina Okafor</h1>
+<span class="bg-surface-dim text-on-surface px-2 py-0.5 rounded font-micro-label text-micro-label">ATN-000184</span>
+</div>
+<p class="font-body-default text-body-default text-text-secondary mb-3">34y Female • DOB: 12 Oct 1989 • Blood Type: O+</p>
+<div class="flex flex-wrap gap-2">
+<div class="bg-status-success/10 text-status-success border border-status-success/20 px-2 py-1 rounded flex items-center gap-1 font-micro-label text-micro-label">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                                    Consent Active
+                                </div>
+<div class="bg-primary/10 text-primary border border-primary/20 px-2 py-1 rounded flex items-center gap-1 font-micro-label text-micro-label">
+<span class="material-symbols-outlined text-[14px]">assignment</span>
+                                    Protocol: Dementia ADDSB
+                                </div>
+<div class="bg-surface-dim text-on-surface border border-border-subtle px-2 py-1 rounded flex items-center gap-1 font-micro-label text-micro-label">
+<span class="material-symbols-outlined text-[14px]">payments</span>
+                                    Balance $0.00
+                                </div>
+</div>
+</div>
+</div>
+<div class="flex gap-3 md:flex-col lg:flex-row">
+<button class="flex items-center justify-center px-4 h-control-min-height bg-white border border-border-subtle text-primary font-body-medium text-body-medium rounded hover:bg-surface-dim transition-colors flex-1">
+<span class="material-symbols-outlined mr-2 text-[18px]">edit_calendar</span>
+                            Book Appt
+                        </button>
+<button class="flex items-center justify-center px-4 h-control-min-height bg-primary text-on-primary font-body-medium text-body-medium rounded hover:bg-tertiary transition-colors flex-1">
+<span class="material-symbols-outlined mr-2 text-[18px]">add_circle</span>
+                            Start Encounter
+                        </button>
+</div>
+</div>
+<!-- Inner Tabs -->
+<div class="border-t border-border-subtle px-6 flex overflow-x-auto no-scrollbar">
+<a class="px-4 py-3 font-body-medium text-body-medium text-primary border-b-2 border-secondary font-bold whitespace-nowrap" href="#">Overview</a>
+<a class="px-4 py-3 font-body-medium text-body-medium text-text-secondary hover:text-primary whitespace-nowrap border-b-2 border-transparent hover:border-border-subtle transition-colors" href="#">Timeline</a>
+<a class="px-4 py-3 font-body-medium text-body-medium text-text-secondary hover:text-primary whitespace-nowrap border-b-2 border-transparent hover:border-border-subtle transition-colors" href="#">Clinical</a>
+<a class="px-4 py-3 font-body-medium text-body-medium text-text-secondary hover:text-primary whitespace-nowrap border-b-2 border-transparent hover:border-border-subtle transition-colors" href="#">Protocol</a>
+<a class="px-4 py-3 font-body-medium text-body-medium text-text-secondary hover:text-primary whitespace-nowrap border-b-2 border-transparent hover:border-border-subtle transition-colors" href="#">Billing</a>
+<a class="px-4 py-3 font-body-medium text-body-medium text-text-secondary hover:text-primary whitespace-nowrap border-b-2 border-transparent hover:border-border-subtle transition-colors" href="#">Consent</a>
+<a class="px-4 py-3 font-body-medium text-body-medium text-text-secondary hover:text-primary whitespace-nowrap border-b-2 border-transparent hover:border-border-subtle transition-colors flex items-center gap-1" href="#">
+                        Audit
+                        <span class="material-symbols-outlined text-[14px] text-secondary">verified</span>
+</a>
+</div>
+</div>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Clinical Summary (Bento Box 1) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<div class="glass-card rounded p-6">
+<div class="flex items-center justify-between mb-4 pb-2 border-b border-border-subtle">
+<h3 class="font-card-title text-card-title text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">monitor_heart</span>
+                                Clinical Summary
+                            </h3>
+<button class="text-secondary font-micro-label text-micro-label uppercase tracking-wider hover:underline">Edit</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Conditions -->
+<div>
+<h4 class="font-micro-label text-micro-label text-text-secondary uppercase mb-3 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">coronavirus</span>
+                                    Active Conditions
+                                </h4>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-status-danger mt-2"></div>
+<div>
+<p class="font-body-medium text-body-medium text-on-surface leading-tight">Hypertension, Essential</p>
+<p class="font-supporting text-supporting text-text-secondary mt-0.5">Diagnosed: Oct 2021 • Dr. Okafor</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-status-warning mt-2"></div>
+<div>
+<p class="font-body-medium text-body-medium text-on-surface leading-tight">Pre-Diabetes</p>
+<p class="font-supporting text-supporting text-text-secondary mt-0.5">Diagnosed: Jan 2023 • Monitoring</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Allergies & Risks -->
+<div class="space-y-6">
+<div>
+<h4 class="font-micro-label text-micro-label text-text-secondary uppercase mb-3 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                                        Allergies
+                                    </h4>
+<div class="flex flex-wrap gap-2">
+<span class="bg-error/10 text-error border border-error/20 px-2 py-1 rounded font-body-default text-body-default">Penicillin (Severe)</span>
+<span class="bg-surface-dim text-on-surface border border-border-subtle px-2 py-1 rounded font-body-default text-body-default">Latex (Mild)</span>
+</div>
+</div>
+<div>
+<h4 class="font-micro-label text-micro-label text-text-secondary uppercase mb-3 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">flag</span>
+                                        Risk Flags
+                                    </h4>
+<div class="flex items-center gap-2 p-3 bg-surface-dim rounded border border-border-subtle">
+<span class="material-symbols-outlined text-status-warning">cloud_download</span>
+<p class="font-body-default text-body-default text-on-surface">Moderate Fall Risk (Assessed 10/24)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Vertical Timeline (Bento Box 3) -->
+<div class="glass-card rounded p-6">
+<div class="flex items-center justify-between mb-6 pb-2 border-b border-border-subtle">
+<h3 class="font-card-title text-card-title text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">history</span>
+                                Recent Clinical Timeline
+                            </h3>
+<button class="text-secondary font-micro-label text-micro-label uppercase tracking-wider hover:underline">View All</button>
+</div>
+<div class="relative pl-4 border-l-2 border-border-subtle space-y-8 pb-4">
+<!-- Timeline Event 1 -->
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-3 h-3 bg-white border-2 border-primary rounded-full"></div>
+<div class="pl-4">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-medium text-body-medium text-on-surface">Outpatient Follow-up</h4>
+<span class="font-supporting text-supporting text-text-secondary">Today, 09:30 AM</span>
+</div>
+<p class="font-body-default text-body-default text-text-secondary mb-2">Routine check-up for hypertension management. BP 130/85.</p>
+<div class="flex items-center gap-1 text-secondary font-micro-label text-micro-label">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                                        Ledger Verified • Dr. S. Patel
+                                    </div>
+</div>
+</div>
+<!-- Timeline Event 2 -->
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-3 h-3 bg-white border-2 border-secondary rounded-full"></div>
+<div class="pl-4">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-medium text-body-medium text-on-surface">Lab Results: Complete Blood Count</h4>
+<span class="font-supporting text-supporting text-text-secondary">Oct 12, 2023</span>
+</div>
+<p class="font-body-default text-body-default text-text-secondary mb-2">HbA1c slightly elevated. Recommending dietary consultation.</p>
+<div class="flex items-center gap-1 text-secondary font-micro-label text-micro-label">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                                        Ledger Verified • System Auto-Sync
+                                    </div>
+</div>
+</div>
+<!-- Timeline Event 3 -->
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-3 h-3 bg-surface-dim border-2 border-border-subtle rounded-full"></div>
+<div class="pl-4">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-medium text-body-medium text-text-secondary">Prescription Refill</h4>
+<span class="font-supporting text-supporting text-text-secondary">Sep 05, 2023</span>
+</div>
+<p class="font-body-default text-body-default text-text-secondary">Lisinopril 10mg authorized for 3 months.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Next Actions (Bento Box 2) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="bg-primary text-on-primary rounded p-6 shadow-sm border border-primary-container relative overflow-hidden">
+<!-- Decorative background element -->
+<div class="absolute top-0 right-0 opacity-10">
+<span class="material-symbols-outlined text-[120px] -mt-4 -mr-4">event</span>
+</div>
+<h3 class="font-card-title text-card-title mb-4 flex items-center gap-2 relative z-10">
+<span class="material-symbols-outlined text-[20px]">action_key</span>
+                            Next Actions
+                        </h3>
+<div class="space-y-4 relative z-10">
+<!-- Action Item 1 -->
+<div class="bg-white/10 backdrop-blur-sm rounded p-4 border border-white/20">
+<div class="flex justify-between items-start mb-2">
+<div class="bg-secondary text-secondary-fixed-dim px-2 py-0.5 rounded font-micro-label text-[10px] uppercase tracking-wide">Upcoming Appt</div>
+<span class="font-supporting text-supporting text-on-primary/80">Nov 15, 2023</span>
+</div>
+<h4 class="font-body-medium text-body-medium mb-1">Dietary Consultation</h4>
+<p class="font-supporting text-supporting text-on-primary/70 mb-3">With Dr. E. Lin, Nutritionist</p>
+<button class="w-full py-2 bg-white text-primary font-body-medium text-body-medium rounded hover:bg-surface-dim transition-colors">View Details</button>
+</div>
+<!-- Action Item 2 -->
+<div class="bg-white/5 rounded p-4 border border-white/10 border-l-4 border-l-status-warning">
+<div class="flex justify-between items-start mb-2">
+<div class="bg-status-warning/20 text-secondary-fixed px-2 py-0.5 rounded font-micro-label text-[10px] uppercase tracking-wide">Protocol Step</div>
+<span class="font-supporting text-supporting text-on-primary/80">Overdue</span>
+</div>
+<h4 class="font-body-medium text-body-medium mb-1">Annual Cognitive Assessment</h4>
+<p class="font-supporting text-supporting text-on-primary/70 mb-3">Dementia ADDSB Protocol requires MMSE screening.</p>
+<button class="w-full py-2 bg-transparent border border-white/30 text-white font-body-medium text-body-medium rounded hover:bg-white/10 transition-colors">Start Assessment</button>
+</div>
+</div>
+</div>
+<!-- Quick Stats (Bento Box 4) -->
+<div class="glass-card rounded p-6">
+<h3 class="font-card-title text-card-title text-primary mb-4">Vital Statistics</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-surface-dim rounded border border-border-subtle">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Blood Pressure</span>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary mt-1">130/85</div>
+<span class="font-supporting text-supporting text-status-warning">Slightly Elevated</span>
+</div>
+<div class="p-3 bg-surface-dim rounded border border-border-subtle">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Heart Rate</span>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary mt-1">72 <span class="text-body-default text-text-secondary font-normal">bpm</span></div>
+<span class="font-supporting text-supporting text-status-success">Normal</span>
+</div>
+<div class="p-3 bg-surface-dim rounded border border-border-subtle">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Weight</span>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary mt-1">68 <span class="text-body-default text-text-secondary font-normal">kg</span></div>
+<span class="font-supporting text-supporting text-text-secondary">Stable</span>
+</div>
+<div class="p-3 bg-surface-dim rounded border border-border-subtle">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Height</span>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary mt-1">165 <span class="text-body-default text-text-secondary font-normal">cm</span></div>
+<span class="font-supporting text-supporting text-text-secondary">-</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

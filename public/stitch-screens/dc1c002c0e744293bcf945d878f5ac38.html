@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patient Directory - Atunse Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary": "#735c00",
+                      "outline": "#737780",
+                      "primary-fixed": "#d5e3ff",
+                      "tertiary-container": "#002f60",
+                      "outline-variant": "#c3c6d0",
+                      "on-primary-fixed-variant": "#234778",
+                      "on-surface-variant": "#43474f",
+                      "on-error": "#ffffff",
+                      "on-tertiary-container": "#6e98db",
+                      "on-primary": "#ffffff",
+                      "surface-container-high": "#ebe7e7",
+                      "primary-container": "#002f5f",
+                      "status-info": "#005EB8",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed": "#241a00",
+                      "surface-bright": "#fcf9f8",
+                      "tertiary": "#001a3b",
+                      "surface-container-highest": "#e5e2e1",
+                      "text-secondary": "#667085",
+                      "inverse-surface": "#313030",
+                      "on-tertiary-fixed": "#001b3c",
+                      "primary-fixed-dim": "#a8c8ff",
+                      "inverse-primary": "#a8c8ff",
+                      "tertiary-fixed": "#d6e3ff",
+                      "primary": "#001a3a",
+                      "secondary-container": "#fed65b",
+                      "tertiary-fixed-dim": "#a8c8ff",
+                      "background": "#fcf9f8",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#ffe088",
+                      "on-surface": "#1c1b1b",
+                      "surface-container": "#f0edec",
+                      "surface": "#F8F8F6",
+                      "on-secondary-container": "#745c00",
+                      "status-danger": "#C8372D",
+                      "surface-variant": "#e5e2e1",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#dcd9d9",
+                      "surface-container-low": "#f6f3f2",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#e9c349",
+                      "status-warning": "#B76E00",
+                      "inverse-on-surface": "#f3f0ef",
+                      "surface-tint": "#3d5f92",
+                      "status-success": "#2D8A39",
+                      "on-tertiary-fixed-variant": "#104685",
+                      "on-primary-fixed": "#001b3c",
+                      "on-secondary-fixed-variant": "#574500",
+                      "border-subtle": "#E4E7EC",
+                      "on-primary-container": "#7798ce",
+                      "on-background": "#1c1b1b",
+                      "on-tertiary": "#ffffff",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-relaxed": "16px",
+                      "control-min-height": "40px",
+                      "gutter": "16px",
+                      "sidebar-width": "256px",
+                      "margin-desktop": "24px",
+                      "margin-mobile": "16px",
+                      "stack-compact": "8px"
+              },
+              "fontFamily": {
+                      "body-default": [
+                              "Inter"
+                      ],
+                      "supporting": [
+                              "Inter"
+                      ],
+                      "body-medium": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "card-title": [
+                              "Inter"
+                      ],
+                      "section-title": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "micro-label": [
+                              "Inter"
+                      ],
+                      "table-data": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-default": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "supporting": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-medium": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "card-title": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "section-title": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "micro-label": [
+                              "11px",
+                              {
+                                      "lineHeight": "14px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "table-data": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-default text-body-default h-full flex flex-col antialiased">
+<!-- Header / TopAppBar (Mobile Optimized) -->
+<header class="bg-surface border-b border-border-subtle sticky top-0 z-10 px-margin-mobile py-3 flex justify-between items-center min-h-[64px]">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Patients</h1>
+<button class="bg-primary text-on-primary font-body-medium text-body-medium px-4 py-2 rounded flex items-center gap-2 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+            Register
+        </button>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto pb-24 px-margin-mobile py-stack-relaxed space-y-stack-relaxed">
+<!-- Search Bar -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary">search</span>
+<input class="w-full pl-10 pr-4 h-control-min-height bg-white border border-border-subtle rounded-DEFAULT text-body-default text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary placeholder-text-secondary" placeholder="Search name, ID, or phone..." type="text"/>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-margin-mobile px-margin-mobile">
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full border-2 border-secondary bg-primary-container text-on-primary-container font-body-medium text-body-medium whitespace-nowrap">All</button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full border border-border-subtle bg-white text-text-secondary font-body-default text-body-default whitespace-nowrap hover:bg-surface-container-low transition-colors">Active</button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full border border-border-subtle bg-white text-text-secondary font-body-default text-body-default whitespace-nowrap hover:bg-surface-container-low transition-colors">Protocol</button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full border border-border-subtle bg-white text-text-secondary font-body-default text-body-default whitespace-nowrap hover:bg-surface-container-low transition-colors">My Patients</button>
+</div>
+<!-- Patient List -->
+<div class="space-y-stack-compact">
+<!-- Patient Card 1 -->
+<div class="bg-white border border-border-subtle rounded-lg p-4 flex flex-col gap-3 active:scale-[0.99] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-card-title text-card-title text-primary">Adebayo, Oluwaseun</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-micro-label text-micro-label text-text-secondary bg-surface-container-low px-1.5 py-0.5 rounded">ATN-948271</span>
+<span class="font-supporting text-supporting text-text-secondary">42M</span>
+</div>
+</div>
+<div class="bg-status-success/10 border border-status-success/20 px-2 py-1 rounded">
+<span class="font-micro-label text-micro-label text-status-success uppercase">Active</span>
+</div>
+</div>
+<div class="pt-3 border-t border-border-subtle flex justify-between items-center">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
+<span class="font-body-medium text-body-medium">Diabetic Protocol Beta</span>
+</div>
+<div class="flex gap-1">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container-highest"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container-highest"></div>
+</div>
+</div>
+</div>
+<!-- Patient Card 2 -->
+<div class="bg-white border border-border-subtle rounded-lg p-4 flex flex-col gap-3 active:scale-[0.99] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-card-title text-card-title text-primary">Nwachukwu, Chioma</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-micro-label text-micro-label text-text-secondary bg-surface-container-low px-1.5 py-0.5 rounded">ATN-552910</span>
+<span class="font-supporting text-supporting text-text-secondary">28F</span>
+</div>
+</div>
+<div class="bg-status-warning/10 border border-status-warning/20 px-2 py-1 rounded">
+<span class="font-micro-label text-micro-label text-status-warning uppercase">Pending</span>
+</div>
+</div>
+<div class="pt-3 border-t border-border-subtle flex justify-between items-center">
+<div class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-[16px]">assignment</span>
+<span class="font-body-default text-body-default">Intake Assessment Required</span>
+</div>
+</div>
+</div>
+<!-- Patient Card 3 -->
+<div class="bg-white border border-border-subtle rounded-lg p-4 flex flex-col gap-3 active:scale-[0.99] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-card-title text-card-title text-primary">Okafor, Emeka</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-micro-label text-micro-label text-text-secondary bg-surface-container-low px-1.5 py-0.5 rounded">ATN-110293</span>
+<span class="font-supporting text-supporting text-text-secondary">65M</span>
+</div>
+</div>
+<div class="bg-status-success/10 border border-status-success/20 px-2 py-1 rounded">
+<span class="font-micro-label text-micro-label text-status-success uppercase">Active</span>
+</div>
+</div>
+<div class="pt-3 border-t border-border-subtle flex justify-between items-center">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[16px]">medical_services</span>
+<span class="font-body-medium text-body-medium">Hypertension Management</span>
+</div>
+<div class="flex gap-1">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container-highest"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-border-subtle px-4 py-2 flex justify-between items-center pb-safe z-50">
+<a class="flex flex-col items-center gap-1 text-text-secondary p-2 min-w-[64px]" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-supporting text-supporting">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary border-t-2 border-secondary -mt-[9px] pt-[7px] p-2 min-w-[64px]" href="#">
+<span class="material-symbols-outlined font-bold" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-supporting text-supporting font-semibold">Patients</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-text-secondary p-2 min-w-[64px]" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-supporting text-supporting">Schedule</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-text-secondary p-2 min-w-[64px]" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span class="font-supporting text-supporting">Tasks</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-text-secondary p-2 min-w-[64px]" href="#">
+<span class="material-symbols-outlined">menu</span>
+<span class="font-supporting text-supporting">More</span>
+</a>
+</nav>
+<style>
+        /* iOS Safe Area padding for bottom nav */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .pb-safe {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+        /* Hide scrollbar for filter chips */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

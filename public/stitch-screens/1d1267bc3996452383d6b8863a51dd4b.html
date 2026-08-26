@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trust &amp; Governance - Atunse Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#a8c8ff",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c3c6d0",
+                        "status-warning": "#B76E00",
+                        "status-info": "#005EB8",
+                        "on-tertiary-container": "#6e98db",
+                        "primary-fixed": "#d5e3ff",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1c1b1b",
+                        "on-error": "#ffffff",
+                        "surface-container": "#f0edec",
+                        "surface-container-high": "#ebe7e7",
+                        "border-subtle": "#E4E7EC",
+                        "secondary-fixed": "#ffe088",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary": "#001a3b",
+                        "on-tertiary-fixed": "#001b3c",
+                        "on-secondary-fixed-variant": "#574500",
+                        "surface-dim": "#dcd9d9",
+                        "primary-container": "#002f5f",
+                        "secondary-fixed-dim": "#e9c349",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e5e2e1",
+                        "secondary": "#735c00",
+                        "surface-bright": "#fcf9f8",
+                        "on-secondary-fixed": "#241a00",
+                        "tertiary-container": "#002f60",
+                        "outline": "#737780",
+                        "status-danger": "#C8372D",
+                        "surface-variant": "#e5e2e1",
+                        "text-secondary": "#667085",
+                        "primary": "#001a3a",
+                        "on-background": "#1c1b1b",
+                        "tertiary-fixed-dim": "#a8c8ff",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "secondary-container": "#fed65b",
+                        "surface": "#F8F8F6",
+                        "on-primary-fixed-variant": "#234778",
+                        "on-tertiary-fixed-variant": "#104685",
+                        "on-primary-container": "#7798ce",
+                        "on-surface-variant": "#43474f",
+                        "status-success": "#2D8A39",
+                        "on-secondary-container": "#745c00",
+                        "on-primary-fixed": "#001b3c",
+                        "inverse-surface": "#313030",
+                        "background": "#fcf9f8",
+                        "surface-tint": "#3d5f92",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#d6e3ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sidebar-width": "256px",
+                        "gutter": "16px",
+                        "control-min-height": "40px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "24px",
+                        "stack-compact": "8px",
+                        "stack-relaxed": "16px"
+                    },
+                    "fontFamily": {
+                        "table-data": ["Inter"],
+                        "card-title": ["Inter"],
+                        "supporting": ["Inter"],
+                        "section-title": ["Inter"],
+                        "body-medium": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "micro-label": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-default": ["Inter"]
+                    },
+                    "fontSize": {
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "card-title": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "supporting": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "section-title": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "micro-label": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-default": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex w-full min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-[256px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline bg-primary dark:bg-tertiary flex flex-col py-6 hidden md:flex z-40">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg text-secondary-container dark:text-secondary-fixed">Atunse Health</h1>
+<p class="font-body-medium text-body-medium text-on-primary/70 mt-1">Lagos General Hospital</p>
+</div>
+<div class="px-4 mb-4">
+<button class="w-full bg-white/10 hover:bg-white/20 text-on-primary font-body-medium text-body-medium py-2 px-4 rounded flex items-center justify-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[18px]">search</span>
+                Global Search
+            </button>
+</div>
+<nav class="flex-1 overflow-y-auto w-full font-body-medium text-body-medium">
+<ul class="flex flex-col w-full gap-1">
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">dashboard</span>Overview</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">group</span>Patients</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">calendar_today</span>Appointments</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">medical_services</span>Clinical</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">assignment_turned_in</span>Protocols</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">account_balance_wallet</span>Billing</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">badge</span>People</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">account_balance</span>Institutions</a></li>
+<li><a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 transition-colors w-full" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>Trust &amp; Governance</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">account_tree</span>Ogami</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">analytics</span>Reports</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 w-full" href="#"><span class="material-symbols-outlined">settings_suggest</span>Admin</a></li>
+</ul>
+</nav>
+<div class="mt-auto px-4 font-body-medium text-body-medium">
+<ul class="flex flex-col gap-1 w-full border-t border-outline-variant/30 pt-4">
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors w-full" href="#"><span class="material-symbols-outlined">help</span>Help</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors w-full" href="#"><span class="material-symbols-outlined">settings</span>Settings</a></li>
+</ul>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-0 md:ml-[256px] flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 border-b border-border-subtle dark:border-outline-variant bg-white dark:bg-black flex justify-between items-center px-6 py-3 h-[64px] z-30 sticky">
+<div class="flex items-center gap-6">
+<!-- Mobile Menu Button -->
+<button class="md:hidden text-primary p-1">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<nav class="hidden md:flex items-center gap-6 h-full font-body-default text-body-default">
+<a class="text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-inverse-primary cursor-pointer transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-inverse-primary cursor-pointer transition-colors duration-200" href="#">Patient Records</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-text-secondary">
+<button class="p-2 hover:bg-surface-variant rounded transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 hover:bg-surface-variant rounded transition-colors"><span class="material-symbols-outlined">sync</span></button>
+<button class="p-2 hover:bg-surface-variant rounded transition-colors"><span class="material-symbols-outlined">cloud_off</span></button>
+<button class="p-2 hover:bg-surface-variant rounded transition-colors"><span class="material-symbols-outlined">help</span></button>
+</div>
+<div class="h-6 w-px bg-border-subtle mx-2"></div>
+<button class="font-body-medium text-body-medium text-primary bg-white border border-border-subtle px-4 py-2 rounded-[4px] hover:bg-surface transition-colors h-[40px]">Book Appointment</button>
+<button class="font-body-medium text-body-medium text-white bg-primary-container px-4 py-2 rounded-[4px] hover:bg-primary transition-colors h-[40px]">Start Encounter</button>
+<div class="w-[32px] h-[32px] rounded-full overflow-hidden ml-2 border border-border-subtle bg-surface">
+<img alt="Dr. Amina Okafor" class="w-full h-full object-cover" data-alt="A professional headshot of an African female doctor in a white coat with a stethoscope, high quality clinical lighting, corporate healthcare style, clean white background, serious and authoritative expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAixYlJbJgESr1zPhzopb9Xn16bkyKzrViB7FyyZpeZNoi1ZOx_KboiQXPAZIAlSZ_9Yd5-x1zGnqHWBWu4goq1vFWPGkUv5dEA0pw1IfK-H8WXSzDklQPEiaR1E8lwj5gyeB6NHbvBOs15rCPPkhRGtnSWMhFiTuigwISGxWdVpHLgfiRv1l4mPylu4dVlFPkeRLylMn5MHME-UsBS3GlwhNarifgG6KH8ITiZWC-XIIwkEiEb0BZD"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 p-6 md:p-8 bg-surface">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Trust &amp; Governance</h2>
+<p class="font-body-default text-body-default text-text-secondary mt-1">Immutable audit ledger and cryptographic verification status.</p>
+</div>
+<div class="flex items-center gap-2 bg-status-success/10 border border-status-success/30 px-3 py-1.5 rounded-[4px]">
+<span class="material-symbols-outlined text-status-success text-[18px]">verified</span>
+<span class="font-body-medium text-body-medium text-status-success">System Integrity Verified</span>
+</div>
+</div>
+<!-- Tabs -->
+<div class="border-b border-border-subtle mb-6">
+<nav class="flex gap-8">
+<a class="font-body-medium text-body-medium text-primary border-b-2 border-secondary pb-3 px-1 -mb-[1px]" href="#">Audit</a>
+<a class="font-body-medium text-body-medium text-text-secondary hover:text-primary pb-3 px-1 -mb-[1px] transition-colors" href="#">Consent</a>
+<a class="font-body-medium text-body-medium text-text-secondary hover:text-primary pb-3 px-1 -mb-[1px] transition-colors" href="#">Custody</a>
+<a class="font-body-medium text-body-medium text-text-secondary hover:text-primary pb-3 px-1 -mb-[1px] transition-colors" href="#">Approvals</a>
+</nav>
+</div>
+<!-- Content Area: Ledger Table -->
+<div class="bg-white border border-border-subtle rounded-[4px] shadow-sm overflow-hidden flex flex-col h-[calc(100vh-280px)] min-h-[500px]">
+<!-- Table Controls -->
+<div class="p-4 border-b border-border-subtle flex flex-wrap justify-between items-center gap-4 bg-surface-bright">
+<div class="flex items-center gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-[18px]">search</span>
+<input class="pl-9 pr-4 py-2 border border-border-subtle rounded-[4px] font-body-default text-body-default w-[300px] h-[40px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search audit logs..." type="text"/>
+</div>
+<button class="h-[40px] px-3 border border-border-subtle rounded-[4px] flex items-center gap-2 font-body-medium text-body-medium text-primary hover:bg-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span> Filter
+                        </button>
+</div>
+<button class="h-[40px] px-4 border border-border-subtle rounded-[4px] flex items-center gap-2 font-body-medium text-body-medium text-primary hover:bg-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span> Export Ledger
+                    </button>
+</div>
+<!-- Table Wrapper (Scrollable) -->
+<div class="flex-1 overflow-auto">
+<table class="w-full text-left border-collapse min-w-[1000px]">
+<thead class="bg-surface sticky top-0 z-10 border-b border-border-subtle shadow-sm">
+<tr>
+<th class="font-micro-label text-micro-label text-text-secondary uppercase px-4 py-3 whitespace-nowrap">Timestamp</th>
+<th class="font-micro-label text-micro-label text-text-secondary uppercase px-4 py-3 whitespace-nowrap">Actor</th>
+<th class="font-micro-label text-micro-label text-text-secondary uppercase px-4 py-3 whitespace-nowrap">Action</th>
+<th class="font-micro-label text-micro-label text-text-secondary uppercase px-4 py-3 whitespace-nowrap">Object</th>
+<th class="font-micro-label text-micro-label text-text-secondary uppercase px-4 py-3 whitespace-nowrap">Authority</th>
+<th class="font-micro-label text-micro-label text-text-secondary uppercase px-4 py-3 whitespace-nowrap">Result</th>
+<th class="font-micro-label text-micro-label text-text-secondary uppercase px-4 py-3 whitespace-nowrap">Verification</th>
+<th class="font-micro-label text-micro-label text-text-secondary uppercase px-4 py-3 whitespace-nowrap text-right">Proof</th>
+</tr>
+</thead>
+<tbody class="font-table-data text-table-data text-on-surface divide-y divide-border-subtle">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">2023-10-27 14:32:01 UTC</td>
+<td class="px-4 py-3 whitespace-nowrap font-medium text-primary">Dr. A. Okafor (USR-829)</td>
+<td class="px-4 py-3 whitespace-nowrap">READ_ACCESS</td>
+<td class="px-4 py-3 whitespace-nowrap">Encounter Record #E-9921</td>
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">Role: ATTENDING</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-status-success/10 text-status-success font-micro-label text-micro-label">GRANTED</span>
+</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[16px]">verified</span> Ledger Signed
+                                    </div>
+</td>
+<td class="px-4 py-3 whitespace-nowrap text-right">
+<button class="text-primary hover:text-primary-container font-medium underline">View Event Proof</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">2023-10-27 14:15:22 UTC</td>
+<td class="px-4 py-3 whitespace-nowrap font-medium text-primary">System Automaton</td>
+<td class="px-4 py-3 whitespace-nowrap">STATE_CHANGE</td>
+<td class="px-4 py-3 whitespace-nowrap">Consent Protocol #C-442</td>
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">Policy: AUTO_EXPIRE</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-status-warning/10 text-status-warning font-micro-label text-micro-label">REVOKED</span>
+</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[16px]">verified</span> Ledger Signed
+                                    </div>
+</td>
+<td class="px-4 py-3 whitespace-nowrap text-right">
+<button class="text-primary hover:text-primary-container font-medium underline">View Event Proof</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">2023-10-27 13:55:09 UTC</td>
+<td class="px-4 py-3 whitespace-nowrap font-medium text-primary">Nurse B. Johnson (USR-112)</td>
+<td class="px-4 py-3 whitespace-nowrap">UPDATE_RECORD</td>
+<td class="px-4 py-3 whitespace-nowrap">Vitals Log #V-8823</td>
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">Role: CLINICIAN</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-status-success/10 text-status-success font-micro-label text-micro-label">COMMITTED</span>
+</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[16px]">verified</span> Ledger Signed
+                                    </div>
+</td>
+<td class="px-4 py-3 whitespace-nowrap text-right">
+<button class="text-primary hover:text-primary-container font-medium underline">View Event Proof</button>
+</td>
+</tr>
+<!-- Row 4 (Error Case) -->
+<tr class="hover:bg-surface-bright transition-colors bg-error-container/20">
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">2023-10-27 13:40:44 UTC</td>
+<td class="px-4 py-3 whitespace-nowrap font-medium text-primary">Unknown (IP: 192.168.1.45)</td>
+<td class="px-4 py-3 whitespace-nowrap">AUTH_ATTEMPT</td>
+<td class="px-4 py-3 whitespace-nowrap">System Gateway</td>
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">None</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-status-danger/10 text-status-danger font-micro-label text-micro-label">DENIED</span>
+</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<div class="flex items-center gap-1 text-text-secondary">
+<span class="material-symbols-outlined text-[16px]">gavel</span> Logged
+                                    </div>
+</td>
+<td class="px-4 py-3 whitespace-nowrap text-right">
+<button class="text-primary hover:text-primary-container font-medium underline">View Event Proof</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">2023-10-27 12:10:05 UTC</td>
+<td class="px-4 py-3 whitespace-nowrap font-medium text-primary">Dr. A. Okafor (USR-829)</td>
+<td class="px-4 py-3 whitespace-nowrap">CRYPTOGRAPHIC_SIGN</td>
+<td class="px-4 py-3 whitespace-nowrap">Prescription #Rx-992</td>
+<td class="px-4 py-3 whitespace-nowrap text-text-secondary">Role: PRESCRIBER</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-status-success/10 text-status-success font-micro-label text-micro-label">COMMITTED</span>
+</td>
+<td class="px-4 py-3 whitespace-nowrap">
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[16px]">verified</span> Ledger Signed
+                                    </div>
+</td>
+<td class="px-4 py-3 whitespace-nowrap text-right">
+<button class="text-primary hover:text-primary-container font-medium underline">View Event Proof</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-4 border-t border-border-subtle bg-surface-bright flex justify-between items-center font-body-default text-body-default text-text-secondary">
+<div>Showing 1 to 5 of 12,492 entries</div>
+<div class="flex items-center gap-2">
+<button class="p-1 border border-border-subtle rounded hover:bg-surface transition-colors disabled:opacity-50" disabled=""><span class="material-symbols-outlined text-[20px]">chevron_left</span></button>
+<span class="px-2">Page 1 of 2499</span>
+<button class="p-1 border border-border-subtle rounded hover:bg-surface transition-colors"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

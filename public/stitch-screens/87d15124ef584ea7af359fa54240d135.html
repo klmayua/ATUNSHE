@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Existing Records Migration - Atunse Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#002f5f",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#745c00",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-surface-variant": "#43474f",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1c1b1b",
+                        "status-info": "#005EB8",
+                        "inverse-surface": "#313030",
+                        "secondary": "#735c00",
+                        "primary-fixed": "#d5e3ff",
+                        "status-warning": "#B76E00",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "tertiary-container": "#002f60",
+                        "surface-tint": "#3d5f92",
+                        "tertiary-fixed": "#d6e3ff",
+                        "on-tertiary-container": "#6e98db",
+                        "text-secondary": "#667085",
+                        "secondary-fixed-dim": "#e9c349",
+                        "on-secondary-fixed-variant": "#574500",
+                        "status-danger": "#C8372D",
+                        "background": "#fcf9f8",
+                        "secondary-fixed": "#ffe088",
+                        "error-container": "#ffdad6",
+                        "status-success": "#2D8A39",
+                        "outline-variant": "#c3c6d0",
+                        "border-subtle": "#E4E7EC",
+                        "surface-container-high": "#ebe7e7",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary": "#001a3b",
+                        "primary": "#001a3a",
+                        "surface-bright": "#fcf9f8",
+                        "surface-container": "#f0edec",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary-fixed-variant": "#104685",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#a8c8ff",
+                        "tertiary-fixed-dim": "#a8c8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#241a00",
+                        "on-primary-fixed": "#001b3c",
+                        "outline": "#737780",
+                        "on-primary-container": "#7798ce",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dcd9d9",
+                        "on-primary-fixed-variant": "#234778",
+                        "surface": "#F8F8F6",
+                        "surface-variant": "#e5e2e1",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary-fixed": "#001b3c",
+                        "secondary-container": "#fed65b",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sidebar-width": "256px",
+                        "control-min-height": "40px",
+                        "stack-compact": "8px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "margin-desktop": "24px",
+                        "stack-relaxed": "16px"
+                    },
+                    "fontFamily": {
+                        "table-data": ["Inter"],
+                        "body-default": ["Inter"],
+                        "body-medium": ["Inter"],
+                        "supporting": ["Inter"],
+                        "card-title": ["Inter"],
+                        "micro-label": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "section-title": ["Inter"]
+                    },
+                    "fontSize": {
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-default": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "supporting": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "card-title": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "micro-label": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "section-title": ["20px", { "lineHeight": "28px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-default overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-screen fixed left-0 top-0 w-[256px] border-r border-outline-variant bg-primary z-50">
+<div class="px-6 py-6 border-b border-outline-variant/20">
+<h1 class="font-headline-lg text-headline-lg text-secondary-container">Atunse Health</h1>
+<p class="font-body-medium text-body-medium text-on-primary/70 mt-1">Lagos General Hospital</p>
+</div>
+<div class="px-4 py-4">
+<button class="w-full flex items-center justify-center gap-2 bg-secondary-container text-on-secondary-container font-body-medium text-body-medium py-2 px-4 rounded hover:bg-secondary-fixed transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+                Global Search
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto py-2">
+<ul class="flex flex-col space-y-1">
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">dashboard</span>Overview</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">group</span>Patients</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">calendar_today</span>Appointments</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">medical_services</span>Clinical</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">assignment_turned_in</span>Protocols</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">account_balance_wallet</span>Billing</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">badge</span>People</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">account_balance</span>Institutions</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">verified_user</span>Trust &amp; Governance</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">account_tree</span>Ogami</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">analytics</span>Reports</a></li>
+<li><a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 transition-colors font-body-medium text-body-medium scale-98 active:opacity-80" href="#"><span class="material-symbols-outlined">settings_suggest</span>Admin</a></li>
+</ul>
+</div>
+<div class="mt-auto border-t border-outline-variant/20 py-4">
+<ul class="flex flex-col space-y-1">
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium" href="#"><span class="material-symbols-outlined">help</span>Help</a></li>
+<li><a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 font-body-medium text-body-medium" href="#"><span class="material-symbols-outlined">settings</span>Settings</a></li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-w-0 md:ml-[256px] h-screen bg-surface">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-6 py-3 h-[64px] bg-surface-container-lowest border-b border-border-subtle sticky top-0 z-40">
+<div class="flex items-center gap-6">
+<h2 class="font-section-title text-section-title text-primary hidden lg:block">Atunse Health</h2>
+<nav class="hidden md:flex gap-6 h-full items-end">
+<a class="text-text-secondary hover:text-primary cursor-pointer transition-colors duration-200 font-body-default text-body-default pb-3" href="#">Dashboard</a>
+<a class="text-primary border-b-2 border-secondary font-bold pb-[10px] font-body-default text-body-default" href="#">Patient Records</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 border-r border-border-subtle pr-4">
+<button class="p-2 text-text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 text-text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">sync</span></button>
+<button class="p-2 text-text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">cloud_off</span></button>
+<button class="p-2 text-text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">help</span></button>
+</div>
+<div class="flex items-center gap-3">
+<button class="hidden lg:block px-4 py-2 border border-border-subtle text-primary font-body-medium text-body-medium rounded hover:bg-surface-container transition-colors">Book Appointment</button>
+<button class="px-4 py-2 bg-primary text-on-primary font-body-medium text-body-medium rounded hover:bg-tertiary transition-colors">Start Encounter</button>
+<img alt="Dr. Amina Okafor" class="w-8 h-8 rounded-full object-cover border border-border-subtle" data-alt="A professional headshot of an African female doctor wearing a white coat and stethoscope in a brightly lit modern clinic setting, conveying warmth and institutional authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzsAehrfXnU2nwyONMpcLRV4-79-OF4EYif5qbdPK4QRkuH8lIOH13ipdrEj0ZDPxGiMq6lnGClVIqy-t71jtjxNcx7oiK5JHkeRU64xm0-UUohS1Tx_ECtukKmbMUoVEdzzO-tiaDOo0avc_vtduf6ThbtmnDwLqyiG5Ban-tFarIZcyqE89jZEK-ye51mX4jn9I29qSfOr1QS-UZG_ABF-URYvOG_pjXVP5xI06PuVp_3Wq_gzne"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 overflow-auto p-margin-desktop bg-surface flex flex-col gap-margin-desktop">
+<!-- Page Header -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-text-secondary font-supporting text-supporting">
+<a class="hover:underline" href="#">Admin</a>
+<span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+<span>System Migration</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary">Existing Records Migration</h1>
+</div>
+<!-- Summary Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col gap-1">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase tracking-wider">Total Found</span>
+<span class="font-section-title text-section-title text-primary">45,209</span>
+<div class="flex items-center gap-1 mt-1 font-supporting text-supporting text-text-secondary">
+<span class="material-symbols-outlined text-status-info" style="font-size: 14px;">database</span> Legacy EMR v2.1
+                    </div>
+</div>
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col gap-1 border-b-4 border-b-status-success">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase tracking-wider">Auto-Matched</span>
+<span class="font-section-title text-section-title text-primary">38,150</span>
+<div class="flex items-center gap-1 mt-1 font-supporting text-supporting text-status-success">
+<span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> Confidence &gt; 98%
+                    </div>
+</div>
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col gap-1 bg-surface-container/30 border-l-4 border-l-status-warning relative overflow-hidden">
+<div class="absolute right-0 top-0 w-16 h-16 bg-status-warning/10 rounded-bl-full -mr-4 -mt-4"></div>
+<span class="font-micro-label text-micro-label text-status-warning uppercase tracking-wider font-bold">Needs Review</span>
+<span class="font-section-title text-section-title text-primary">1,204</span>
+<div class="flex items-center gap-1 mt-1 font-supporting text-supporting text-text-secondary">
+<span class="material-symbols-outlined" style="font-size: 14px;">warning</span> Manual reconciliation required
+                    </div>
+</div>
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col gap-1">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase tracking-wider">Successfully Imported</span>
+<span class="font-section-title text-section-title text-primary">5,855</span>
+<div class="flex items-center gap-1 mt-1 font-supporting text-supporting text-text-secondary">
+<div class="w-full bg-surface-variant h-1.5 rounded-full mt-1">
+<div class="bg-primary h-1.5 rounded-full" style="width: 12%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Workspace: Master-Detail Layout -->
+<div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-gutter min-h-[600px]">
+<!-- Left Pane: Review List -->
+<div class="lg:col-span-5 bg-surface-container-lowest border border-border-subtle rounded-lg flex flex-col overflow-hidden">
+<div class="p-4 border-b border-border-subtle bg-surface-container-low flex justify-between items-center">
+<h3 class="font-card-title text-card-title text-primary">Records Needing Review</h3>
+<div class="flex items-center gap-2">
+<button class="p-1.5 text-text-secondary hover:text-primary hover:bg-surface-variant rounded transition-colors"><span class="material-symbols-outlined" style="font-size: 18px;">filter_list</span></button>
+<button class="p-1.5 text-text-secondary hover:text-primary hover:bg-surface-variant rounded transition-colors"><span class="material-symbols-outlined" style="font-size: 18px;">sort</span></button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface sticky top-0 z-10 border-b border-border-subtle">
+<tr>
+<th class="py-2 px-4 font-micro-label text-micro-label text-text-secondary uppercase font-semibold">Source ID / Name</th>
+<th class="py-2 px-4 font-micro-label text-micro-label text-text-secondary uppercase font-semibold">Match Score</th>
+<th class="py-2 px-4 font-micro-label text-micro-label text-text-secondary uppercase font-semibold text-right">Action</th>
+</tr>
+</thead>
+<tbody class="font-table-data text-table-data text-on-surface divide-y divide-border-subtle">
+<!-- Active Row -->
+<tr class="hover:bg-surface-container-low cursor-pointer border-l-2 border-l-secondary bg-surface-container/20">
+<td class="py-3 px-4">
+<div class="font-body-medium text-body-medium text-primary">LEG-4921A</div>
+<div class="text-text-secondary text-supporting mt-0.5">Oluwaseun, Adebayo</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-status-warning/10 text-status-warning font-micro-label text-micro-label gap-1">
+                                            85%
+                                            <span class="material-symbols-outlined" style="font-size: 12px;">info</span>
+</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="text-primary hover:text-tertiary-container font-body-medium text-body-medium"><span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span></button>
+</td>
+</tr>
+<!-- Inactive Rows -->
+<tr class="hover:bg-surface-container-low cursor-pointer transition-colors border-l-2 border-transparent">
+<td class="py-3 px-4">
+<div class="font-body-medium text-body-medium text-primary">LEG-9920X</div>
+<div class="text-text-secondary text-supporting mt-0.5">Ibrahim, Fatima</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-status-warning/10 text-status-warning font-micro-label text-micro-label gap-1">
+                                            78%
+                                            <span class="material-symbols-outlined" style="font-size: 12px;">info</span>
+</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="text-text-secondary hover:text-primary"><span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low cursor-pointer transition-colors border-l-2 border-transparent">
+<td class="py-3 px-4">
+<div class="font-body-medium text-body-medium text-primary">LEG-1002M</div>
+<div class="text-text-secondary text-supporting mt-0.5">Chukwu, Emeka J.</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-status-danger/10 text-status-danger font-micro-label text-micro-label gap-1">
+                                            62%
+                                            <span class="material-symbols-outlined" style="font-size: 12px;">warning</span>
+</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="text-text-secondary hover:text-primary"><span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low cursor-pointer transition-colors border-l-2 border-transparent">
+<td class="py-3 px-4">
+<div class="font-body-medium text-body-medium text-primary">LEG-5531B</div>
+<div class="text-text-secondary text-supporting mt-0.5">Nwachukwu, Grace</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-status-warning/10 text-status-warning font-micro-label text-micro-label gap-1">
+                                            89%
+                                        </span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="text-text-secondary hover:text-primary"><span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Right Pane: Side-by-Side Comparison -->
+<div class="lg:col-span-7 bg-surface-container-lowest border border-border-subtle rounded-lg flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+<!-- Header -->
+<div class="p-4 border-b border-border-subtle flex justify-between items-center bg-surface-container-low">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">compare_arrows</span>
+<h3 class="font-card-title text-card-title text-primary">Review Match: LEG-4921A</h3>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 border border-status-danger text-status-danger hover:bg-status-danger/5 font-body-medium text-supporting rounded transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 16px;">close</span> Reject
+                            </button>
+<button class="px-3 py-1.5 border border-border-subtle text-primary hover:bg-surface-container font-body-medium text-supporting rounded transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 16px;">call_merge</span> Merge Selected
+                            </button>
+<button class="px-4 py-1.5 bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed font-body-medium text-supporting rounded transition-colors shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 16px;">check</span> Confirm Match
+                            </button>
+</div>
+</div>
+<!-- Comparison Grid -->
+<div class="flex-1 overflow-y-auto p-0">
+<div class="grid grid-cols-2 divide-x divide-border-subtle border-b border-border-subtle bg-surface sticky top-0 z-10">
+<div class="p-3 text-center">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase tracking-wider block">Source Record</span>
+<span class="font-supporting text-supporting text-primary mt-0.5 block">Legacy System V2</span>
+</div>
+<div class="p-3 text-center">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase tracking-wider block">Atunse Profile</span>
+<span class="font-supporting text-supporting text-primary mt-0.5 block">Existing EMR Database</span>
+</div>
+</div>
+<!-- Data Rows -->
+<div class="divide-y divide-border-subtle">
+<!-- Field: Name (Match) -->
+<div class="grid grid-cols-[auto_1fr_1fr] hover:bg-surface-container-low transition-colors group">
+<div class="w-10 flex items-center justify-center border-r border-border-subtle">
+<span class="material-symbols-outlined text-status-success" style="font-size: 16px;">check_circle</span>
+</div>
+<div class="p-3 border-r border-border-subtle">
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Full Name</span>
+<span class="font-body-default text-body-default text-primary">Adebayo Oluwaseun</span>
+</div>
+<div class="p-3">
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Full Name</span>
+<span class="font-body-default text-body-default text-primary">Adebayo Oluwaseun</span>
+</div>
+</div>
+<!-- Field: DOB (Match) -->
+<div class="grid grid-cols-[auto_1fr_1fr] hover:bg-surface-container-low transition-colors group">
+<div class="w-10 flex items-center justify-center border-r border-border-subtle">
+<span class="material-symbols-outlined text-status-success" style="font-size: 16px;">check_circle</span>
+</div>
+<div class="p-3 border-r border-border-subtle">
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Date of Birth</span>
+<span class="font-body-default text-body-default text-primary">12-May-1985</span>
+</div>
+<div class="p-3">
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Date of Birth</span>
+<span class="font-body-default text-body-default text-primary">1985-05-12</span>
+</div>
+</div>
+<!-- Field: Phone (Mismatch - Highlighted) -->
+<div class="grid grid-cols-[auto_1fr_1fr] bg-status-warning/5 hover:bg-status-warning/10 transition-colors group relative">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-status-warning"></div>
+<div class="w-10 flex items-center justify-center border-r border-border-subtle">
+<span class="material-symbols-outlined text-status-warning" style="font-size: 16px;">error</span>
+</div>
+<div class="p-3 border-r border-border-subtle flex justify-between items-start">
+<div>
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Primary Phone</span>
+<span class="font-body-default text-body-default text-on-surface line-through text-opacity-60">0803 123 4567</span>
+</div>
+<input class="mt-1 text-primary focus:ring-primary h-4 w-4 border-outline-variant" name="phone_merge" title="Keep Source" type="radio"/>
+</div>
+<div class="p-3 flex justify-between items-start">
+<div>
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Primary Phone</span>
+<span class="font-body-medium text-body-medium text-primary">+234 803 123 4567</span>
+<span class="block mt-1 font-micro-label text-micro-label text-secondary-container flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 12px; font-variation-settings: 'FILL' 1;">verified</span> Verified via SMS
+                                        </span>
+</div>
+<input checked="" class="mt-1 text-primary focus:ring-primary h-4 w-4 border-outline-variant" name="phone_merge" title="Keep Existing" type="radio"/>
+</div>
+</div>
+<!-- Field: Address (Partial Match / Review) -->
+<div class="grid grid-cols-[auto_1fr_1fr] bg-surface-container/20 hover:bg-surface-container/40 transition-colors group">
+<div class="w-10 flex items-center justify-center border-r border-border-subtle">
+<span class="material-symbols-outlined text-outline" style="font-size: 16px;">rule</span>
+</div>
+<div class="p-3 border-r border-border-subtle flex justify-between items-start">
+<div>
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Address</span>
+<span class="font-body-default text-body-default text-primary">15 Awolowo Rd, Ikoyi</span>
+</div>
+<input class="mt-1 text-primary focus:ring-primary h-4 w-4 rounded border-outline-variant" title="Append to record" type="checkbox"/>
+</div>
+<div class="p-3 flex justify-between items-start">
+<div>
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Address</span>
+<span class="font-body-default text-body-default text-primary">15 Obafemi Awolowo Road, Ikoyi, Lagos</span>
+</div>
+<input checked="" class="mt-1 text-primary focus:ring-primary h-4 w-4 rounded border-outline-variant" title="Keep as Primary" type="checkbox"/>
+</div>
+</div>
+<!-- Field: Last Encounter (Info only) -->
+<div class="grid grid-cols-[auto_1fr_1fr] hover:bg-surface-container-low transition-colors group">
+<div class="w-10 flex items-center justify-center border-r border-border-subtle">
+<span class="material-symbols-outlined text-outline" style="font-size: 16px;">history</span>
+</div>
+<div class="p-3 border-r border-border-subtle">
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Last Encounter (Source)</span>
+<span class="font-body-default text-body-default text-text-secondary">04-Oct-2022 (Cardiology)</span>
+</div>
+<div class="p-3">
+<span class="font-micro-label text-micro-label text-text-secondary block mb-1">Last Encounter (Atunse)</span>
+<span class="font-body-default text-body-default text-text-secondary">18-Jan-2024 (General Practice)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<div class="p-3 bg-surface border-t border-border-subtle flex items-center justify-between">
+<div class="flex items-center gap-2 text-text-secondary font-supporting text-supporting">
+<span class="material-symbols-outlined" style="font-size: 14px;">policy</span>
+                            Migration Policy: Strict Merge (M-2)
+                        </div>
+<a class="text-primary hover:underline font-supporting text-supporting" href="#">View Full Audit Log</a>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

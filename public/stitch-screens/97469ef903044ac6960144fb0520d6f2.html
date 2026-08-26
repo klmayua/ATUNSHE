@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Atunse Health - People</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#e9c349",
+                    "primary-fixed": "#d5e3ff",
+                    "primary-fixed-dim": "#a8c8ff",
+                    "surface-bright": "#fcf9f8",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed": "#001b3c",
+                    "secondary": "#735c00",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#ebe7e7",
+                    "surface-container-low": "#f6f3f2",
+                    "surface-variant": "#e5e2e1",
+                    "surface-container-lowest": "#ffffff",
+                    "status-danger": "#C8372D",
+                    "text-secondary": "#667085",
+                    "border-subtle": "#E4E7EC",
+                    "surface-dim": "#dcd9d9",
+                    "surface-tint": "#3d5f92",
+                    "tertiary-fixed": "#d6e3ff",
+                    "on-secondary-container": "#745c00",
+                    "inverse-primary": "#a8c8ff",
+                    "tertiary-fixed-dim": "#a8c8ff",
+                    "status-warning": "#B76E00",
+                    "primary-container": "#002f5f",
+                    "inverse-on-surface": "#f3f0ef",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#43474f",
+                    "secondary-container": "#fed65b",
+                    "tertiary-container": "#002f60",
+                    "outline": "#737780",
+                    "tertiary": "#001a3b",
+                    "surface": "#F8F8F6",
+                    "outline-variant": "#c3c6d0",
+                    "surface-container": "#f0edec",
+                    "on-background": "#1c1b1b",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#001b3c",
+                    "on-secondary-fixed": "#241a00",
+                    "status-success": "#2D8A39",
+                    "on-primary-container": "#7798ce",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#313030",
+                    "secondary-fixed": "#ffe088",
+                    "on-surface": "#1c1b1b",
+                    "surface-container-highest": "#e5e2e1",
+                    "background": "#fcf9f8",
+                    "primary": "#001a3a",
+                    "status-info": "#005EB8",
+                    "error": "#ba1a1a",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#234778",
+                    "on-tertiary-fixed-variant": "#104685",
+                    "on-tertiary-container": "#6e98db",
+                    "on-secondary-fixed-variant": "#574500"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sidebar-width": "256px",
+                    "gutter": "16px",
+                    "stack-relaxed": "16px",
+                    "control-min-height": "40px",
+                    "stack-compact": "8px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "24px"
+            },
+            "fontFamily": {
+                    "body-medium": ["Inter"],
+                    "micro-label": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "supporting": ["Inter"],
+                    "body-default": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "table-data": ["Inter"],
+                    "section-title": ["Inter"],
+                    "card-title": ["Inter"]
+            },
+            "fontSize": {
+                    "body-medium": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "micro-label": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "supporting": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "body-default": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "table-data": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "section-title": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "card-title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { background-color: #F8F8F6; }
+        /* Ensuring Material Symbols render correctly */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="text-on-surface antialiased font-body-default min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar -->
+<nav class="hidden md:flex bg-primary dark:bg-tertiary text-on-primary dark:text-on-tertiary w-[256px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex-col h-full py-6 z-50">
+<div class="px-4 mb-8">
+<h1 class="font-headline-lg text-headline-lg text-secondary-container dark:text-secondary-fixed">Atunse Health</h1>
+<p class="font-supporting text-supporting text-on-primary/70 mt-1">Lagos General Hospital</p>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full flex items-center justify-center gap-2 bg-surface-tint/20 hover:bg-surface-tint/30 text-on-primary rounded h-control-min-height font-body-medium text-body-medium transition-colors border border-on-primary/10">
+<span class="material-symbols-outlined text-[18px]">search</span>
+                Global Search
+            </button>
+</div>
+<ul class="flex-1 overflow-y-auto space-y-1 px-2 font-body-medium text-body-medium">
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span> Overview
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span> Patients
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span> Appointments
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">medical_services</span> Clinical
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span> Protocols
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span> Billing
+                </a>
+</li>
+<li>
+<a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 transition-colors rounded-r" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">badge</span> People
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance</span> Institutions
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">verified_user</span> Trust &amp; Governance
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span> Ogami
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span> Reports
+                </a>
+</li>
+<li>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20" href="#">
+<span class="material-symbols-outlined text-[20px]">settings_suggest</span> Admin
+                </a>
+</li>
+</ul>
+<div class="mt-auto px-2 pt-4 border-t border-outline-variant/30 font-body-medium text-body-medium space-y-1">
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-2 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[18px]">help</span> Help
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-2 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20" href="#">
+<span class="material-symbols-outlined text-[18px]">settings</span> Settings
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 md:ml-[256px] flex flex-col min-h-screen w-full">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant flex justify-between items-center px-6 py-3 h-[64px] sticky top-0 z-40 bg-white">
+<div class="flex items-center gap-6">
+<!-- Mobile Menu Button (Visible only on mobile) -->
+<button class="md:hidden text-primary dark:text-inverse-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="font-section-title text-section-title text-primary dark:text-inverse-primary hidden md:block">Atunse Health</h2>
+<nav class="hidden lg:flex gap-6 font-body-medium text-body-medium h-full items-center pt-2">
+<a class="text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-inverse-primary cursor-pointer transition-colors duration-200 pb-4" href="#">Dashboard</a>
+<a class="text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-inverse-primary cursor-pointer transition-colors duration-200 pb-4" href="#">Patient Records</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex gap-2 text-text-secondary">
+<button class="hover:text-primary transition-colors p-1"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-primary transition-colors p-1"><span class="material-symbols-outlined">sync</span></button>
+<button class="hover:text-primary transition-colors p-1"><span class="material-symbols-outlined">cloud_off</span></button>
+<button class="hover:text-primary transition-colors p-1"><span class="material-symbols-outlined">help</span></button>
+</div>
+<div class="h-6 w-px bg-border-subtle mx-2"></div>
+<button class="hidden sm:block px-4 h-control-min-height border border-border-subtle rounded font-body-medium text-body-medium text-primary bg-white hover:bg-surface transition-colors">Book Appointment</button>
+<button class="px-4 h-control-min-height rounded font-body-medium text-body-medium text-white bg-primary hover:bg-primary/90 transition-colors">Start Encounter</button>
+<div class="ml-2 w-8 h-8 rounded-full bg-surface-variant border border-border-subtle overflow-hidden flex-shrink-0 cursor-pointer">
+<img alt="Dr. Amina Okafor" class="w-full h-full object-cover" data-alt="A professional headshot of an authoritative female medical doctor in her 40s wearing a crisp white clinical coat over a deep navy scrub top. She has a warm but serious expression. The background is a slightly blurred, modern, well-lit hospital corridor with bright, clean light-mode aesthetics. High contrast, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9FGU8bBfoCaGS_3d43qevU3o9IzxNuZ_6l0bu6G51K6uX7csan-uumChCCjRakS3KkF_UCfh-FrnQgeXTkEXG7vNawnAT2WeH4gbGCFOGnA0Tdn8DO5HLsFXB844dHOktbwpxiXNd4ApZXgJvr8WyWux_mqjJlaCeK-DEVKcDUx1vXf8ic7wkCtzeOzoujx_qpnx2VEOo7_F7ULKSmjzon6J3CE6ULR8A2EJ9aUZXRCKH4M7Dfrnf"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop overflow-x-hidden">
+<!-- Page Header & Tabs -->
+<div class="mb-6">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
+<div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-1">People &amp; Personnel</h1>
+<p class="font-body-default text-body-default text-text-secondary">Manage staff directory, roles, and credentialing across all facilities.</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 h-control-min-height border border-border-subtle rounded font-body-medium text-body-medium text-primary bg-white hover:bg-surface transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">filter_list</span> Filter
+                        </button>
+<button class="px-4 h-control-min-height rounded font-body-medium text-body-medium text-white bg-primary hover:bg-primary/90 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">person_add</span> Add Staff
+                        </button>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex border-b border-border-subtle">
+<button class="px-6 py-3 font-body-medium text-body-medium text-primary border-b-2 border-secondary font-bold">Staff</button>
+<button class="px-6 py-3 font-body-medium text-body-medium text-text-secondary hover:text-primary transition-colors">Roles</button>
+<button class="px-6 py-3 font-body-medium text-body-medium text-text-secondary hover:text-primary transition-colors">Credentials</button>
+</div>
+</div>
+<!-- Data Table Card -->
+<div class="bg-white rounded border border-border-subtle overflow-hidden">
+<!-- Toolbar -->
+<div class="p-4 border-b border-border-subtle flex justify-between items-center bg-surface-bright">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-[18px]">search</span>
+<input class="w-full pl-9 pr-4 h-control-min-height bg-white border border-border-subtle rounded font-body-default text-body-default focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="Search by name, role, or ID..." type="text"/>
+</div>
+<div class="text-text-secondary font-supporting text-supporting">
+                        Showing 1-10 of 423
+                    </div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface border-b border-border-subtle font-micro-label text-micro-label text-text-secondary uppercase tracking-wider">
+<th class="p-4 font-semibold">Name &amp; ID</th>
+<th class="p-4 font-semibold">Role</th>
+<th class="p-4 font-semibold">Department</th>
+<th class="p-4 font-semibold">Facility</th>
+<th class="p-4 font-semibold">Credential Status</th>
+<th class="p-4 font-semibold">Last Activity</th>
+<th class="p-4 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-table-data text-table-data divide-y divide-border-subtle">
+<!-- Row 1 -->
+<tr class="hover:bg-surface/50 transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                            AO
+                                        </div>
+<div>
+<div class="font-body-medium text-primary">Dr. Amina Okafor</div>
+<div class="font-supporting text-text-secondary">ID: PHY-8821</div>
+</div>
+</div>
+</td>
+<td class="p-4 text-on-surface">Chief of Surgery</td>
+<td class="p-4 text-text-secondary">General Surgery</td>
+<td class="p-4 text-text-secondary">Lagos General</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded bg-status-success/10 text-status-success font-micro-label text-micro-label gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Valid
+                                    </span>
+</td>
+<td class="p-4 text-text-secondary">2 mins ago</td>
+<td class="p-4 text-right">
+<button class="text-text-secondary hover:text-primary"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface/50 transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                            EB
+                                        </div>
+<div>
+<div class="font-body-medium text-primary">Emmanuel Balogun</div>
+<div class="font-supporting text-text-secondary">ID: RN-4432</div>
+</div>
+</div>
+</td>
+<td class="p-4 text-on-surface">Senior RN</td>
+<td class="p-4 text-text-secondary">Emergency</td>
+<td class="p-4 text-text-secondary">Lagos General</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded bg-status-warning/10 text-status-warning font-micro-label text-micro-label gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> Expiring (12d)
+                                    </span>
+</td>
+<td class="p-4 text-text-secondary">1 hour ago</td>
+<td class="p-4 text-right">
+<button class="text-text-secondary hover:text-primary"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface/50 transition-colors bg-error-container/5 border-l-2 border-l-status-danger">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                            CO
+                                        </div>
+<div>
+<div class="font-body-medium text-primary">Chioma Okeke</div>
+<div class="font-supporting text-text-secondary">ID: PHY-9102</div>
+</div>
+</div>
+</td>
+<td class="p-4 text-on-surface">Attending Physician</td>
+<td class="p-4 text-text-secondary">Pediatrics</td>
+<td class="p-4 text-text-secondary">Ikeja Clinic</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded bg-status-danger/10 text-status-danger font-micro-label text-micro-label gap-1">
+<span class="material-symbols-outlined text-[14px]">error</span> Invalid
+                                    </span>
+</td>
+<td class="p-4 text-text-secondary">Yesterday</td>
+<td class="p-4 text-right">
+<button class="text-text-secondary hover:text-primary"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface/50 transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                            SA
+                                        </div>
+<div>
+<div class="font-body-medium text-primary">Samuel Adeyemi</div>
+<div class="font-supporting text-text-secondary">ID: TECH-110</div>
+</div>
+</div>
+</td>
+<td class="p-4 text-on-surface">Radiology Tech</td>
+<td class="p-4 text-text-secondary">Imaging</td>
+<td class="p-4 text-text-secondary">Lagos General</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded bg-status-success/10 text-status-success font-micro-label text-micro-label gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Valid
+                                    </span>
+</td>
+<td class="p-4 text-text-secondary">3 days ago</td>
+<td class="p-4 text-right">
+<button class="text-text-secondary hover:text-primary"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-4 border-t border-border-subtle flex justify-between items-center bg-surface-bright">
+<button class="px-3 py-1 border border-border-subtle rounded font-body-medium text-body-medium text-text-secondary hover:bg-surface disabled:opacity-50" disabled="">Previous</button>
+<div class="flex gap-1 font-body-medium text-body-medium">
+<button class="w-8 h-8 rounded bg-primary text-white flex items-center justify-center">1</button>
+<button class="w-8 h-8 rounded hover:bg-surface text-text-secondary flex items-center justify-center">2</button>
+<button class="w-8 h-8 rounded hover:bg-surface text-text-secondary flex items-center justify-center">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-text-secondary">...</span>
+<button class="w-8 h-8 rounded hover:bg-surface text-text-secondary flex items-center justify-center">43</button>
+</div>
+<button class="px-3 py-1 border border-border-subtle rounded font-body-medium text-body-medium text-primary hover:bg-surface">Next</button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

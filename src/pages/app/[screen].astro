@@ -1,0 +1,119 @@
+---
+import { screens } from '../../data/screens.mjs';
+import '../../styles/global.css';
+
+export function getStaticPaths() {
+  return screens
+    .filter((s) => s.html && !s.asset)
+    .map((s) => ({ params: { screen: s.id } }));
+}
+
+// Group screens by category for the sidebar nav.
+const groups = {};
+for (const s of screens) {
+  const g = s.group || 'Screens';
+  (groups[g] = groups[g] || []).push(s);
+}
+const groupOrder = [
+  'Auth',
+  'Dashboards',
+  'Patient',
+  'Clinical',
+  'Protocols',
+  'Compliance & Ledgers',
+  'Scheduling',
+  'Billing & Finance',
+  'Administration',
+  'Operations & Intelligence',
+  'Mobile',
+  'AI Assistant',
+  'Assets & Docs',
+  'Screens',
+];
+const orderedGroups = Object.keys(groups).sort(
+  (a, b) => groupOrder.indexOf(a) - groupOrder.indexOf(b)
+);
+const year = new Date().getFullYear();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>Atunse Health — Demo</title>
+  </head>
+  <body>
+    <div id="root" class="loading">Loading demo session…</div>
+
+    <script>
+      import { guard, logout, isAuthed } from '../../lib/auth.mjs';
+      import { screens } from '../../data/screens.mjs';
+
+      const session = guard();
+      const params = new URLSearchParams(location.search);
+      const activeId = location.pathname.split('/app/')[1]?.replace(/\/$/, '') || '';
+
+      const groups = {};
+      for (const s of screens) {
+        const g = s.group || 'Screens';
+        (groups[g] = groups[g] || []).push(s);
+      }
+      const groupOrder = [
+        'Auth','Dashboards','Patient','Clinical','Protocols','Compliance & Ledgers',
+        'Scheduling','Billing & Finance','Administration','Operations & Intelligence',
+        'Mobile','AI Assistant','Assets & Docs','Screens',
+      ];
+      const orderedGroups = Object.keys(groups).sort((a,b)=>groupOrder.indexOf(a)-groupOrder.indexOf(b));
+
+      const navHtml = orderedGroups.map((g) => {
+        const items = groups[g].map((s) => {
+          const cls = s.id === activeId ? 'nav-link active' : 'nav-link';
+          const url = '/app/' + s.id + '/';
+          return `<a class="${cls}" href="${url}" data-id="${s.id}">${s.title}</a>`;
+        }).join('');
+        return `<div class="nav-group">${g}</div>${items}`;
+      }).join('');
+
+      const active = screens.find((s) => s.id === activeId);
+      const crumb = active ? active.title : 'Dashboard';
+      const isMobile = active && active.deviceType === 'MOBILE';
+
+      const root = document.getElementById('root');
+      root.className = '';
+      root.innerHTML = `
+        <div class="app-shell">
+          <aside class="sidebar">
+            <div class="s-head">
+              <span class="dot">A</span>
+              <div><div class="t">Atunse Health</div><div class="s">Demo walkthrough</div></div>
+            </div>
+            <div class="login-as">
+              <span class="av">${session.initials}</span>
+              <div><div class="nm">${session.name}</div><div class="rl">${session.role}</div></div>
+            </div>
+            <nav class="nav">${navHtml}</nav>
+          </aside>
+          <section class="stage">
+            <div class="stage-bar">
+              <div class="crumb">${crumb}${isMobile ? '<span class="tag">MOBILE</span>' : ''}</div>
+              <div class="right">
+                <span class="who">Signed in as <b>${session.username}</b></span>
+                <button class="btn-logout" id="logout">Log out</button>
+              </div>
+            </div>
+            <div class="frame-host">
+              <iframe src="${active ? active.html : '/stitch-screens/' + session.landing + '.html'}" title="${crumb}"></iframe>
+            </div>
+          </section>
+        </div>
+      `;
+
+      document.getElementById('logout').addEventListener('click', () => {
+        logout();
+        location.replace('/');
+      });
+    </script>
+  </body>
+</html>

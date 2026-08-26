@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Atunse Health - Global Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "status-info": "#005EB8",
+                        "surface-container-high": "#ebe7e7",
+                        "tertiary-fixed": "#d6e3ff",
+                        "secondary": "#735c00",
+                        "background": "#fcf9f8",
+                        "surface-container-highest": "#e5e2e1",
+                        "surface-container": "#f0edec",
+                        "surface-tint": "#3d5f92",
+                        "primary-fixed": "#d5e3ff",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#002f5f",
+                        "tertiary-container": "#002f60",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#fcf9f8",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#001a3b",
+                        "secondary-container": "#fed65b",
+                        "surface": "#F8F8F6",
+                        "text-secondary": "#667085",
+                        "on-surface-variant": "#43474f",
+                        "tertiary-fixed-dim": "#a8c8ff",
+                        "outline": "#737780",
+                        "status-warning": "#B76E00",
+                        "surface-variant": "#e5e2e1",
+                        "border-subtle": "#E4E7EC",
+                        "on-secondary-fixed": "#241a00",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary-container": "#6e98db",
+                        "status-success": "#2D8A39",
+                        "secondary-fixed": "#ffe088",
+                        "status-danger": "#C8372D",
+                        "secondary-fixed-dim": "#e9c349",
+                        "primary": "#001a3a",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "on-primary-fixed-variant": "#234778",
+                        "on-secondary-fixed-variant": "#574500",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "on-tertiary-fixed": "#001b3c",
+                        "on-background": "#1c1b1b",
+                        "on-secondary-container": "#745c00",
+                        "surface-dim": "#dcd9d9",
+                        "outline-variant": "#c3c6d0",
+                        "on-primary-fixed": "#001b3c",
+                        "on-tertiary-fixed-variant": "#104685",
+                        "inverse-primary": "#a8c8ff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-container": "#7798ce",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "24px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "stack-relaxed": "16px",
+                        "sidebar-width": "256px",
+                        "control-min-height": "40px",
+                        "stack-compact": "8px"
+                    },
+                    "fontFamily": {
+                        "body-medium": ["Inter"],
+                        "supporting": ["Inter"],
+                        "micro-label": ["Inter"],
+                        "section-title": ["Inter"],
+                        "body-default": ["Inter"],
+                        "card-title": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "table-data": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "supporting": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "micro-label": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "section-title": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "body-default": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "card-title": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface flex flex-col h-screen overflow-hidden">
+<!-- Search Header Area -->
+<header class="bg-surface border-b border-border-subtle pt-6 pb-4 px-4 shrink-0 shadow-sm">
+<div class="flex items-center gap-3">
+<button aria-label="Back" class="text-text-secondary p-2 -ml-2 rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<div class="relative flex-grow">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" style="font-variation-settings: 'FILL' 0;">search</span>
+<input autofocus="" class="w-full bg-surface-container-lowest border border-border-subtle rounded-lg py-3 pl-10 pr-10 font-body-default text-body-default text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all" id="searchInput" placeholder="Search patients, protocols, staff..." type="text"/>
+<button aria-label="Clear search" class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hidden hover:text-on-surface p-1 rounded-full hover:bg-surface-variant transition-colors" id="clearSearch">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">close</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area (Scrollable) -->
+<main class="flex-grow overflow-y-auto px-4 py-6" id="searchContent">
+<!-- Default State: Categories & Recent Searches -->
+<div class="space-y-8 block" id="defaultState">
+<!-- Categories -->
+<section>
+<h2 class="font-section-title text-section-title text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">category</span>
+                    Categories
+                </h2>
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:border-secondary transition-colors shadow-sm active:bg-surface-variant">
+<div class="w-10 h-10 rounded-full bg-primary-fixed/20 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+</div>
+<span class="font-body-medium text-body-medium text-on-surface">Patients</span>
+</button>
+<button class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:border-secondary transition-colors shadow-sm active:bg-surface-variant">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed/20 text-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment_turned_in</span>
+</div>
+<span class="font-body-medium text-body-medium text-on-surface">Protocols</span>
+</button>
+<button class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:border-secondary transition-colors shadow-sm active:bg-surface-variant">
+<div class="w-10 h-10 rounded-full bg-status-info/10 text-status-info flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">badge</span>
+</div>
+<span class="font-body-medium text-body-medium text-on-surface">Staff</span>
+</button>
+<button class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:border-secondary transition-colors shadow-sm active:bg-surface-variant">
+<div class="w-10 h-10 rounded-full bg-status-success/10 text-status-success flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">domain</span>
+</div>
+<span class="font-body-medium text-body-medium text-on-surface">Facilities</span>
+</button>
+</div>
+</section>
+<!-- Recent Searches -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-section-title text-section-title text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">history</span>
+                        Recent Searches
+                    </h2>
+<button class="font-body-medium text-body-medium text-text-secondary hover:text-primary transition-colors">Clear</button>
+</div>
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg divide-y divide-border-subtle shadow-sm">
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant transition-colors text-left group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-secondary" style="font-variation-settings: 'FILL' 0;">search</span>
+<span class="font-body-default text-body-default text-on-surface group-hover:text-primary transition-colors">Doe, John - ID: 48921</span>
+</div>
+<span class="material-symbols-outlined text-text-secondary opacity-0 group-hover:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 0;">north_west</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant transition-colors text-left group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-secondary" style="font-variation-settings: 'FILL' 0;">search</span>
+<span class="font-body-default text-body-default text-on-surface group-hover:text-primary transition-colors">Hypertension Protocol V2</span>
+</div>
+<span class="material-symbols-outlined text-text-secondary opacity-0 group-hover:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 0;">north_west</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant transition-colors text-left group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-secondary" style="font-variation-settings: 'FILL' 0;">search</span>
+<span class="font-body-default text-body-default text-on-surface group-hover:text-primary transition-colors">Cardiology Dept Staff</span>
+</div>
+<span class="material-symbols-outlined text-text-secondary opacity-0 group-hover:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 0;">north_west</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Typing State: Instant Results (Hidden by default) -->
+<div class="hidden space-y-6" id="resultsState">
+<!-- Result Group: Patients -->
+<section>
+<h3 class="font-card-title text-card-title text-primary mb-3 pb-2 border-b border-border-subtle">Patients</h3>
+<div class="space-y-2">
+<!-- Selected/Active state example (Heritage Gold border) -->
+<div class="bg-surface-container-lowest border-l-2 border-l-secondary border border-border-subtle rounded-lg p-3 flex items-center gap-3 shadow-sm cursor-pointer hover:bg-surface-variant transition-colors">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0">
+<span class="font-body-medium text-body-medium">JS</span>
+</div>
+<div class="flex-grow min-w-0">
+<p class="font-body-medium text-body-medium text-on-surface truncate">Smith, <span class="font-bold text-primary">Jo</span>hn</p>
+<p class="font-supporting text-supporting text-text-secondary truncate">ID: 88392 • DOB: 1980-05-12</p>
+</div>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-3 flex items-center gap-3 shadow-sm cursor-pointer hover:border-l-2 hover:border-l-secondary hover:bg-surface-variant transition-all">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center shrink-0">
+<span class="font-body-medium text-body-medium">MJ</span>
+</div>
+<div class="flex-grow min-w-0">
+<p class="font-body-medium text-body-medium text-on-surface truncate"><span class="font-bold text-primary">Jo</span>hnson, Mary</p>
+<p class="font-supporting text-supporting text-text-secondary truncate">ID: 11204 • DOB: 1992-11-20</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Result Group: Protocols -->
+<section>
+<h3 class="font-card-title text-card-title text-primary mb-3 pb-2 border-b border-border-subtle">Protocols</h3>
+<div class="space-y-2">
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-3 flex items-center gap-3 shadow-sm cursor-pointer hover:border-l-2 hover:border-l-secondary hover:bg-surface-variant transition-all">
+<div class="w-8 h-8 rounded bg-surface-variant text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">assignment</span>
+</div>
+<div class="flex-grow min-w-0">
+<p class="font-body-medium text-body-medium text-on-surface truncate">Post-Op Care: <span class="font-bold text-primary">Jo</span>ints</p>
+<p class="font-supporting text-supporting text-text-secondary truncate">Orthopedics • Updated 2w ago</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<script>
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        const defaultState = document.getElementById('defaultState');
+        const resultsState = document.getElementById('resultsState');
+
+        // Simple toggle logic to simulate instant search
+        searchInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                clearSearchBtn.classList.remove('hidden');
+                defaultState.classList.add('hidden');
+                resultsState.classList.remove('hidden');
+            } else {
+                clearSearchBtn.classList.add('hidden');
+                defaultState.classList.remove('hidden');
+                resultsState.classList.add('hidden');
+            }
+        });
+
+        clearSearchBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            searchInput.focus();
+            clearSearchBtn.classList.add('hidden');
+            defaultState.classList.remove('hidden');
+            resultsState.classList.add('hidden');
+        });
+    </script>
+</body></html>

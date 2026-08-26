@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sync Conflict Resolution</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#735c00",
+                        "outline": "#737780",
+                        "primary-fixed": "#d5e3ff",
+                        "tertiary-container": "#002f60",
+                        "outline-variant": "#c3c6d0",
+                        "on-primary-fixed-variant": "#234778",
+                        "on-surface-variant": "#43474f",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#6e98db",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#ebe7e7",
+                        "primary-container": "#002f5f",
+                        "status-info": "#005EB8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#241a00",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary": "#001a3b",
+                        "surface-container-highest": "#e5e2e1",
+                        "text-secondary": "#667085",
+                        "inverse-surface": "#313030",
+                        "on-tertiary-fixed": "#001b3c",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "inverse-primary": "#a8c8ff",
+                        "tertiary-fixed": "#d6e3ff",
+                        "primary": "#001a3a",
+                        "secondary-container": "#fed65b",
+                        "tertiary-fixed-dim": "#a8c8ff",
+                        "background": "#fcf9f8",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#ffe088",
+                        "on-surface": "#1c1b1b",
+                        "surface-container": "#f0edec",
+                        "surface": "#F8F8F6",
+                        "on-secondary-container": "#745c00",
+                        "status-danger": "#C8372D",
+                        "surface-variant": "#e5e2e1",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dcd9d9",
+                        "surface-container-low": "#f6f3f2",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#e9c349",
+                        "status-warning": "#B76E00",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-tint": "#3d5f92",
+                        "status-success": "#2D8A39",
+                        "on-tertiary-fixed-variant": "#104685",
+                        "on-primary-fixed": "#001b3c",
+                        "on-secondary-fixed-variant": "#574500",
+                        "border-subtle": "#E4E7EC",
+                        "on-primary-container": "#7798ce",
+                        "on-background": "#1c1b1b",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-relaxed": "16px",
+                        "control-min-height": "40px",
+                        "gutter": "16px",
+                        "sidebar-width": "256px",
+                        "margin-desktop": "24px",
+                        "margin-mobile": "16px",
+                        "stack-compact": "8px"
+                    },
+                    "fontFamily": {
+                        "body-default": ["Inter"],
+                        "supporting": ["Inter"],
+                        "body-medium": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "card-title": ["Inter"],
+                        "section-title": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "micro-label": ["Inter"],
+                        "table-data": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-default": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "supporting": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "card-title": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "section-title": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "micro-label": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased flex flex-col min-h-screen font-body-default">
+<!-- TopAppBar Container (Semantic Shell Suppression Rules Applied - Hiding Nav for Transactional Intent) -->
+<!-- However, we still need a header. We will adapt the TopAppBar style for a modal/focus view -->
+<header class="flex justify-between items-center px-6 py-3 h-[64px] bg-white border-b border-border-subtle w-full z-10 sticky top-0">
+<div class="flex items-center gap-4">
+<button aria-label="Close" class="text-text-secondary hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
+</button>
+<h1 class="font-section-title text-section-title text-primary">Sync Review Required</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-warning" style="font-variation-settings: 'FILL' 1;">sync_problem</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-3xl mx-auto p-margin-mobile md:p-margin-desktop flex flex-col gap-stack-relaxed">
+<!-- Summary Banner -->
+<div class="bg-surface-container-low border border-border-subtle rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<div class="p-2 rounded-full bg-status-success/10 text-status-success flex-shrink-0 mt-0.5 sm:mt-0">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-body-medium text-body-medium text-on-surface">3 items synced successfully</p>
+<p class="font-supporting text-supporting text-text-secondary mt-1">Vitals, Medication Log, Patient Demographics</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<div class="p-2 rounded-full bg-status-warning/10 text-status-warning flex-shrink-0 mt-0.5 sm:mt-0">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<p class="font-body-medium text-body-medium text-status-warning">1 conflict detected</p>
+<p class="font-supporting text-supporting text-status-warning/80 mt-1">Requires manual resolution</p>
+</div>
+</div>
+</div>
+<!-- Conflict Details Section -->
+<div class="flex flex-col gap-stack-compact mt-4">
+<div class="flex items-center gap-2">
+<span class="font-card-title text-card-title text-primary">Clinical Note - Assessment Update</span>
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded font-micro-label text-micro-label uppercase tracking-wider">Patient: John Doe (ID: 84920)</span>
+</div>
+<p class="font-body-default text-body-default text-text-secondary">
+                Please review the conflicting changes below. You can choose to keep your local edits, accept the server changes, or merge them manually.
+            </p>
+</div>
+<!-- Comparison Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+<!-- Local Version Card -->
+<div class="bg-white border-2 border-secondary/30 rounded-xl overflow-hidden flex flex-col relative group">
+<!-- Active Indicator -->
+<div class="absolute left-0 top-0 bottom-0 w-[4px] bg-secondary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="border-b border-border-subtle p-4 bg-surface-bright flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 0;">smartphone</span>
+<h3 class="font-body-medium text-body-medium text-on-surface">Local Version</h3>
+</div>
+<span class="font-micro-label text-micro-label bg-surface-container-high px-2 py-1 rounded text-on-surface-variant">Unsynced</span>
+</div>
+<div class="flex flex-col gap-1 mt-2">
+<span class="font-supporting text-supporting text-text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 0;">person</span>
+                            Nurse M. Adebayo
+                        </span>
+<span class="font-supporting text-supporting text-text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 0;">schedule</span>
+                            Today, 10:42 AM
+                        </span>
+</div>
+</div>
+<div class="p-4 flex-1">
+<p class="font-body-default text-body-default text-on-surface whitespace-pre-wrap leading-relaxed">
+Patient reported mild discomfort in lower abdomen. Administered prescribed analgesic at 10:30 AM. Resting comfortably now. BP stable at 120/80. Will continue monitoring every 2 hours.
+                    </p>
+</div>
+<div class="p-4 bg-surface-container-lowest border-t border-border-subtle mt-auto">
+<button class="w-full h-control-min-height bg-white text-primary border border-primary/20 rounded font-body-medium text-body-medium hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">save_alt</span>
+                        Keep Local
+                    </button>
+</div>
+</div>
+<!-- Server Version Card -->
+<div class="bg-white border border-border-subtle rounded-xl overflow-hidden flex flex-col relative group">
+<!-- Active Indicator -->
+<div class="absolute left-0 top-0 bottom-0 w-[2px] bg-primary/20 group-hover:opacity-100 transition-opacity"></div>
+<div class="border-b border-border-subtle p-4 bg-surface-bright flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-text-secondary" style="font-variation-settings: 'FILL' 0;">dns</span>
+<h3 class="font-body-medium text-body-medium text-on-surface">Server Version</h3>
+</div>
+<span class="font-micro-label text-micro-label bg-status-info/10 text-status-info px-2 py-1 rounded">Latest on Server</span>
+</div>
+<div class="flex flex-col gap-1 mt-2">
+<span class="font-supporting text-supporting text-text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 0;">desktop_windows</span>
+                            Admin System (Auto-Update)
+                        </span>
+<span class="font-supporting text-supporting text-text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 0;">schedule</span>
+                            Today, 10:45 AM
+                        </span>
+</div>
+</div>
+<div class="p-4 flex-1 relative">
+<!-- Highlighted differences simulation -->
+<p class="font-body-default text-body-default text-on-surface whitespace-pre-wrap leading-relaxed">
+Patient reported mild discomfort in lower abdomen. Administered prescribed analgesic at 10:30 AM. Resting comfortably now. BP stable at 120/80. <span class="bg-status-warning/20 text-status-warning px-1 rounded -mx-1">Lab results uploaded: Complete Blood Count within normal limits.</span> Will continue monitoring every 2 hours.
+                    </p>
+</div>
+<div class="p-4 bg-surface-container-lowest border-t border-border-subtle mt-auto">
+<button class="w-full h-control-min-height bg-white text-primary border border-border-subtle rounded font-body-medium text-body-medium hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">cloud_download</span>
+                        Keep Server
+                    </button>
+</div>
+</div>
+</div>
+<!-- Merge Action Area -->
+<div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-primary/5 border border-primary/10 rounded-xl">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary text-white rounded-full flex-shrink-0">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">call_merge</span>
+</div>
+<div>
+<h4 class="font-body-medium text-body-medium text-primary">Need to combine both?</h4>
+<p class="font-supporting text-supporting text-text-secondary">Open the merge editor to manually select changes line by line.</p>
+</div>
+</div>
+<button class="w-full sm:w-auto px-6 h-control-min-height bg-primary text-white rounded font-body-medium text-body-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 flex-shrink-0">
+                 Merge &amp; Edit
+                 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">edit</span>
+</button>
+</div>
+</main>
+</body></html>

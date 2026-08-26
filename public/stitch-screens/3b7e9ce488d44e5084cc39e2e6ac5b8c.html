@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reports - Atunse Health</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#002f5f",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#745c00",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-surface-variant": "#43474f",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1c1b1b",
+                        "status-info": "#005EB8",
+                        "inverse-surface": "#313030",
+                        "secondary": "#735c00",
+                        "primary-fixed": "#d5e3ff",
+                        "status-warning": "#B76E00",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "tertiary-container": "#002f60",
+                        "surface-tint": "#3d5f92",
+                        "tertiary-fixed": "#d6e3ff",
+                        "on-tertiary-container": "#6e98db",
+                        "text-secondary": "#667085",
+                        "secondary-fixed-dim": "#e9c349",
+                        "on-secondary-fixed-variant": "#574500",
+                        "status-danger": "#C8372D",
+                        "background": "#fcf9f8",
+                        "secondary-fixed": "#ffe088",
+                        "error-container": "#ffdad6",
+                        "status-success": "#2D8A39",
+                        "outline-variant": "#c3c6d0",
+                        "border-subtle": "#E4E7EC",
+                        "surface-container-high": "#ebe7e7",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary": "#001a3b",
+                        "primary": "#001a3a",
+                        "surface-bright": "#fcf9f8",
+                        "surface-container": "#f0edec",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary-fixed-variant": "#104685",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#a8c8ff",
+                        "tertiary-fixed-dim": "#a8c8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#241a00",
+                        "on-primary-fixed": "#001b3c",
+                        "outline": "#737780",
+                        "on-primary-container": "#7798ce",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dcd9d9",
+                        "on-primary-fixed-variant": "#234778",
+                        "surface": "#F8F8F6",
+                        "surface-variant": "#e5e2e1",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary-fixed": "#001b3c",
+                        "secondary-container": "#fed65b",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sidebar-width": "256px",
+                        "control-min-height": "40px",
+                        "stack-compact": "8px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "margin-desktop": "24px",
+                        "stack-relaxed": "16px"
+                    },
+                    "fontFamily": {
+                        "table-data": ["Inter", "sans-serif"],
+                        "body-default": ["Inter", "sans-serif"],
+                        "body-medium": ["Inter", "sans-serif"],
+                        "supporting": ["Inter", "sans-serif"],
+                        "card-title": ["Inter", "sans-serif"],
+                        "micro-label": ["Inter", "sans-serif"],
+                        "headline-lg-mobile": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"],
+                        "section-title": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-default": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "supporting": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "card-title": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "micro-label": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "section-title": ["20px", { "lineHeight": "28px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-default min-h-screen flex antialiased">
+<!-- SideNavBar (Permanent) -->
+<nav class="w-[256px] h-screen fixed left-0 top-0 bg-primary border-r border-outline-variant z-20 flex flex-col h-full py-6 text-on-primary">
+<!-- Brand Area -->
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined icon-filled text-primary">local_hospital</span>
+</div>
+<div>
+<div class="font-section-title text-section-title text-secondary-container">Atunse Health</div>
+<div class="font-supporting text-supporting text-on-primary/70">Lagos General Hospital</div>
+</div>
+</div>
+<!-- Global Search CTA -->
+<div class="px-4 mb-6">
+<button class="w-full flex items-center justify-start gap-2 px-3 py-2 bg-primary-container text-on-primary-container rounded border border-tertiary-container hover:bg-primary-container/20 transition-all font-body-medium text-body-medium">
+<span class="material-symbols-outlined text-[18px]">search</span>
+<span>Global Search</span>
+</button>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto px-2 space-y-1">
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">dashboard</span> Overview
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">group</span> Patients
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">calendar_today</span> Appointments
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">medical_services</span> Clinical
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span> Protocols
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span> Billing
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">badge</span> People
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">account_balance</span> Institutions
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">verified_user</span> Trust &amp; Governance
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">account_tree</span> Ogami
+            </a>
+<!-- Active Tab -->
+<a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 transition-colors rounded-r scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined icon-filled">analytics</span> <span class="font-body-medium text-body-medium">Reports</span>
+</a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">settings_suggest</span> Admin
+            </a>
+</div>
+<!-- Footer Actions -->
+<div class="px-2 mt-auto space-y-1">
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">help</span> Help
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded hover:bg-primary-container/20 font-body-medium text-body-medium scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</div>
+</nav>
+<!-- Main Content Area Wrapper -->
+<div class="flex-1 flex flex-col ml-[256px] min-w-0">
+<!-- TopAppBar -->
+<header class="bg-surface-container-lowest w-full top-0 border-b border-border-subtle flex justify-between items-center px-6 py-3 h-[64px] sticky z-10 text-primary">
+<!-- Left: Breadcrumbs / Context Navigation -->
+<div class="flex items-center gap-4">
+<nav class="flex space-x-1">
+<a class="text-text-secondary hover:text-primary transition-colors duration-200 cursor-pointer font-body-default text-body-default px-2 py-1" href="#">Dashboard</a>
+<span class="text-text-secondary">/</span>
+<a class="text-text-secondary hover:text-primary transition-colors duration-200 cursor-pointer font-body-default text-body-default px-2 py-1" href="#">Patient Records</a>
+</nav>
+</div>
+<!-- Right: Actions & Profile -->
+<div class="flex items-center gap-4">
+<button class="h-control-min-height px-4 border border-border-subtle rounded bg-surface-container-lowest text-primary font-body-medium text-body-medium hover:bg-surface-container-low transition-colors flex items-center gap-2">
+                    Book Appointment
+                </button>
+<button class="h-control-min-height px-4 rounded bg-primary text-on-primary font-body-medium text-body-medium hover:opacity-90 transition-opacity flex items-center gap-2">
+                    Start Encounter
+                </button>
+<div class="w-px h-6 bg-border-subtle mx-2"></div>
+<div class="flex items-center gap-2 text-text-secondary">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[20px]">sync</span></button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[20px]">cloud_off</span></button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[20px]">help</span></button>
+</div>
+<div class="ml-2 w-8 h-8 rounded-full overflow-hidden border border-border-subtle bg-surface-container flex-shrink-0 cursor-pointer">
+<img alt="Dr. Amina Okafor" class="w-full h-full object-cover" data-alt="Professional headshot of a confident female African doctor with hair pulled back, wearing glasses and a subtle dark navy scrub top. Soft, clinical bright white lighting, clean grey background, establishing trust and medical authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwAx_9uTSpK8FTC-vBo5zT_2kF5YfTcKqHI6vR77RZz2XRVYF3fW6sfWqXE2ohrNENQNpY9ve-hwPyVJUaHr_k3Li15Q7xkc9ittj163MYU9q2nsXzf6Boo2_Sqads_WpbyrfrPFCOtc00ORnrD80KsS7R71iXKX5IiWZKn8z4wi4IvvZhP66mGdbnwDonxUeNuL0wRKh_mF6bvnWyQx6FJBzSns7nI_TIo1_Lq4kzTnJjrspwL8pO"/>
+</div>
+</div>
+</header>
+<!-- Main Dashboard Canvas -->
+<main class="flex-1 p-margin-desktop bg-surface overflow-y-auto">
+<div class="max-w-[1440px] mx-auto space-y-6">
+<!-- Header Section: Title & Global Controls -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary m-0 p-0 leading-none tracking-tight">Clinical Adherence Report</h1>
+<p class="font-body-default text-body-default text-text-secondary mt-2 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-info"></span> Protocol: Dementia ADDSB
+                        </p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<!-- Date Filter -->
+<div class="flex items-center bg-surface-container-lowest border border-border-subtle rounded h-control-min-height px-3 py-1 cursor-pointer hover:border-outline transition-colors">
+<span class="material-symbols-outlined text-text-secondary mr-2 text-[18px]">calendar_today</span>
+<span class="font-body-default text-body-default text-on-surface">Last 30 Days</span>
+<span class="material-symbols-outlined text-text-secondary ml-2 text-[18px]">arrow_drop_down</span>
+</div>
+<!-- Facility Selector -->
+<div class="flex items-center bg-surface-container-lowest border border-border-subtle rounded h-control-min-height px-3 py-1 cursor-pointer hover:border-outline transition-colors">
+<span class="material-symbols-outlined text-text-secondary mr-2 text-[18px]">location_on</span>
+<span class="font-body-default text-body-default text-on-surface">All Facilities</span>
+<span class="material-symbols-outlined text-text-secondary ml-2 text-[18px]">arrow_drop_down</span>
+</div>
+<!-- Export -->
+<button class="flex items-center gap-2 bg-surface-container-lowest border border-border-subtle text-primary font-body-medium text-body-medium h-control-min-height px-4 rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span> Export
+                        </button>
+</div>
+</div>
+<!-- Internal Navigation Tabs -->
+<div class="border-b border-border-subtle flex gap-6">
+<button class="pb-3 border-b-2 border-secondary font-body-medium text-body-medium text-primary font-bold transition-colors">Clinical</button>
+<button class="pb-3 border-b-2 border-transparent font-body-default text-body-default text-text-secondary hover:text-primary transition-colors">Operations</button>
+<button class="pb-3 border-b-2 border-transparent font-body-default text-body-default text-text-secondary hover:text-primary transition-colors">Financial</button>
+<button class="pb-3 border-b-2 border-transparent font-body-default text-body-default text-text-secondary hover:text-primary transition-colors">Trust</button>
+<button class="pb-3 border-b-2 border-transparent font-body-default text-body-default text-text-secondary hover:text-primary transition-colors">Intelligence</button>
+</div>
+<!-- KPI Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- KPI Card 1 -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-body-medium text-body-medium text-text-secondary">Overall Adherence</span>
+<span class="material-symbols-outlined text-text-secondary text-[20px]">assignment_turned_in</span>
+</div>
+<div class="flex items-baseline gap-3">
+<span class="font-headline-lg text-headline-lg text-primary">87.4%</span>
+<span class="font-micro-label text-micro-label text-status-success bg-status-success/10 px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> +2.1%
+                            </span>
+</div>
+</div>
+<!-- KPI Card 2 -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-body-medium text-body-medium text-text-secondary">Active Patients</span>
+<span class="material-symbols-outlined text-text-secondary text-[20px]">group</span>
+</div>
+<div class="flex items-baseline gap-3">
+<span class="font-headline-lg text-headline-lg text-primary">1,204</span>
+<span class="font-micro-label text-micro-label text-text-secondary bg-surface-container px-2 py-0.5 rounded">
+                                Stable
+                            </span>
+</div>
+</div>
+<!-- KPI Card 3 -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-body-medium text-body-medium text-text-secondary">Critical Deviations</span>
+<span class="material-symbols-outlined text-text-secondary text-[20px]">warning</span>
+</div>
+<div class="flex items-baseline gap-3">
+<span class="font-headline-lg text-headline-lg text-status-danger">14</span>
+<span class="font-micro-label text-micro-label text-status-danger bg-status-danger/10 px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> +3
+                            </span>
+</div>
+</div>
+<!-- KPI Card 4 -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-4 flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-body-medium text-body-medium text-text-secondary">Avg. Protocol Duration</span>
+<span class="material-symbols-outlined text-text-secondary text-[20px]">timer</span>
+</div>
+<div class="flex items-baseline gap-3">
+<span class="font-headline-lg text-headline-lg text-primary">42 <span class="text-card-title font-card-title text-text-secondary">days</span></span>
+<span class="font-micro-label text-micro-label text-status-success bg-status-success/10 px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_down</span> -1.5 days
+                            </span>
+</div>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+<!-- Trend Chart (Line) -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-5 flex flex-col h-[340px]">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-card-title text-card-title text-primary">Adherence Trend (30 Days)</h3>
+<button class="p-1 rounded hover:bg-surface-container text-text-secondary"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+<div class="flex-1 relative border-l border-b border-border-subtle">
+<!-- Y-axis labels -->
+<div class="absolute left-[-35px] top-0 h-full flex flex-col justify-between text-right font-supporting text-supporting text-text-secondary pb-6">
+<span>100%</span>
+<span>75%</span>
+<span>50%</span>
+<span>25%</span>
+</div>
+<!-- X-axis labels -->
+<div class="absolute bottom-[-25px] w-full flex justify-between font-supporting text-supporting text-text-secondary px-2">
+<span>Wk 1</span>
+<span>Wk 2</span>
+<span>Wk 3</span>
+<span>Wk 4</span>
+</div>
+<!-- Mock Line Chart SVG -->
+<svg class="w-full h-full absolute inset-0 pt-2 pb-6 pl-2 pr-2" preserveaspectratio="none" viewbox="0 0 100 100">
+<path class="text-status-info" d="M0,80 L10,75 L20,60 L30,65 L40,40 L50,45 L60,25 L70,30 L80,15 L90,20 L100,5" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<!-- Target Line -->
+<line class="text-status-warning" stroke="currentColor" stroke-dasharray="4" stroke-width="1" vector-effect="non-scaling-stroke" x1="0" x2="100" y1="15" y2="15"></line>
+</svg>
+</div>
+</div>
+<!-- Volume Chart (Bar) -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg p-5 flex flex-col h-[340px]">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-card-title text-card-title text-primary">Deviations by Protocol Step</h3>
+<button class="p-1 rounded hover:bg-surface-container text-text-secondary"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+<div class="flex-1 relative flex items-end justify-between px-4 pb-6 pt-2 border-b border-border-subtle">
+<!-- Bars -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-12 bg-primary-container hover:bg-tertiary-container transition-colors rounded-t-sm h-[80%] relative">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 font-supporting text-supporting text-primary opacity-0 group-hover:opacity-100 transition-opacity">142</div>
+</div>
+<span class="font-supporting text-supporting text-text-secondary absolute bottom-[-24px]">Intake</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-12 bg-primary-container hover:bg-tertiary-container transition-colors rounded-t-sm h-[40%] relative">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 font-supporting text-supporting text-primary opacity-0 group-hover:opacity-100 transition-opacity">71</div>
+</div>
+<span class="font-supporting text-supporting text-text-secondary absolute bottom-[-24px]">Assess</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-12 bg-status-warning hover:bg-secondary transition-colors rounded-t-sm h-[60%] relative">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 font-supporting text-supporting text-status-warning opacity-0 group-hover:opacity-100 transition-opacity">108</div>
+</div>
+<span class="font-supporting text-supporting text-text-secondary absolute bottom-[-24px]">Med Rev</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-12 bg-primary-container hover:bg-tertiary-container transition-colors rounded-t-sm h-[20%] relative">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 font-supporting text-supporting text-primary opacity-0 group-hover:opacity-100 transition-opacity">35</div>
+</div>
+<span class="font-supporting text-supporting text-text-secondary absolute bottom-[-24px]">Lab Req</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-12 bg-primary-container hover:bg-tertiary-container transition-colors rounded-t-sm h-[50%] relative">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 font-supporting text-supporting text-primary opacity-0 group-hover:opacity-100 transition-opacity">89</div>
+</div>
+<span class="font-supporting text-supporting text-text-secondary absolute bottom-[-24px]">F-Up</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Dense Data Table -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-lg overflow-hidden flex flex-col">
+<div class="p-4 border-b border-border-subtle flex justify-between items-center bg-surface-bright">
+<h3 class="font-card-title text-card-title text-primary">Granular Exception Log</h3>
+<div class="flex items-center gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-[18px]">search</span>
+<input class="pl-9 pr-3 py-1.5 h-control-min-height border border-border-subtle rounded text-body-default font-body-default w-[240px] focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="Search Patient ID..." type="text"/>
+</div>
+<button class="p-2 border border-border-subtle rounded hover:bg-surface-container transition-colors text-text-secondary flex items-center justify-center h-control-min-height w-control-min-height">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-border-subtle">
+<th class="py-3 px-4 font-body-medium text-body-medium text-text-secondary whitespace-nowrap">Event ID</th>
+<th class="py-3 px-4 font-body-medium text-body-medium text-text-secondary whitespace-nowrap">Patient Identifier</th>
+<th class="py-3 px-4 font-body-medium text-body-medium text-text-secondary whitespace-nowrap">Timestamp</th>
+<th class="py-3 px-4 font-body-medium text-body-medium text-text-secondary whitespace-nowrap">Protocol Step</th>
+<th class="py-3 px-4 font-body-medium text-body-medium text-text-secondary whitespace-nowrap">Status</th>
+<th class="py-3 px-4 font-body-medium text-body-medium text-text-secondary whitespace-nowrap">Clinician</th>
+<th class="py-3 px-4 font-body-medium text-body-medium text-text-secondary whitespace-nowrap text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-table-data text-table-data text-on-surface">
+<tr class="border-b border-border-subtle hover:bg-surface-container-low/50 transition-colors">
+<td class="py-2.5 px-4 font-mono text-text-secondary">EX-992A</td>
+<td class="py-2.5 px-4 font-medium text-primary">PID-8842-1A</td>
+<td class="py-2.5 px-4">2023-10-27 14:32</td>
+<td class="py-2.5 px-4">Medication Review</td>
+<td class="py-2.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded font-micro-label text-micro-label bg-status-danger/10 text-status-danger">Skipped</span>
+</td>
+<td class="py-2.5 px-4">Dr. H. Soludo</td>
+<td class="py-2.5 px-4 text-right">
+<button class="text-primary hover:text-secondary transition-colors font-body-medium">Audit</button>
+</td>
+</tr>
+<tr class="border-b border-border-subtle hover:bg-surface-container-low/50 transition-colors">
+<td class="py-2.5 px-4 font-mono text-text-secondary">EX-992B</td>
+<td class="py-2.5 px-4 font-medium text-primary">PID-3391-9C</td>
+<td class="py-2.5 px-4">2023-10-27 11:15</td>
+<td class="py-2.5 px-4">Cognitive Assessment</td>
+<td class="py-2.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded font-micro-label text-micro-label bg-status-warning/10 text-status-warning">Delayed</span>
+</td>
+<td class="py-2.5 px-4">Nurse T. Adeleke</td>
+<td class="py-2.5 px-4 text-right">
+<button class="text-primary hover:text-secondary transition-colors font-body-medium">Audit</button>
+</td>
+</tr>
+<tr class="border-b border-border-subtle hover:bg-surface-container-low/50 transition-colors bg-surface-container-lowest border-l-2 border-l-secondary">
+<td class="py-2.5 px-4 font-mono text-text-secondary">EX-993C</td>
+<td class="py-2.5 px-4 font-medium text-primary">PID-4122-2B</td>
+<td class="py-2.5 px-4">2023-10-26 09:45</td>
+<td class="py-2.5 px-4">Caregiver Education</td>
+<td class="py-2.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded font-micro-label text-micro-label bg-status-info/10 text-status-info">Override</span>
+</td>
+<td class="py-2.5 px-4 flex items-center gap-2">
+                                        Dr. A. Okafor 
+                                        <span class="material-symbols-outlined text-[14px] text-secondary" title="Ledger Verified">verified</span>
+</td>
+<td class="py-2.5 px-4 text-right">
+<button class="text-primary hover:text-secondary transition-colors font-body-medium">View Log</button>
+</td>
+</tr>
+<tr class="border-b border-border-subtle hover:bg-surface-container-low/50 transition-colors">
+<td class="py-2.5 px-4 font-mono text-text-secondary">EX-994D</td>
+<td class="py-2.5 px-4 font-medium text-primary">PID-1109-8F</td>
+<td class="py-2.5 px-4">2023-10-26 08:20</td>
+<td class="py-2.5 px-4">Initial Intake</td>
+<td class="py-2.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded font-micro-label text-micro-label bg-status-danger/10 text-status-danger">Incomplete</span>
+</td>
+<td class="py-2.5 px-4">Admin System</td>
+<td class="py-2.5 px-4 text-right">
+<button class="text-primary hover:text-secondary transition-colors font-body-medium">Audit</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-2.5 px-4 font-mono text-text-secondary">EX-995E</td>
+<td class="py-2.5 px-4 font-medium text-primary">PID-5561-3X</td>
+<td class="py-2.5 px-4">2023-10-25 16:05</td>
+<td class="py-2.5 px-4">Lab Requisition</td>
+<td class="py-2.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded font-micro-label text-micro-label bg-status-warning/10 text-status-warning">Delayed</span>
+</td>
+<td class="py-2.5 px-4">Dr. H. Soludo</td>
+<td class="py-2.5 px-4 text-right">
+<button class="text-primary hover:text-secondary transition-colors font-body-medium">Audit</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="px-4 py-3 border-t border-border-subtle bg-surface-bright flex justify-between items-center text-supporting font-supporting text-text-secondary">
+<span>Showing 1 to 5 of 142 entries</span>
+<div class="flex gap-2">
+<button class="px-2 py-1 border border-border-subtle rounded hover:bg-surface-container disabled:opacity-50" disabled="">Prev</button>
+<button class="px-2 py-1 border border-border-subtle rounded hover:bg-surface-container">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

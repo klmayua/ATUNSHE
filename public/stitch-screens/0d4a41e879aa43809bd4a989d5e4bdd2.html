@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Atunse Health - Workspace Selection</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Design System Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#001b3c",
+                        "on-secondary-container": "#745c00",
+                        "outline": "#737780",
+                        "tertiary": "#001a3b",
+                        "secondary": "#735c00",
+                        "tertiary-container": "#002f60",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#574500",
+                        "on-surface": "#1c1b1b",
+                        "secondary-container": "#fed65b",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "surface-container-high": "#ebe7e7",
+                        "secondary-fixed-dim": "#e9c349",
+                        "status-info": "#005EB8",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e5e2e1",
+                        "on-tertiary-container": "#6e98db",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "on-secondary-fixed": "#241a00",
+                        "surface-bright": "#fcf9f8",
+                        "on-background": "#1c1b1b",
+                        "outline-variant": "#c3c6d0",
+                        "error": "#ba1a1a",
+                        "text-secondary": "#667085",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#d5e3ff",
+                        "secondary-fixed": "#ffe088",
+                        "background": "#fcf9f8",
+                        "surface": "#F8F8F6",
+                        "surface-container-low": "#f6f3f2",
+                        "status-warning": "#B76E00",
+                        "surface-tint": "#3d5f92",
+                        "on-primary-fixed": "#001b3c",
+                        "tertiary-fixed": "#d6e3ff",
+                        "inverse-primary": "#a8c8ff",
+                        "tertiary-fixed-dim": "#a8c8ff",
+                        "primary": "#001a3a",
+                        "surface-dim": "#dcd9d9",
+                        "status-success": "#2D8A39",
+                        "primary-container": "#002f5f",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#104685",
+                        "surface-container-highest": "#e5e2e1",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary": "#ffffff",
+                        "border-subtle": "#E4E7EC",
+                        "on-primary-container": "#7798ce",
+                        "status-danger": "#C8372D",
+                        "surface-container": "#f0edec",
+                        "on-primary-fixed-variant": "#234778",
+                        "on-surface-variant": "#43474f"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "margin-mobile": "16px",
+                        "sidebar-width": "256px",
+                        "control-min-height": "40px",
+                        "gutter": "16px",
+                        "margin-desktop": "24px",
+                        "stack-relaxed": "16px",
+                        "stack-compact": "8px"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Inter"],
+                        "table-data": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "micro-label": ["Inter"],
+                        "section-title": ["Inter"],
+                        "supporting": ["Inter"],
+                        "body-default": ["Inter"],
+                        "card-title": ["Inter"],
+                        "body-medium": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "table-data": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "micro-label": ["11px", { lineHeight: "14px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "section-title": ["20px", { lineHeight: "28px", fontWeight: "700" }],
+                        "supporting": ["12px", { lineHeight: "16px", fontWeight: "400" }],
+                        "body-default": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "card-title": ["16px", { lineHeight: "24px", fontWeight: "600" }],
+                        "body-medium": ["14px", { lineHeight: "20px", fontWeight: "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-grid-pattern {
+            background-image: radial-gradient(var(--tw-colors-border-subtle) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex items-center justify-center relative overflow-hidden font-body-default text-body-default">
+<!-- Subtle Institutional Background Texture -->
+<div class="absolute inset-0 bg-grid-pattern opacity-50 pointer-events-none"></div>
+<main class="relative z-10 w-full max-w-[720px] px-margin-mobile md:px-margin-desktop py-12 flex flex-col items-center">
+<!-- Header Section -->
+<header class="text-center mb-10 w-full flex flex-col items-center">
+<div class="h-12 w-12 bg-primary rounded-lg flex items-center justify-center mb-6 shadow-sm border border-border-subtle">
+<span class="material-symbols-outlined text-on-primary text-[28px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-2">
+                Welcome back, Dr. Adebayo
+            </h1>
+<p class="font-body-default text-body-default text-text-secondary max-w-md">
+                Select your designated clinical workspace to initiate your session and access patient records.
+            </p>
+</header>
+<!-- Workspace Selection Container -->
+<div class="w-full flex flex-col gap-stack-compact bg-surface-container-lowest border border-border-subtle p-2 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+<!-- Facility 1: Main -->
+<a class="group relative flex items-center p-4 rounded-lg bg-surface-container-lowest border-l-2 border-transparent hover:border-secondary-container hover:bg-surface-container-low transition-all duration-200" href="#">
+<div class="h-10 w-10 rounded bg-primary-fixed/20 flex items-center justify-center mr-4 shrink-0 border border-primary-fixed">
+<span class="material-symbols-outlined text-primary-fixed-dim text-xl" style="font-variation-settings: 'FILL' 1;">domain</span>
+</div>
+<div class="flex-grow min-w-0 pr-4">
+<div class="flex items-center gap-2 mb-0.5">
+<h2 class="font-card-title text-card-title text-primary truncate group-hover:text-primary-container transition-colors">
+                            Atunse Health — Main Facility
+                        </h2>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-status-success/10 text-status-success font-micro-label text-micro-label border border-status-success/20">
+                            PRIMARY
+                        </span>
+</div>
+<div class="flex items-center text-on-surface-variant gap-3">
+<span class="font-body-medium text-body-medium truncate flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">badge</span>
+                            Chief Medical Officer
+                        </span>
+<span class="w-1 h-1 rounded-full bg-border-subtle"></span>
+<span class="font-body-default text-body-default truncate flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                            Lagos, Nigeria
+                        </span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 text-right">
+<span class="font-supporting text-supporting text-text-secondary mb-1">
+                        Last access: 2h ago
+                    </span>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary group-hover:translate-x-1 transition-all">
+                        arrow_forward
+                    </span>
+</div>
+</a>
+<!-- Divider -->
+<div class="h-px w-full bg-border-subtle/50 mx-auto max-w-[95%]"></div>
+<!-- Facility 2: Research -->
+<a class="group relative flex items-center p-4 rounded-lg bg-surface-container-lowest border-l-2 border-transparent hover:border-secondary-container hover:bg-surface-container-low transition-all duration-200" href="#">
+<div class="h-10 w-10 rounded bg-surface-variant/50 flex items-center justify-center mr-4 shrink-0 border border-border-subtle">
+<span class="material-symbols-outlined text-on-surface-variant text-xl" style="font-variation-settings: 'FILL' 1;">science</span>
+</div>
+<div class="flex-grow min-w-0 pr-4">
+<div class="flex items-center gap-2 mb-0.5">
+<h2 class="font-card-title text-card-title text-primary truncate group-hover:text-primary-container transition-colors">
+                            Atunse Health — Research / Clinical Programme
+                        </h2>
+</div>
+<div class="flex items-center text-on-surface-variant gap-3">
+<span class="font-body-medium text-body-medium truncate flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">badge</span>
+                            Principal Investigator
+                        </span>
+<span class="w-1 h-1 rounded-full bg-border-subtle"></span>
+<span class="font-body-default text-body-default truncate flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">public</span>
+                            Remote / Distributed
+                        </span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 text-right">
+<span class="font-supporting text-supporting text-text-secondary mb-1">
+                        Last access: Yesterday, 14:30
+                    </span>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary group-hover:translate-x-1 transition-all">
+                        arrow_forward
+                    </span>
+</div>
+</a>
+<!-- Divider -->
+<div class="h-px w-full bg-border-subtle/50 mx-auto max-w-[95%]"></div>
+<!-- Facility 3: Partner -->
+<a class="group relative flex items-center p-4 rounded-lg bg-surface-container-lowest border-l-2 border-transparent hover:border-secondary-container hover:bg-surface-container-low transition-all duration-200" href="#">
+<div class="h-10 w-10 rounded bg-surface-variant/50 flex items-center justify-center mr-4 shrink-0 border border-border-subtle">
+<span class="material-symbols-outlined text-on-surface-variant text-xl" style="font-variation-settings: 'FILL' 1;">handshake</span>
+</div>
+<div class="flex-grow min-w-0 pr-4">
+<div class="flex items-center gap-2 mb-0.5">
+<h2 class="font-card-title text-card-title text-primary truncate group-hover:text-primary-container transition-colors">
+                            Lagos General — Partner Facility
+                        </h2>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-surface-variant text-on-surface-variant font-micro-label text-micro-label border border-border-subtle">
+                            EXTERNAL
+                        </span>
+</div>
+<div class="flex items-center text-on-surface-variant gap-3">
+<span class="font-body-medium text-body-medium truncate flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">badge</span>
+                            Consulting Specialist
+                        </span>
+<span class="w-1 h-1 rounded-full bg-border-subtle"></span>
+<span class="font-body-default text-body-default truncate flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                            Lagos Island
+                        </span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 text-right">
+<span class="font-supporting text-supporting text-text-secondary mb-1">
+                        Last access: 3 days ago
+                    </span>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary group-hover:translate-x-1 transition-all">
+                        arrow_forward
+                    </span>
+</div>
+</a>
+</div>
+<!-- Trust Indicator Footer -->
+<div class="mt-8 flex items-center gap-2 text-text-secondary opacity-80">
+<span class="material-symbols-outlined text-[16px] text-secondary-container" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-micro-label text-micro-label tracking-wider uppercase">
+                Secured by Atunse Enterprise Gateway
+            </span>
+</div>
+</main>
+</body></html>

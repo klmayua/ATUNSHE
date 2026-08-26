@@ -1,0 +1,23 @@
+---
+import '../../styles/global.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Atunse Health — Demo</title>
+  </head>
+  <body>
+    <div id="root" class="loading">Loading demo session…</div>
+    <script>
+      import { isAuthed, logout } from '../../lib/auth.mjs';
+      const s = isAuthed();
+      if (!s) {
+        location.replace('/');
+      } else {
+        location.replace('/app/' + s.landing + '/');
+      }
+    </script>
+  </body>
+</html>

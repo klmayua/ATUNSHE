@@ -1,0 +1,116 @@
+---
+import { PERSONAS } from '../data/personas.mjs';
+import '../styles/global.css';
+
+const year = new Date().getFullYear();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>Atunse Health — Demo Login</title>
+  </head>
+  <body>
+    <div class="login-wrap">
+      <aside class="login-aside">
+        <div class="brand"><span class="dot">A</span> Atunse Health</div>
+        <div>
+          <h1>A clinical platform, demo-ready.</h1>
+          <p>
+            This is an interactive demo of the Atunse Health design system pulled
+            verbatim from Google Stitch. Pick a persona below or sign in with the
+            mock credentials to explore the screens.
+          </p>
+        </div>
+        <div class="foot">Interactive mock demo · mock data only · {year}</div>
+      </aside>
+
+      <main class="login-main">
+        <div class="login-card">
+          <h2>Sign in to the demo</h2>
+          <p class="sub">Use the username &amp; password, or tap a persona to auto-fill.</p>
+
+          <div id="err" class="err" style="display:none"></div>
+
+          <form id="login-form" autocomplete="off">
+            <div class="field">
+              <label for="username">Username</label>
+              <input id="username" name="username" type="text" placeholder="e.g. amina.okafor" />
+            </div>
+            <div class="field">
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" placeholder="••••••••" />
+            </div>
+            <button class="btn-primary" type="submit">Sign in</button>
+          </form>
+
+          <div class="divider">Or explore as a persona</div>
+
+          <div class="persona-grid" id="persona-grid">
+            {PERSONAS.map((p) => (
+              <button class="persona" type="button" data-id={p.id}>
+                <span class="av">{p.initials}</span>
+                <span>
+                  <span class="nm">{p.name}</span><br />
+                  <span class="rl">{p.role}</span>
+                  <span class="hint">tap to enter →</span>
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <p class="note">
+            Demo only — any persona logs you into a clickable, read-only walkthrough.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      import { PERSONAS, findPersona } from '../data/personas.mjs';
+      import { login } from '../lib/auth.mjs';
+
+      const form = document.getElementById('login-form');
+      const errEl = document.getElementById('err');
+      const userEl = document.getElementById('username');
+      const passEl = document.getElementById('password');
+
+      function fail(msg) {
+        errEl.textContent = msg;
+        errEl.style.display = 'block';
+      }
+
+      function go(persona) {
+        if (!persona) return fail('Unknown persona.');
+        login(persona);
+        window.location.assign('/app/' + persona.landing + '/');
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        errEl.style.display = 'none';
+        const u = userEl.value.trim();
+        const pw = passEl.value;
+        const p = PERSONAS.find((x) => x.username === u);
+        if (!p) return fail('No demo account matches that username.');
+        if (p.password !== pw) return fail('Incorrect demo password. (Hint: click the persona button to auto-fill.)');
+        go(p);
+      });
+
+      document.querySelectorAll('.persona').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const p = findPersona(btn.dataset.id);
+          if (p) {
+            userEl.value = p.username;
+            passEl.value = p.password;
+            go(p);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

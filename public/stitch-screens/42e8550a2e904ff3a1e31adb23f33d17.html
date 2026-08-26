@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Atunse Health - Vitals Entry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "status-info": "#005EB8",
+                      "surface-container-high": "#ebe7e7",
+                      "tertiary-fixed": "#d6e3ff",
+                      "secondary": "#735c00",
+                      "background": "#fcf9f8",
+                      "surface-container-highest": "#e5e2e1",
+                      "surface-container": "#f0edec",
+                      "surface-tint": "#3d5f92",
+                      "primary-fixed": "#d5e3ff",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-container": "#002f5f",
+                      "tertiary-container": "#002f60",
+                      "error": "#ba1a1a",
+                      "surface-bright": "#fcf9f8",
+                      "error-container": "#ffdad6",
+                      "on-error-container": "#93000a",
+                      "tertiary": "#001a3b",
+                      "secondary-container": "#fed65b",
+                      "surface": "#F8F8F6",
+                      "text-secondary": "#667085",
+                      "on-surface-variant": "#43474f",
+                      "tertiary-fixed-dim": "#a8c8ff",
+                      "outline": "#737780",
+                      "status-warning": "#B76E00",
+                      "surface-variant": "#e5e2e1",
+                      "border-subtle": "#E4E7EC",
+                      "on-secondary-fixed": "#241a00",
+                      "inverse-on-surface": "#f3f0ef",
+                      "on-surface": "#1c1b1b",
+                      "on-tertiary-container": "#6e98db",
+                      "status-success": "#2D8A39",
+                      "secondary-fixed": "#ffe088",
+                      "status-danger": "#C8372D",
+                      "secondary-fixed-dim": "#e9c349",
+                      "primary": "#001a3a",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#313030",
+                      "on-primary-fixed-variant": "#234778",
+                      "on-secondary-fixed-variant": "#574500",
+                      "primary-fixed-dim": "#a8c8ff",
+                      "on-tertiary-fixed": "#001b3c",
+                      "on-background": "#1c1b1b",
+                      "on-secondary-container": "#745c00",
+                      "surface-dim": "#dcd9d9",
+                      "outline-variant": "#c3c6d0",
+                      "on-primary-fixed": "#001b3c",
+                      "on-tertiary-fixed-variant": "#104685",
+                      "inverse-primary": "#a8c8ff",
+                      "on-secondary": "#ffffff",
+                      "surface-container-low": "#f6f3f2",
+                      "on-primary-container": "#7798ce",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "24px",
+                      "gutter": "16px",
+                      "margin-mobile": "16px",
+                      "stack-relaxed": "16px",
+                      "sidebar-width": "256px",
+                      "control-min-height": "40px",
+                      "stack-compact": "8px"
+              },
+              "fontFamily": {
+                      "body-medium": ["Inter"],
+                      "supporting": ["Inter"],
+                      "micro-label": ["Inter"],
+                      "section-title": ["Inter"],
+                      "body-default": ["Inter"],
+                      "card-title": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "table-data": ["Inter"],
+                      "headline-lg-mobile": ["Inter"]
+              },
+              "fontSize": {
+                      "body-medium": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "supporting": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "micro-label": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "section-title": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "body-default": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "card-title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "table-data": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom Input Styling for large touch targets */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-default min-h-screen flex flex-col antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top Navigation / Header - Hidden on Desktop -->
+<header class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-border-subtle flex justify-between items-center px-4 py-3 h-[56px] md:hidden">
+<button class="text-text-secondary hover:text-primary transition-colors flex items-center justify-center p-2 -ml-2 rounded-full active:bg-surface-variant">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="font-card-title text-card-title text-primary">Record Vitals</h1>
+<span class="font-supporting text-supporting text-text-secondary">Patient: John Doe (ID: 4829)</span>
+</div>
+<button class="text-text-secondary hover:text-primary transition-colors flex items-center justify-center p-2 -mr-2 rounded-full active:bg-surface-variant">
+<span class="material-symbols-outlined">history</span>
+</button>
+</header>
+<main class="flex-1 w-full max-w-md mx-auto p-margin-mobile flex flex-col gap-stack-relaxed pb-24 md:pb-margin-mobile md:mt-margin-desktop md:bg-white md:border md:border-border-subtle md:rounded-lg md:shadow-sm">
+<!-- Desktop Header -->
+<div class="hidden md:flex justify-between items-center pb-4 border-b border-border-subtle mb-2">
+<div>
+<h1 class="font-section-title text-section-title text-primary">Record Vitals</h1>
+<p class="font-body-medium text-body-medium text-text-secondary mt-1">John Doe • DOB: 05/12/1980 • MRN: 482910</p>
+</div>
+<button class="text-primary hover:bg-surface-variant px-3 py-2 rounded-DEFAULT transition-colors flex items-center gap-2 border border-border-subtle font-body-medium text-body-medium">
+<span class="material-symbols-outlined">history</span> View History
+            </button>
+</div>
+<!-- Blood Pressure Card -->
+<div class="bg-white rounded-lg border border-border-subtle p-4 flex flex-col gap-3 relative overflow-hidden">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]" data-weight="fill">favorite</span>
+<h2 class="font-card-title text-card-title">Blood Pressure</h2>
+</div>
+<div class="text-right">
+<span class="font-supporting text-supporting text-text-secondary block">Previous (2 days ago)</span>
+<span class="font-body-medium text-body-medium text-on-surface-variant">120/80 mmHg</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex-1 relative">
+<label class="sr-only" for="bp_sys">Systolic</label>
+<input class="w-full h-14 bg-surface-container-low border border-border-subtle rounded-DEFAULT px-4 font-section-title text-section-title text-center text-primary focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all placeholder:text-outline-variant placeholder:font-normal" id="bp_sys" inputmode="numeric" placeholder="Sys" type="number"/>
+</div>
+<span class="text-2xl text-outline-variant font-light">/</span>
+<div class="flex-1 relative">
+<label class="sr-only" for="bp_dia">Diastolic</label>
+<input class="w-full h-14 bg-surface-container-low border border-border-subtle rounded-DEFAULT px-4 font-section-title text-section-title text-center text-primary focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all placeholder:text-outline-variant placeholder:font-normal" id="bp_dia" inputmode="numeric" placeholder="Dia" type="number"/>
+</div>
+<span class="font-body-default text-body-default text-text-secondary ml-2 w-12">mmHg</span>
+</div>
+</div>
+<!-- Heart Rate & Temp Row -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Heart Rate -->
+<div class="bg-white rounded-lg border border-border-subtle p-4 flex flex-col gap-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">monitor_heart</span>
+<h2 class="font-card-title text-card-title">Heart Rate</h2>
+</div>
+<div class="relative">
+<input class="w-full h-14 bg-surface-container-low border border-border-subtle rounded-DEFAULT pl-4 pr-12 font-section-title text-section-title text-primary focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all placeholder:text-outline-variant" inputmode="numeric" placeholder="--" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-body-default text-body-default text-text-secondary">bpm</span>
+</div>
+<div class="font-supporting text-supporting text-text-secondary">Prev: 72 bpm</div>
+</div>
+<!-- Temperature -->
+<div class="bg-white rounded-lg border border-border-subtle p-4 flex flex-col gap-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">device_thermostat</span>
+<h2 class="font-card-title text-card-title">Temp</h2>
+</div>
+<div class="relative">
+<input class="w-full h-14 bg-surface-container-low border border-border-subtle rounded-DEFAULT pl-4 pr-10 font-section-title text-section-title text-primary focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all placeholder:text-outline-variant" inputmode="decimal" placeholder="--" step="0.1" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-body-default text-body-default text-text-secondary">°C</span>
+</div>
+<div class="font-supporting text-supporting text-text-secondary">Prev: 36.6 °C</div>
+</div>
+</div>
+<!-- Weight Card -->
+<div class="bg-white rounded-lg border border-border-subtle p-4 flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">scale</span>
+<h2 class="font-card-title text-card-title">Weight</h2>
+</div>
+<div class="text-right">
+<span class="font-supporting text-supporting text-text-secondary block">Prev: 75.2 kg</span>
+</div>
+</div>
+<div class="relative">
+<input class="w-full h-14 bg-surface-container-low border border-border-subtle rounded-DEFAULT pl-4 pr-12 font-section-title text-section-title text-primary focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all placeholder:text-outline-variant placeholder:font-normal" inputmode="decimal" placeholder="Enter weight" step="0.1" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-body-default text-body-default text-text-secondary">kg</span>
+</div>
+</div>
+<!-- Action Area (Fixed bottom on mobile) -->
+<div class="fixed bottom-0 left-0 right-0 p-margin-mobile bg-white border-t border-border-subtle md:relative md:border-t-0 md:bg-transparent md:p-0 md:mt-4">
+<button class="w-full h-12 bg-primary text-on-primary rounded-DEFAULT font-body-medium text-body-medium flex items-center justify-center gap-2 active:bg-primary-container transition-colors shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined">save</span>
+                Save to Record
+            </button>
+</div>
+</main>
+</body></html>

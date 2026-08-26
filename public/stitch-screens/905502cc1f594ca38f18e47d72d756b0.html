@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chain of Custody Ledger - Atunse Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#e9c349",
+                        "primary-fixed": "#d5e3ff",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "surface-bright": "#fcf9f8",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#001b3c",
+                        "secondary": "#735c00",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#ebe7e7",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-lowest": "#ffffff",
+                        "status-danger": "#C8372D",
+                        "text-secondary": "#667085",
+                        "border-subtle": "#E4E7EC",
+                        "surface-dim": "#dcd9d9",
+                        "surface-tint": "#3d5f92",
+                        "tertiary-fixed": "#d6e3ff",
+                        "on-secondary-container": "#745c00",
+                        "inverse-primary": "#a8c8ff",
+                        "tertiary-fixed-dim": "#a8c8ff",
+                        "status-warning": "#B76E00",
+                        "primary-container": "#002f5f",
+                        "inverse-on-surface": "#f3f0ef",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#43474f",
+                        "secondary-container": "#fed65b",
+                        "tertiary-container": "#002f60",
+                        "outline": "#737780",
+                        "tertiary": "#001a3b",
+                        "surface": "#F8F8F6",
+                        "outline-variant": "#c3c6d0",
+                        "surface-container": "#f0edec",
+                        "on-background": "#1c1b1b",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#001b3c",
+                        "on-secondary-fixed": "#241a00",
+                        "status-success": "#2D8A39",
+                        "on-primary-container": "#7798ce",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "secondary-fixed": "#ffe088",
+                        "on-surface": "#1c1b1b",
+                        "surface-container-highest": "#e5e2e1",
+                        "background": "#fcf9f8",
+                        "primary": "#001a3a",
+                        "status-info": "#005EB8",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#234778",
+                        "on-tertiary-fixed-variant": "#104685",
+                        "on-tertiary-container": "#6e98db",
+                        "on-secondary-fixed-variant": "#574500"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sidebar-width": "256px",
+                        "gutter": "16px",
+                        "stack-relaxed": "16px",
+                        "control-min-height": "40px",
+                        "stack-compact": "8px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "24px"
+                    },
+                    "fontFamily": {
+                        "body-medium": ["Inter"],
+                        "micro-label": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "supporting": ["Inter"],
+                        "body-default": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "table-data": ["Inter"],
+                        "section-title": ["Inter"],
+                        "card-title": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "micro-label": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "supporting": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "body-default": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "section-title": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "card-title": ["16px", { "lineHeight": "24px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8F8F6; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .filled-icon { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<nav class="bg-primary dark:bg-tertiary w-[256px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex flex-col h-full py-6 z-20 md:flex hidden">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg text-secondary-container dark:text-secondary-fixed">Atunse Health</h1>
+<p class="font-body-medium text-body-medium text-on-primary/70">Lagos General Hospital</p>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full bg-secondary-container text-on-secondary-container font-body-medium text-body-medium py-2 px-4 rounded flex items-center justify-center gap-2 hover:bg-secondary-fixed transition-colors">
+<span class="material-symbols-outlined">search</span>
+                Global Search
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto px-2 space-y-1">
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span> Overview
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">group</span> Patients
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">calendar_today</span> Appointments
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">medical_services</span> Clinical
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span> Protocols
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span> Billing
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">badge</span> People
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">account_balance</span> Institutions
+            </a>
+<a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 rounded-r font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined filled-icon">verified_user</span> Trust &amp; Governance
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">account_tree</span> Ogami
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span> Reports
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">settings_suggest</span> Admin
+            </a>
+</div>
+<div class="mt-auto px-2 border-t border-outline-variant/30 pt-4 space-y-1">
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">help</span> Help
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col md:ml-[256px] w-full min-h-screen relative">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant flex justify-between items-center px-6 py-3 h-[64px] bg-white dark:bg-black sticky top-0 z-10 hidden md:flex">
+<div class="flex items-center gap-6">
+<nav class="flex gap-4">
+<a class="text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-inverse-primary cursor-pointer transition-colors duration-200 font-body-medium text-body-medium" href="#">Dashboard</a>
+<a class="text-primary dark:text-inverse-primary border-b-2 border-secondary font-bold pb-1 cursor-pointer transition-colors duration-200 font-body-medium text-body-medium" href="#">Patient Records</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative max-w-md w-64 hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-sm">search</span>
+<input class="w-full bg-surface-container-low border border-border-subtle rounded pl-9 pr-3 py-1.5 font-body-default text-body-default focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="Search Asset/Specimen ID..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="p-1.5 text-text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-1.5 text-text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">sync</span></button>
+<button class="p-1.5 text-text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">cloud_off</span></button>
+<button class="p-1.5 text-text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">help</span></button>
+</div>
+<div class="flex gap-3 ml-2 border-l border-border-subtle pl-4">
+<button class="bg-surface border border-border-subtle text-primary font-body-medium text-body-medium px-3 py-1.5 rounded hover:bg-surface-container-low transition-colors">Book Appointment</button>
+<button class="bg-primary text-on-primary font-body-medium text-body-medium px-3 py-1.5 rounded hover:bg-primary-container transition-colors">Start Encounter</button>
+</div>
+<div class="ml-2 w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-border-subtle flex items-center justify-center">
+<img alt="Dr. Amina Okafor" class="w-full h-full object-cover" data-alt="Professional headshot of a female African doctor with a stethoscope, bright institutional lighting, neutral background, authoritative but approachable mood, realistic photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzxwZixZN4d_KK_mCyq0FhpVKmS1AyKvEih-GZ1v1ej6X2L16UhJV17RCN3x_AOFfTmJE5gC0o0ZogWYwhy97ZTAvYGDePb8s7sMd_bf3up-ONw-wMcPLHlfBZiU7Pdr2JrQXsFnDV36TBPJnmTwinuKoKWKfF5KBEnKZcTB9noJ3gpjY9Z-4GmqA6nyuhocmqEKWvS0YGawIq5DJPSb7xoAJG1f_ABgEmtfy6e-kr-UroerOeVCyw"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto p-4 md:p-margin-desktop bg-surface">
+<div class="max-w-6xl mx-auto flex flex-col gap-stack-relaxed">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-4">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Chain of Custody Ledger</h2>
+<p class="font-body-default text-body-default text-text-secondary mt-1">Cryptographically verified tracking for clinical assets.</p>
+</div>
+<div class="relative w-full md:w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary">search</span>
+<input class="w-full bg-white border border-border-subtle rounded-lg pl-10 pr-4 py-2 font-body-default text-body-default focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container shadow-sm" placeholder="Scan or enter Asset ID..." type="text" value="B-882"/>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Asset Card -->
+<div class="lg:col-span-4 flex flex-col gap-stack-relaxed">
+<div class="bg-white border border-border-subtle rounded-lg shadow-sm overflow-hidden">
+<div class="p-4 border-b border-border-subtle bg-surface-bright flex justify-between items-center">
+<h3 class="font-card-title text-card-title text-primary">Asset Details</h3>
+<span class="bg-status-success/10 text-status-success font-micro-label text-micro-label px-2 py-1 rounded-sm border border-status-success/20 uppercase">Active</span>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div class="flex items-center gap-4 mb-2">
+<div class="w-12 h-12 rounded bg-surface-container flex items-center justify-center border border-border-subtle text-primary">
+<span class="material-symbols-outlined filled-icon text-3xl">science</span>
+</div>
+<div>
+<div class="font-micro-label text-micro-label text-text-secondary uppercase mb-1">Specimen ID</div>
+<div class="font-section-title text-section-title text-primary tracking-tight">B-882</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1 p-3 bg-surface-container-low rounded border border-border-subtle">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Type</span>
+<span class="font-body-medium text-body-medium text-primary">Biopsy Tissue</span>
+</div>
+<div class="flex flex-col gap-1 p-3 bg-surface-container-low rounded border border-border-subtle">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Source</span>
+<span class="font-body-medium text-body-medium text-primary">Oncology W-4</span>
+</div>
+<div class="flex flex-col gap-1 p-3 bg-surface-container-low rounded border border-border-subtle col-span-2">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Condition Req.</span>
+<span class="font-body-medium text-body-medium text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-status-info">ac_unit</span>
+                                            Cryo-Preserved (-80°C)
+                                        </span>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-border-subtle">
+<div class="flex justify-between items-center mb-2">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Integrity Hash</span>
+<span class="material-symbols-outlined text-[16px] text-text-secondary hover:text-primary cursor-pointer">content_copy</span>
+</div>
+<div class="font-supporting text-supporting text-text-secondary break-all font-mono bg-surface p-2 rounded border border-border-subtle">
+                                         0x8f2a9b3e7c1d4...f9e2a1b4c6d8e0f
+                                     </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Timeline -->
+<div class="lg:col-span-8">
+<div class="bg-white border border-border-subtle rounded-lg shadow-sm h-full">
+<div class="p-4 border-b border-border-subtle flex justify-between items-center bg-surface-bright">
+<h3 class="font-card-title text-card-title text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">history</span>
+                                    Custody Timeline
+                                </h3>
+<button class="font-body-medium text-body-medium text-primary flex items-center gap-1 hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span> Export Ledger
+                                </button>
+</div>
+<div class="p-6">
+<div class="relative pl-6 border-l-2 border-border-subtle space-y-8">
+<!-- Event: Reconciled -->
+<div class="relative">
+<div class="absolute -left-[31px] bg-white border-2 border-primary rounded-full w-[14px] h-[14px] top-1"></div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="font-body-medium text-body-medium text-primary font-bold">Reconciled &amp; Logged</span>
+<span class="bg-surface-container-high border border-border-subtle text-primary font-micro-label text-micro-label px-1.5 py-0.5 rounded-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-secondary">verified</span>
+                                                        Ledger Verified
+                                                    </span>
+</div>
+<span class="font-supporting text-supporting text-text-secondary">Today, 09:42 AM</span>
+</div>
+<div class="bg-surface-container-low border border-border-subtle rounded p-3 grid grid-cols-2 gap-3">
+<div class="flex flex-col">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Actor</span>
+<span class="font-body-default text-body-default text-primary">Dr. S. Adeyemi</span>
+</div>
+<div class="flex flex-col">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">System</span>
+<span class="font-body-default text-body-default text-primary">Lab LIS-Core</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Event: Transferred -->
+<div class="relative">
+<div class="absolute -left-[31px] bg-primary rounded-full w-[14px] h-[14px] top-1"></div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="font-body-medium text-body-medium text-primary">Transferred</span>
+<span class="bg-surface-container-high border border-border-subtle text-primary font-micro-label text-micro-label px-1.5 py-0.5 rounded-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-secondary">verified</span>
+                                                        Ledger Verified
+                                                    </span>
+</div>
+<span class="font-supporting text-supporting text-text-secondary">Today, 09:15 AM</span>
+</div>
+<div class="bg-surface-container-low border border-border-subtle rounded p-3">
+<div class="flex items-center gap-4">
+<div class="flex flex-col flex-1">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">From</span>
+<span class="font-body-default text-body-default text-primary">Cryo-Storage Unit 2</span>
+</div>
+<span class="material-symbols-outlined text-text-secondary">arrow_right_alt</span>
+<div class="flex flex-col flex-1">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">To</span>
+<span class="font-body-default text-body-default text-primary">Pathology Lab B</span>
+</div>
+</div>
+<div class="mt-3 pt-3 border-t border-border-subtle flex gap-4">
+<div class="flex flex-col">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Courier ID</span>
+<span class="font-body-default text-body-default text-primary">C-9931</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Event: Stored -->
+<div class="relative">
+<div class="absolute -left-[31px] bg-primary rounded-full w-[14px] h-[14px] top-1"></div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="font-body-medium text-body-medium text-primary">Stored</span>
+<span class="bg-surface-container-high border border-border-subtle text-primary font-micro-label text-micro-label px-1.5 py-0.5 rounded-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-secondary">verified</span>
+                                                        Ledger Verified
+                                                    </span>
+</div>
+<span class="font-supporting text-supporting text-text-secondary">Yesterday, 14:30 PM</span>
+</div>
+<div class="bg-surface-container-low border border-border-subtle rounded p-3 grid grid-cols-2 gap-3">
+<div class="flex flex-col">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Location</span>
+<span class="font-body-default text-body-default text-primary">Cryo-Storage Unit 2</span>
+</div>
+<div class="flex flex-col">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Condition</span>
+<span class="font-body-default text-body-default text-primary flex items-center gap-1">
+                                                        -78.5°C <span class="material-symbols-outlined text-[14px] text-status-success">check_circle</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Event: Received -->
+<div class="relative">
+<div class="absolute -left-[31px] bg-primary rounded-full w-[14px] h-[14px] top-1"></div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="font-body-medium text-body-medium text-primary">Received</span>
+<span class="bg-surface-container-high border border-border-subtle text-primary font-micro-label text-micro-label px-1.5 py-0.5 rounded-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-secondary">verified</span>
+                                                        Ledger Verified
+                                                    </span>
+</div>
+<span class="font-supporting text-supporting text-text-secondary">Yesterday, 13:45 PM</span>
+</div>
+<div class="bg-surface-container-low border border-border-subtle rounded p-3 grid grid-cols-3 gap-3">
+<div class="flex flex-col">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Actor</span>
+<span class="font-body-default text-body-default text-primary">Nurse K. Ojo</span>
+</div>
+<div class="flex flex-col col-span-2">
+<span class="font-micro-label text-micro-label text-text-secondary uppercase">Origin Location</span>
+<span class="font-body-default text-body-default text-primary">Surgical Ward 3, Theatre A</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

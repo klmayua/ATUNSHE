@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Atunse Health - Appointment Calendar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#a8c8ff",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c3c6d0",
+                        "status-warning": "#B76E00",
+                        "status-info": "#005EB8",
+                        "on-tertiary-container": "#6e98db",
+                        "primary-fixed": "#d5e3ff",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1c1b1b",
+                        "on-error": "#ffffff",
+                        "surface-container": "#f0edec",
+                        "surface-container-high": "#ebe7e7",
+                        "border-subtle": "#E4E7EC",
+                        "secondary-fixed": "#ffe088",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary": "#001a3b",
+                        "on-tertiary-fixed": "#001b3c",
+                        "on-secondary-fixed-variant": "#574500",
+                        "surface-dim": "#dcd9d9",
+                        "primary-container": "#002f5f",
+                        "secondary-fixed-dim": "#e9c349",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e5e2e1",
+                        "secondary": "#735c00",
+                        "surface-bright": "#fcf9f8",
+                        "on-secondary-fixed": "#241a00",
+                        "tertiary-container": "#002f60",
+                        "outline": "#737780",
+                        "status-danger": "#C8372D",
+                        "surface-variant": "#e5e2e1",
+                        "text-secondary": "#667085",
+                        "primary": "#001a3a",
+                        "on-background": "#1c1b1b",
+                        "tertiary-fixed-dim": "#a8c8ff",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "secondary-container": "#fed65b",
+                        "surface": "#F8F8F6",
+                        "on-primary-fixed-variant": "#234778",
+                        "on-tertiary-fixed-variant": "#104685",
+                        "on-primary-container": "#7798ce",
+                        "on-surface-variant": "#43474f",
+                        "status-success": "#2D8A39",
+                        "on-secondary-container": "#745c00",
+                        "on-primary-fixed": "#001b3c",
+                        "inverse-surface": "#313030",
+                        "background": "#fcf9f8",
+                        "surface-tint": "#3d5f92",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#d6e3ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sidebar-width": "256px",
+                        "gutter": "16px",
+                        "control-min-height": "40px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "24px",
+                        "stack-compact": "8px",
+                        "stack-relaxed": "16px"
+                    },
+                    "fontFamily": {
+                        "table-data": ["Inter", "sans-serif"],
+                        "card-title": ["Inter", "sans-serif"],
+                        "supporting": ["Inter", "sans-serif"],
+                        "section-title": ["Inter", "sans-serif"],
+                        "body-medium": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"],
+                        "micro-label": ["Inter", "sans-serif"],
+                        "headline-lg-mobile": ["Inter", "sans-serif"],
+                        "body-default": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "card-title": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "supporting": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "section-title": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "micro-label": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-default": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8F8F6; color: #1c1b1b; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .icon-fill { font-variation-settings: 'FILL' 1; }
+        
+        /* Custom Scrollbar for dense areas */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E4E7EC; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c3c6d0; }
+    </style>
+</head>
+<body class="antialiased overflow-hidden flex h-screen">
+<!-- SideNavBar (Shared Component) -->
+<nav class="bg-primary dark:bg-tertiary text-on-primary dark:text-on-tertiary w-[256px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex flex-col h-full py-6 z-50 transition-transform duration-300 transform -translate-x-full md:translate-x-0" id="mobile-sidebar">
+<!-- Header -->
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold text-on-secondary-container">AH</div>
+<div>
+<h1 class="font-headline-lg text-headline-lg text-secondary-container dark:text-secondary-fixed text-lg leading-tight">Atunse Health</h1>
+<p class="font-supporting text-supporting text-on-primary/70">Lagos General Hospital</p>
+</div>
+</div>
+<!-- Global Search CTA -->
+<div class="px-4 mb-6">
+<button class="w-full bg-surface-tint text-on-primary rounded flex items-center justify-center gap-2 py-2 font-body-medium text-body-medium hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 transition-all scale-98 active:opacity-80">
+<span class="material-symbols-outlined text-[18px]">search</span>
+                Global Search
+            </button>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex-1 overflow-y-auto font-body-medium text-body-medium flex flex-col gap-1 px-2">
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>Overview
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="group">group</span>Patients
+            </a>
+<a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 transition-colors rounded-r-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="calendar_today">calendar_today</span>Appointments
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="medical_services">medical_services</span>Clinical
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="assignment_turned_in">assignment_turned_in</span>Protocols
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_balance_wallet">account_balance_wallet</span>Billing
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="badge">badge</span>People
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_balance">account_balance</span>Institutions
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="verified_user">verified_user</span>Trust &amp; Governance
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_tree">account_tree</span>Ogami
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="analytics">analytics</span>Reports
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings_suggest">settings_suggest</span>Admin
+            </a>
+</div>
+<!-- Footer Tabs -->
+<div class="mt-auto px-2 font-body-medium text-body-medium flex flex-col gap-1 border-t border-outline-variant/30 pt-4">
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>Help
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>Settings
+            </a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<div class="flex-1 flex flex-col md:ml-[256px] h-screen w-full relative">
+<!-- TopAppBar (Shared Component) -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant docked full-width top-0 flex justify-between items-center px-6 py-3 h-[64px] bg-white dark:bg-black z-40">
+<!-- Mobile Menu Toggle (hidden on md) -->
+<button class="md:hidden text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-inverse-primary mr-4" onclick="document.getElementById('mobile-sidebar').classList.toggle('-translate-x-full')">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Navigation Links (Left Side Content) -->
+<div class="flex items-center gap-6 h-full font-body-default text-body-default">
+<a class="text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-inverse-primary cursor-pointer transition-colors duration-200 h-full flex items-center" href="#">Dashboard</a>
+<a class="text-primary dark:text-inverse-primary border-b-2 border-secondary font-bold pb-1 h-full flex items-center mt-1" href="#">Patient Records</a>
+</div>
+<!-- Actions (Right Side) -->
+<div class="flex items-center gap-4">
+<!-- Trailing Primary Action -->
+<button class="hidden md:flex bg-primary text-on-primary rounded-DEFAULT px-4 h-control-min-height items-center justify-center font-body-medium text-body-medium hover:opacity-90 transition-opacity">
+                    Start Encounter
+                </button>
+<!-- Trailing Secondary Action -->
+<button class="hidden md:flex bg-white text-primary border border-border-subtle rounded-DEFAULT px-4 h-control-min-height items-center justify-center font-body-medium text-body-medium hover:bg-surface-container-lowest transition-colors">
+                    Book Appointment
+                </button>
+<!-- Icon Actions -->
+<div class="flex items-center gap-2 text-text-secondary dark:text-on-surface-variant">
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors"><span class="material-symbols-outlined" data-icon="sync">sync</span></button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors"><span class="material-symbols-outlined" data-icon="cloud_off">cloud_off</span></button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors"><span class="material-symbols-outlined" data-icon="help">help</span></button>
+</div>
+<!-- Profile -->
+<div class="w-8 h-8 rounded-full overflow-hidden border border-border-subtle bg-surface-container-highest cursor-pointer ml-2">
+<img alt="Dr. Amina Okafor" class="w-full h-full object-cover" data-alt="A professional headshot of an African female doctor in her mid-30s. She is wearing a white lab coat over a dark blue scrub top, with a stethoscope draped around her neck. The background is a brightly lit, modern clinical corridor with pristine white walls and subtle cool blue lighting accents. The style is hyper-realistic, conveying institutional credibility and operational precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFTSplAKsbS2wMZvPISy44u9F82icFLvNuQUf-m42pvq55YvnMmoUGg1TDXUfvVwmGCxnqGV_dq6VAO8E9E2VpnY_zvGQZnWHf8reHzFyAPnVKuENdVpHlfI84HAmVa2ilwPGJi0WvYyWIfwyLbtghePkaQMNn10FkTp44h9QERgN-TLAONi2tfl9BKioaRWsfgms8rvFL2eeQKxfUmbbuaduXKRYUrRiBqeaB7Ycd53eBOyDfUBsg"/>
+</div>
+</div>
+</header>
+<!-- Main Workspace: Split View (Calendar + Details) -->
+<main class="flex-1 flex flex-col lg:flex-row overflow-hidden bg-surface">
+<!-- Left Pane: Calendar View (High Density) -->
+<section class="flex-1 flex flex-col h-full border-r border-border-subtle bg-white relative">
+<!-- Calendar Toolbar -->
+<div class="px-6 py-4 border-b border-border-subtle flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white z-10">
+<div class="flex items-center gap-4">
+<h2 class="font-section-title text-section-title text-primary">October 24, 2023</h2>
+<div class="flex items-center bg-surface-container rounded-DEFAULT p-0.5">
+<button class="px-3 py-1 text-text-secondary hover:text-primary font-body-medium text-body-medium rounded-DEFAULT transition-colors">Day</button>
+<button class="px-3 py-1 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] text-primary font-body-medium text-body-medium rounded-DEFAULT">Week</button>
+<button class="px-3 py-1 text-text-secondary hover:text-primary font-body-medium text-body-medium rounded-DEFAULT transition-colors">Month</button>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center border border-border-subtle rounded-DEFAULT bg-white overflow-hidden">
+<button class="w-8 h-8 flex items-center justify-center text-text-secondary hover:bg-surface hover:text-primary transition-colors border-r border-border-subtle"><span class="material-symbols-outlined text-[20px]">chevron_left</span></button>
+<button class="px-3 font-body-medium text-body-medium text-text-secondary hover:bg-surface hover:text-primary transition-colors border-r border-border-subtle">Today</button>
+<button class="w-8 h-8 flex items-center justify-center text-text-secondary hover:bg-surface hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+</div>
+<button class="w-8 h-8 flex items-center justify-center text-text-secondary border border-border-subtle rounded-DEFAULT hover:bg-surface transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Calendar Grid (Week View Mockup) -->
+<div class="flex-1 overflow-y-auto bg-surface-bright relative" id="calendar-scroll-area">
+<!-- Time Column + Grid Container -->
+<div class="flex min-w-[800px]">
+<!-- Time Labels -->
+<div class="w-16 flex-shrink-0 border-r border-border-subtle bg-white z-20 sticky left-0 py-2">
+<div class="h-[60px] relative"><span class="absolute -top-3 right-2 font-supporting text-supporting text-text-secondary">08:00</span></div>
+<div class="h-[60px] relative border-t border-border-subtle/50"><span class="absolute -top-3 right-2 font-supporting text-supporting text-text-secondary">09:00</span></div>
+<div class="h-[60px] relative border-t border-border-subtle/50"><span class="absolute -top-3 right-2 font-supporting text-supporting text-text-secondary">10:00</span></div>
+<div class="h-[60px] relative border-t border-border-subtle/50"><span class="absolute -top-3 right-2 font-supporting text-supporting text-text-secondary">11:00</span></div>
+<div class="h-[60px] relative border-t border-border-subtle/50"><span class="absolute -top-3 right-2 font-supporting text-supporting text-text-secondary">12:00</span></div>
+<div class="h-[60px] relative border-t border-border-subtle/50"><span class="absolute -top-3 right-2 font-supporting text-supporting text-text-secondary">13:00</span></div>
+<div class="h-[60px] relative border-t border-border-subtle/50"><span class="absolute -top-3 right-2 font-supporting text-supporting text-text-secondary">14:00</span></div>
+<div class="h-[60px] relative border-t border-border-subtle/50"><span class="absolute -top-3 right-2 font-supporting text-supporting text-text-secondary">15:00</span></div>
+</div>
+<!-- Day Columns -->
+<div class="flex-1 grid grid-cols-5 divide-x divide-border-subtle bg-white">
+<!-- Mon (Active/Today) -->
+<div class="relative min-h-[480px]">
+<!-- Header Sticky -->
+<div class="sticky top-0 bg-white border-b border-border-subtle py-2 px-3 text-center z-10 shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+<div class="font-supporting text-supporting text-primary uppercase font-bold tracking-wider">Mon</div>
+<div class="font-section-title text-section-title text-primary">24</div>
+</div>
+<!-- Current Time Line -->
+<div class="absolute top-[150px] left-0 w-full z-10 pointer-events-none">
+<div class="w-full h-px bg-status-danger"></div>
+<div class="absolute -left-1 -top-1 w-2 h-2 rounded-full bg-status-danger"></div>
+</div>
+<!-- Slot 1: Scheduled (09:00 - 09:45) -->
+<div class="absolute top-[60px] left-1 right-1 h-[45px] bg-[#E8F0F8] border border-status-info/20 rounded-DEFAULT p-2 flex flex-col justify-between cursor-pointer hover:border-status-info/50 transition-colors group">
+<div class="flex justify-between items-start">
+<span class="font-table-data text-table-data font-semibold text-primary truncate leading-tight">Ogunleye, B.</span>
+<span class="font-micro-label text-micro-label bg-white px-1 rounded text-text-secondary border border-border-subtle leading-tight">09:00</span>
+</div>
+<div class="font-supporting text-supporting text-primary/70 truncate flex items-center gap-1 leading-tight">
+<span class="w-1.5 h-1.5 rounded-full bg-status-info"></span> Initial Consult
+                                    </div>
+</div>
+<!-- Slot 2: Selected State (10:30 - 11:30) -->
+<div class="absolute top-[150px] left-1 right-1 h-[60px] bg-white border-l-2 border-l-secondary-fixed border-y border-r border-border-subtle rounded-r-DEFAULT shadow-[0_4px_12px_rgba(0,0,0,0.05)] p-2 flex flex-col justify-between cursor-pointer z-20">
+<div class="flex justify-between items-start">
+<span class="font-table-data text-table-data font-semibold text-primary truncate leading-tight">Adebayo, M.</span>
+<span class="font-micro-label text-micro-label bg-secondary-fixed-dim/20 px-1 rounded text-secondary leading-tight">10:30</span>
+</div>
+<div class="font-supporting text-supporting text-text-secondary truncate leading-tight">Cardiology Follow-up</div>
+<div class="flex gap-1 mt-0.5">
+<span class="bg-status-warning/10 text-status-warning font-micro-label text-[9px] px-1 rounded uppercase">Arrived</span>
+</div>
+</div>
+<!-- Slot 3: Completed (13:00 - 13:30) -->
+<div class="absolute top-[300px] left-1 right-1 h-[30px] bg-surface-container-low border border-border-subtle rounded-DEFAULT p-1.5 flex items-center justify-between cursor-pointer opacity-70">
+<div class="flex items-center gap-2 overflow-hidden">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success flex-shrink-0"></span>
+<span class="font-table-data text-table-data font-semibold text-text-secondary truncate leading-none">Eze, K.</span>
+</div>
+<span class="material-symbols-outlined text-[14px] text-status-success flex-shrink-0">check_circle</span>
+</div>
+</div>
+<!-- Tue -->
+<div class="relative min-h-[480px]">
+<div class="sticky top-0 bg-white border-b border-border-subtle py-2 px-3 text-center z-10">
+<div class="font-supporting text-supporting text-text-secondary uppercase">Tue</div>
+<div class="font-body-medium text-body-medium text-text-secondary">25</div>
+</div>
+<div class="absolute top-[120px] left-1 right-1 h-[60px] bg-[#FFF5E6] border border-status-warning/20 rounded-DEFAULT p-2 flex flex-col justify-between cursor-pointer">
+<div class="flex justify-between items-start">
+<span class="font-table-data text-table-data font-semibold text-primary truncate leading-tight">Ojo, P.</span>
+</div>
+<div class="font-supporting text-supporting text-primary/70 truncate leading-tight">Lab Review</div>
+</div>
+</div>
+<!-- Wed -->
+<div class="relative min-h-[480px] bg-surface-bright/50">
+<div class="sticky top-0 bg-white border-b border-border-subtle py-2 px-3 text-center z-10">
+<div class="font-supporting text-supporting text-text-secondary uppercase">Wed</div>
+<div class="font-body-medium text-body-medium text-text-secondary">26</div>
+</div>
+<!-- Blocked Out Area -->
+<div class="absolute top-[180px] left-0 right-0 h-[120px] bg-[repeating-linear-gradient(45deg,transparent,transparent_4px,#f3f0ef_4px,#f3f0ef_8px)] border-y border-border-subtle/50 flex items-center justify-center pointer-events-none">
+<span class="bg-white/80 px-2 py-1 rounded font-micro-label text-text-secondary border border-border-subtle">Admin Block</span>
+</div>
+</div>
+<!-- Thu -->
+<div class="relative min-h-[480px]">
+<div class="sticky top-0 bg-white border-b border-border-subtle py-2 px-3 text-center z-10">
+<div class="font-supporting text-supporting text-text-secondary uppercase">Thu</div>
+<div class="font-body-medium text-body-medium text-text-secondary">27</div>
+</div>
+</div>
+<!-- Fri -->
+<div class="relative min-h-[480px]">
+<div class="sticky top-0 bg-white border-b border-border-subtle py-2 px-3 text-center z-10">
+<div class="font-supporting text-supporting text-text-secondary uppercase">Fri</div>
+<div class="font-body-medium text-body-medium text-text-secondary">28</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Pane: Appointment Detail View (High Density, Clinical Focus) -->
+<aside class="w-full lg:w-[400px] flex flex-col h-full bg-white shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-20 flex-shrink-0">
+<!-- Detail Header -->
+<div class="p-6 border-b border-border-subtle bg-surface-container-lowest">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-2">
+<span class="bg-status-warning/10 text-status-warning font-micro-label text-micro-label px-2 py-0.5 rounded uppercase font-bold tracking-wider">Arrived • Waiting</span>
+<span class="text-text-secondary font-supporting text-supporting">Slot: 10:30 - 11:30</span>
+</div>
+<button class="text-text-secondary hover:text-primary"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-1">Adebayo, Michael</h3>
+<div class="font-body-default text-body-default text-text-secondary mb-4 flex items-center gap-2">
+<span>42Y • Male • MRN: 8829-10A</span>
+<span class="w-1 h-1 rounded-full bg-border-subtle"></span>
+<a class="text-status-info hover:underline flex items-center gap-1" href="#"><span class="material-symbols-outlined text-[14px]">open_in_new</span> Chart</a>
+</div>
+<!-- Core Actions -->
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-primary text-on-primary rounded-DEFAULT h-control-min-height font-body-medium text-body-medium flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span> Start Encounter
+                        </button>
+<button class="bg-white text-primary border border-border-subtle rounded-DEFAULT h-control-min-height font-body-medium text-body-medium flex items-center justify-center gap-2 hover:bg-surface-container-lowest transition-colors">
+<span class="material-symbols-outlined text-[18px]">how_to_reg</span> Check In
+                        </button>
+</div>
+</div>
+<!-- Detail Content Scroll -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<!-- Encounter Context Bento -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Provider -->
+<div class="border border-border-subtle rounded-DEFAULT p-3 bg-surface-bright">
+<div class="font-micro-label text-micro-label text-text-secondary uppercase mb-1">Provider</div>
+<div class="font-body-medium text-body-medium text-primary">Dr. A. Okafor</div>
+<div class="font-supporting text-supporting text-text-secondary">Cardiology</div>
+</div>
+<!-- Service -->
+<div class="border border-border-subtle rounded-DEFAULT p-3 bg-surface-bright">
+<div class="font-micro-label text-micro-label text-text-secondary uppercase mb-1">Service Type</div>
+<div class="font-body-medium text-body-medium text-primary">F/U Routine</div>
+<div class="font-supporting text-supporting text-text-secondary">Code: 99213</div>
+</div>
+</div>
+<hr class="border-border-subtle"/>
+<!-- Clinical Prerequisites -->
+<div>
+<h4 class="font-card-title text-card-title text-primary mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-text-secondary">fact_check</span> Prerequisites
+                        </h4>
+<div class="space-y-2">
+<div class="flex justify-between items-center p-2 rounded hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-status-success text-[18px]">check_circle</span>
+<span class="font-table-data text-table-data text-primary">General Consent Form</span>
+</div>
+<span class="font-supporting text-supporting text-text-secondary">Signed Oct 12</span>
+</div>
+<div class="flex justify-between items-center p-2 rounded hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-status-warning text-[18px]">pending</span>
+<span class="font-table-data text-table-data text-primary">Pre-Visit Questionnaire</span>
+</div>
+<button class="font-supporting text-supporting text-status-info hover:underline">Send Reminder</button>
+</div>
+<div class="flex justify-between items-center p-2 rounded hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-status-success text-[18px]">check_circle</span>
+<span class="font-table-data text-table-data text-primary">Vitals Captured</span>
+</div>
+<span class="font-supporting text-supporting text-text-secondary">10:45 AM</span>
+</div>
+</div>
+</div>
+<hr class="border-border-subtle"/>
+<!-- Financial / Balance -->
+<div>
+<h4 class="font-card-title text-card-title text-primary mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-text-secondary">payments</span> Account Status
+                        </h4>
+<div class="bg-white border border-border-subtle rounded-DEFAULT p-3">
+<div class="flex justify-between items-end mb-2">
+<div>
+<div class="font-supporting text-supporting text-text-secondary mb-1">Patient Balance</div>
+<div class="font-section-title text-section-title text-status-danger">₦12,500.00</div>
+</div>
+<button class="bg-white text-primary border border-border-subtle rounded px-3 py-1 font-body-medium text-body-medium hover:bg-surface-container-low">Collect</button>
+</div>
+<div class="flex items-center gap-2 mt-3 pt-3 border-t border-border-subtle/50">
+<span class="material-symbols-outlined text-[16px] text-status-info">verified</span>
+<span class="font-supporting text-supporting text-text-secondary">NHIS Active (HMO: Reliance)</span>
+</div>
+</div>
+</div>
+<!-- Clinical Notes Preview -->
+<div>
+<h4 class="font-card-title text-card-title text-primary mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-text-secondary">description</span> Chief Complaint
+                        </h4>
+<div class="bg-surface p-3 rounded-DEFAULT border border-border-subtle font-body-default text-body-default text-primary italic">
+                            "Experiencing mild palpitations after evening meals for the past 3 weeks. No shortness of breath."
+                        </div>
+</div>
+</div>
+</aside>
+</main>
+</div>
+</body></html>

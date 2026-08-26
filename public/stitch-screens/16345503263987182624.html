@@ -1,0 +1,2812 @@
+# ATUNSE HEALTH × FARAWA
+
+# PROTOTYPE SCREEN DESIGN SPECIFICATION
+
+**Document Type:** Strict Prototype Design Instructions\
+**Product:** Atunse Health Digital Health Platform / EMR\
+**Audience:** Product Designer, UX/UI Designer, Prototype Builder,
+Frontend Engineer\
+**Status:** Prototype Build Specification\
+**Version:** 1.0\
+**Date:** August 2026
+
+------------------------------------------------------------------------
+
+## 0. PURPOSE OF THIS DOCUMENT
+
+This document is the authoritative design instruction for the Atunse
+Health prototype.
+
+The prototype must demonstrate the product as a **serious
+production-oriented EMR and digital health operating environment**, not
+as a generic hospital dashboard, SaaS admin template, or collection of
+attractive screens.
+
+The prototype must communicate five things immediately:
+
+1.  **EMR is the centre of the product.**
+2.  **Protocols are executable workflows, not PDF documents.**
+3.  **The patient journey is connected from registration through care,
+    billing and follow-up.**
+4.  **Trust is built into the platform through consent, auditability and
+    chain-of-custody tracking.**
+5.  **The system works on mobile and can continue selected workflows
+    offline.**
+
+The prototype should make the technology feel **compact, robust,
+configurable and institutionally credible**.
+
+Do not build unnecessary feature breadth merely to make the prototype
+look large.
+
+The visual and interaction design should imply that the underlying
+system is capable of much more than is shown.
+
+------------------------------------------------------------------------
+
+# 1. DESIGN NORTH STAR
+
+## 1.1 Product Positioning
+
+The interface should visually position Atunse as:
+
+> **A protocol-driven EMR and digital health operating platform.**
+
+Not:
+
+-   a hospital CRM;
+-   a generic clinic management app;
+-   a research dashboard;
+-   a blockchain product;
+-   an AI chatbot product;
+-   a billing system;
+-   a consumer wellness app.
+
+Those capabilities exist, but the **EMR is the primary product**.
+
+------------------------------------------------------------------------
+
+## 1.2 Core Product Narrative
+
+Every major screen should reinforce this operating chain:
+
+**PATIENT → CONSENT → BOOKING → EMR → PROTOCOL → CARE → BILLING →
+FOLLOW-UP → GOVERNANCE → INTELLIGENCE**
+
+The interface should make these relationships visible without forcing
+users to understand the architecture.
+
+------------------------------------------------------------------------
+
+# 2. DESIGN PRINCIPLES
+
+## 2.1 Clinical First
+
+The patient record must always feel more important than administration.
+
+Clinical information receives the strongest visual hierarchy.
+
+------------------------------------------------------------------------
+
+## 2.2 Action Over Decoration
+
+Every dashboard element must answer one of these questions:
+
+-   What needs attention?
+-   What happened?
+-   What is happening now?
+-   What happens next?
+-   Who is responsible?
+-   Is there a risk?
+-   Is the record complete?
+
+Do not add decorative charts simply because the screen looks empty.
+
+------------------------------------------------------------------------
+
+## 2.3 Dense but Calm
+
+Healthcare software needs information density.
+
+However, density must come from **structure**, not clutter.
+
+Use:
+
+-   clear grouping;
+-   strong alignment;
+-   restrained cards;
+-   tables where tables are appropriate;
+-   timelines;
+-   status chips;
+-   progressive disclosure.
+
+Avoid:
+
+-   giant rounded cards;
+-   excessive gradients;
+-   excessive shadows;
+-   oversized icons;
+-   decorative illustrations;
+-   excessive whitespace around critical data.
+
+------------------------------------------------------------------------
+
+## 2.4 One Record, Many Views
+
+The same patient data should appear consistently throughout the
+prototype.
+
+If a patient is booked on the Scheduling screen, that appointment must
+appear in the patient record.
+
+If consent is withdrawn, the patient record must show it.
+
+If a clinical encounter generates a bill, the financial history must
+reflect it.
+
+If a protocol step is completed, the patient's protocol timeline must
+reflect it.
+
+The prototype must feel like **one connected system**.
+
+------------------------------------------------------------------------
+
+# 3. VISUAL SYSTEM
+
+## 3.1 Overall Aesthetic
+
+Use a **premium clinical enterprise aesthetic**.
+
+Reference characteristics:
+
+-   white or very light neutral canvas;
+-   deep navy as the primary brand colour;
+-   restrained heritage-gold accent;
+-   charcoal primary text;
+-   muted slate secondary text;
+-   subtle neutral borders;
+-   minimal shadows;
+-   compact cards;
+-   generous but controlled spacing.
+
+No gradients.
+
+No neon.
+
+No glowing AI effects.
+
+No futuristic blockchain imagery.
+
+No cartoon medical illustrations.
+
+------------------------------------------------------------------------
+
+## 3.2 Colour System
+
+Use the following base palette:
+
+  -----------------------------------------------------------------------
+  Token                   Value                   Usage
+  ----------------------- ----------------------- -----------------------
+  Primary Navy            `#002F5F`               Primary navigation,
+                                                  headings, primary
+                                                  actions
+
+  Deep Navy               `#003F7D`               Hover/active states
+
+  Heritage Gold           `#D4AF37`               High-value accent,
+                                                  selected states, trust
+                                                  indicators
+
+  White                   `#FFFFFF`               Main surface
+
+  Surface                 `#F8F8F6`               Page/background
+                                                  surfaces
+
+  Text                    `#111111`               Primary text
+
+  Secondary Text          `#667085`               Supporting text
+
+  Border                  `#E4E7EC`               Dividers and controls
+
+  Success                 restrained green        Confirmed/completed
+
+  Warning                 restrained amber        Attention
+
+  Danger                  restrained red          Critical/problem
+
+  Info                    restrained blue         Informational
+  -----------------------------------------------------------------------
+
+Do not use colour as the only indicator of status.
+
+Always combine colour with text, iconography or shape.
+
+------------------------------------------------------------------------
+
+## 3.3 Typography
+
+Use **Inter** throughout the application.
+
+Suggested hierarchy:
+
+-   Page title: 28--32px / 700
+-   Section title: 18--22px / 650--700
+-   Card title: 15--17px / 600
+-   Body: 14px / 400--500
+-   Table: 13--14px
+-   Supporting text: 12--13px
+-   Micro labels: 11--12px / 600
+
+Avoid giant dashboard typography.
+
+This is a clinical system, not a marketing website.
+
+------------------------------------------------------------------------
+
+# 4. APPLICATION SHELL
+
+## 4.1 Desktop Layout
+
+Use a persistent left navigation.
+
+### Left Navigation
+
+Width:
+
+**240--260px**
+
+Contents:
+
+1.  Atunse Health logo
+2.  Facility / tenant selector
+3.  Search
+4.  Overview
+5.  Patients
+6.  Appointments
+7.  Clinical
+8.  Protocols
+9.  Billing
+10. People
+11. Institutions
+12. Trust & Governance
+13. Ogami
+14. Reports
+15. Administration
+
+Bottom:
+
+-   Sync status
+-   Help
+-   User profile
+
+------------------------------------------------------------------------
+
+## 4.2 Top Bar
+
+The top bar contains:
+
+### Left
+
+Current page title and optional breadcrumb.
+
+### Centre
+
+Global search.
+
+Search should support:
+
+-   patient;
+-   appointment;
+-   protocol;
+-   staff;
+-   institution;
+-   document.
+
+### Right
+
+-   Notifications
+-   Sync indicator
+-   Offline indicator when applicable
+-   Help
+-   User menu
+
+------------------------------------------------------------------------
+
+## 4.3 Mobile Shell
+
+Do not simply shrink the desktop sidebar.
+
+Use:
+
+-   top header;
+-   compact patient/context header;
+-   bottom navigation;
+-   contextual floating action where useful.
+
+Primary mobile navigation:
+
+1.  Home
+2.  Patients
+3.  Schedule
+4.  Tasks
+5.  More
+
+Critical workflows should be reachable in three taps or fewer.
+
+------------------------------------------------------------------------
+
+# 5. PROTOTYPE DATA MODEL
+
+The prototype must use consistent seeded data.
+
+Create at least:
+
+### Patients
+
+-   12--20 patients
+-   mix of active/inactive
+-   at least 3 patients with protocol activity
+-   at least 2 patients with outstanding balances
+-   at least 2 patients with consent events
+-   at least 1 patient with historical migrated records
+-   at least 1 patient demonstrating offline-created activity
+
+### Staff
+
+-   Medical Director
+-   Physician
+-   Nurse
+-   Study/Clinical Coordinator
+-   Pharmacist/Product Custodian
+-   Front Desk
+-   Finance Officer
+-   Administrator
+
+### Institutions
+
+-   Atunse Health
+-   referring institution
+-   laboratory
+-   pharmacy
+-   corporate partner
+
+### Protocols
+
+At minimum:
+
+-   Dementia ADDSB Dual-Route
+-   General Clinical Assessment
+-   Follow-up / Review
+
+The prototype should show protocol versioning.
+
+------------------------------------------------------------------------
+
+# 6. SCREEN INVENTORY
+
+The prototype should contain the following screens.
+
+## Core Screens
+
+1.  Login
+2.  Facility / Workspace Selection
+3.  Main Dashboard
+4.  Patient Directory
+5.  Patient Profile / EMR
+6.  Patient Timeline
+7.  New Patient Registration
+8.  Existing Patient Data / Migration Review
+9.  Appointment Calendar
+10. Appointment Detail
+11. Clinical Encounter
+12. Protocol Execution
+13. Protocol Builder
+14. Protocol Version History
+15. Billing Dashboard
+16. Invoice / Transaction Detail
+17. People & Personnel
+18. Institution / Partner Directory
+19. Consent Management
+20. Chain of Custody
+21. Governance / Audit Ledger
+22. AI & Clinical Intelligence
+23. Ogami Conversation
+24. Reports
+25. Administration / Configuration
+26. Mobile Home
+27. Mobile Patient Record
+28. Mobile Clinical Workflow
+29. Offline Mode
+30. Sync / Conflict Resolution
+
+------------------------------------------------------------------------
+
+# 7. SCREEN 01 --- LOGIN
+
+## Objective
+
+Establish a serious secure-healthcare first impression.
+
+## Layout
+
+Centred authentication panel on a restrained light background.
+
+Left side, on desktop:
+
+-   Atunse Health mark;
+-   short statement: **"Protocol-driven care. One trusted record."**
+
+Right side:
+
+-   Email / username
+-   Password
+-   Sign in
+-   Forgot password
+-   optional SSO button
+
+Bottom:
+
+**Protected clinical environment**
+
+Do not put marketing copy everywhere.
+
+------------------------------------------------------------------------
+
+# 8. SCREEN 02 --- FACILITY / WORKSPACE SELECTION
+
+## Objective
+
+Demonstrate multi-tenant and multi-facility capability.
+
+Display:
+
+**Select workspace**
+
+Cards or compact rows:
+
+-   Atunse Health --- Main Facility
+-   Atunse Health --- Research / Clinical Programme
+-   Partner Facility
+
+Each shows:
+
+-   facility name;
+-   location;
+-   user role;
+-   last access.
+
+Do not make this screen visually heavy.
+
+------------------------------------------------------------------------
+
+# 9. SCREEN 03 --- MAIN DASHBOARD
+
+## Objective
+
+Show the organisation's operating state at a glance.
+
+### Header
+
+**Good morning, Dr. \[Name\]**
+
+Subtext:
+
+**Tuesday, 25 August 2026 · Atunse Health**
+
+### KPI row
+
+Use 4--5 compact metrics:
+
+-   Today's appointments
+-   Patients currently in care
+-   Pending clinical tasks
+-   Outstanding balances
+-   Protocol exceptions
+
+Do not make KPI cards enormous.
+
+### Main content
+
+Left 60%:
+
+**Today's Care**
+
+Timeline/table:
+
+-   time
+-   patient
+-   service
+-   practitioner
+-   status
+
+Right 40%:
+
+**Attention Required**
+
+Items such as:
+
+-   consent awaiting confirmation;
+-   protocol deviation;
+-   overdue follow-up;
+-   unpaid invoice;
+-   pending approval.
+
+### Bottom section
+
+**Protocol Intelligence**
+
+Show:
+
+-   adherence rate;
+-   exceptions this week;
+-   emerging pattern;
+-   recommended review.
+
+AI recommendations must clearly show:
+
+**Recommendation --- Human review required**
+
+------------------------------------------------------------------------
+
+# 10. SCREEN 04 --- PATIENT DIRECTORY
+
+## Objective
+
+Make patient discovery fast.
+
+### Header
+
+**Patients**
+
+Primary action:
+
+**+ Register Patient**
+
+Secondary:
+
+**Import / Review Existing Records**
+
+Search bar:
+
+**Search name, patient ID, phone, identifier**
+
+Filters:
+
+-   Active
+-   Pending
+-   Follow-up
+-   Protocol
+-   Consent
+-   Outstanding balance
+-   Facility
+
+### Table
+
+Columns:
+
+-   Patient
+-   ID
+-   Age
+-   Primary care status
+-   Last visit
+-   Next appointment
+-   Consent
+-   Protocol
+-   Balance
+-   Status
+
+Use compact rows.
+
+Clicking a patient opens the EMR.
+
+------------------------------------------------------------------------
+
+# 11. SCREEN 05 --- PATIENT PROFILE / EMR
+
+## THIS IS THE MOST IMPORTANT SCREEN IN THE PROTOTYPE.
+
+The patient profile must feel like the centre of the entire system.
+
+### Header
+
+Left:
+
+Patient photograph/avatar
+
+**Amina Okafor**
+
+**ATN-000184**
+
+Age · Sex · Phone
+
+Right:
+
+-   Book appointment
+-   Start encounter
+-   Add note
+-   More
+
+### Patient status strip
+
+Show:
+
+-   Active
+-   Consent: Current
+-   Protocol: Active
+-   Next appointment
+-   Outstanding balance
+-   Sync status
+
+### Navigation tabs
+
+1.  Overview
+2.  Timeline
+3.  Clinical
+4.  Protocol
+5.  Appointments
+6.  Billing
+7.  Consent
+8.  Documents
+9.  Audit
+
+### Overview
+
+Two-column layout.
+
+Left:
+
+**Clinical Summary**
+
+-   conditions
+-   allergies
+-   medications
+-   risk flags
+-   care plan
+
+Right:
+
+**Next Actions**
+
+-   upcoming appointment
+-   protocol step
+-   pending consent
+-   follow-up
+-   outstanding task
+
+### Timeline
+
+Use a vertical chronological timeline.
+
+Example:
+
+**25 Aug · 10:42**
+
+Clinical encounter completed
+
+**25 Aug · 10:38**
+
+Protocol step 04 completed
+
+**25 Aug · 10:10**
+
+Consent verified
+
+**24 Aug · 16:30**
+
+Appointment booked
+
+Each event must show:
+
+-   actor
+-   role
+-   timestamp
+-   status
+-   source
+
+------------------------------------------------------------------------
+
+# 12. SCREEN 06 --- PATIENT TIMELINE
+
+## Objective
+
+Show the longitudinal record.
+
+Timeline filters:
+
+-   All
+-   Clinical
+-   Protocol
+-   Billing
+-   Communication
+-   Consent
+-   Governance
+
+Each event card:
+
+**Event type**
+
+Short description
+
+**Actor · date/time**
+
+Status badge
+
+Action:
+
+**View details**
+
+Use vertical chronology.
+
+This screen should make the concept of an authoritative longitudinal
+record obvious.
+
+------------------------------------------------------------------------
+
+# 13. SCREEN 07 --- NEW PATIENT REGISTRATION
+
+## Objective
+
+Demonstrate structured registration and consent.
+
+Use a stepper:
+
+**1 Identity → 2 Demographics → 3 Contacts → 4 Clinical Basics → 5
+Consent → 6 Review**
+
+### Step 1
+
+-   patient ID generated automatically;
+-   legal name;
+-   preferred name;
+-   DOB;
+-   sex;
+-   national/other identifier;
+-   photograph;
+-   identification document.
+
+### Step 2
+
+-   address;
+-   occupation;
+-   language;
+-   emergency contact;
+-   next of kin.
+
+### Step 3
+
+-   phone;
+-   email;
+-   preferred communication.
+
+### Step 4
+
+-   allergies;
+-   medications;
+-   relevant history;
+-   presenting concern.
+
+### Step 5
+
+Consent panel.
+
+Show:
+
+-   consent purpose;
+-   version;
+-   status;
+-   signer;
+-   date/time;
+-   witness if required.
+
+### Step 6
+
+Review before creation.
+
+Primary:
+
+**Create Patient Record**
+
+------------------------------------------------------------------------
+
+# 14. SCREEN 08 --- EXISTING PATIENT DATA / MIGRATION REVIEW
+
+## Objective
+
+Show that existing Atunse records can enter the new longitudinal system
+without losing provenance.
+
+Header:
+
+**Existing Records Migration**
+
+Display summary:
+
+-   Records found
+-   Matched
+-   Needs review
+-   Duplicates
+-   Imported
+-   Exceptions
+
+### Main table
+
+Columns:
+
+-   Source ID
+-   Proposed Patient
+-   Match confidence
+-   Record type
+-   Date range
+-   Status
+-   Action
+
+For uncertain matches:
+
+**Review Match**
+
+Show side-by-side:
+
+**Source Record**
+
+vs.
+
+**Atunse Patient**
+
+Actions:
+
+-   Confirm match
+-   Create new patient
+-   Merge
+-   Reject
+
+Never imply that migration silently overwrites existing records.
+
+Imported records must retain:
+
+-   source;
+-   original date;
+-   migration date;
+-   migration status.
+
+------------------------------------------------------------------------
+
+# 15. SCREEN 09 --- APPOINTMENT CALENDAR
+
+## Objective
+
+Make scheduling a core operational system.
+
+Header:
+
+**Appointments**
+
+Actions:
+
+-   New appointment
+-   New patient
+-   Availability
+
+Views:
+
+-   Day
+-   Week
+-   Month
+
+Filters:
+
+-   Provider
+-   Facility
+-   Service
+-   Room
+-   Status
+
+Appointment card:
+
+**10:30**
+
+Patient name
+
+Service
+
+Provider
+
+Status
+
+Protocol if applicable
+
+Colour should indicate status, not arbitrary categories.
+
+------------------------------------------------------------------------
+
+# 16. SCREEN 10 --- APPOINTMENT DETAIL
+
+Display:
+
+Patient
+
+Appointment type
+
+Provider
+
+Facility
+
+Date/time
+
+Status
+
+### Patient context
+
+-   consent status;
+-   outstanding balance;
+-   protocol status;
+-   previous visit.
+
+Actions:
+
+-   Check in
+-   Reschedule
+-   Cancel
+-   Start encounter
+
+Show appointment history below.
+
+------------------------------------------------------------------------
+
+# 17. SCREEN 11 --- CLINICAL ENCOUNTER
+
+## Objective
+
+Make clinical documentation efficient.
+
+Header:
+
+Patient name + ID
+
+Encounter status
+
+### Left/main
+
+Clinical note.
+
+Sections:
+
+-   reason for visit;
+-   history;
+-   examination;
+-   observations;
+-   assessment;
+-   plan.
+
+### Right rail
+
+**Patient Context**
+
+-   allergies;
+-   active medications;
+-   conditions;
+-   latest vitals;
+-   active protocol;
+-   alerts.
+
+### Bottom
+
+-   Save draft
+-   Sign & complete
+
+Signed entries become immutable events.
+
+Corrections create new versioned entries rather than silently replacing
+the old record.
+
+------------------------------------------------------------------------
+
+# 18. SCREEN 12 --- PROTOCOL EXECUTION
+
+## This screen is critical.
+
+The protocol must look like an **executable workflow**, not a PDF
+viewer.
+
+Header:
+
+**Dementia ADDSB Dual-Route**
+
+Version:
+
+**v1.0 · Active**
+
+Patient:
+
+**Amina Okafor · ATN-000184**
+
+Progress:
+
+**Session 3 of 6**
+
+### Step indicator
+
+1.  Eligibility
+2.  Consent
+3.  Pre-treatment
+4.  Administration
+5.  Monitoring
+6.  Follow-up
+
+Current step is visually dominant.
+
+### Current step
+
+Display required checks as structured tasks.
+
+For example:
+
+**Pre-treatment readiness**
+
+-   Authorisations on file
+-   Products in date
+-   Certificate reviewed
+-   Cold chain intact
+-   Device ready
+-   Emergency kit present
+-   Forms prepared
+
+Each has:
+
+-   status;
+-   actor;
+-   timestamp.
+
+### Two-person timeout
+
+Show a dedicated verification block.
+
+**Correct patient**
+
+**Correct product**
+
+**Correct route**
+
+**Correct dose**
+
+**Correct device**
+
+**Correct lot**
+
+**Documentation complete**
+
+Each requires confirmation.
+
+Do not allow the prototype to imply that a critical step can be skipped
+casually.
+
+### Bottom
+
+**Complete Step**
+
+**Record Exception**
+
+------------------------------------------------------------------------
+
+# 19. SCREEN 13 --- PROTOCOL EXECUTION / ADMINISTRATION
+
+Use a structured clinical workflow.
+
+Show:
+
+### Product
+
+-   product;
+-   lot;
+-   expiry;
+-   quantity.
+
+### Administration
+
+-   route;
+-   dose;
+-   start time;
+-   stop time;
+-   operator.
+
+### Monitoring
+
+-   baseline;
+-   observation;
+-   event;
+-   response.
+
+### Deviations
+
+If a deviation occurs:
+
+**Record deviation**
+
+Fields:
+
+-   deviation type;
+-   reason;
+-   severity;
+-   action;
+-   responsible person;
+-   timestamp.
+
+The system must automatically connect the deviation to the protocol
+version.
+
+------------------------------------------------------------------------
+
+# 20. SCREEN 14 --- PROTOCOL BUILDER
+
+## Objective
+
+Demonstrate that Atunse protocols can be configured rather than
+hard-coded.
+
+Header:
+
+**Protocol Builder**
+
+Left:
+
+Protocol structure tree.
+
+Example:
+
+-   Eligibility
+-   Consent
+-   Baseline
+-   Treatment
+-   Monitoring
+-   Follow-up
+
+Centre:
+
+Current workflow step.
+
+Components:
+
+-   question;
+-   checkbox;
+-   field;
+-   instruction;
+-   condition;
+-   task;
+-   alert;
+-   signature;
+-   timer;
+-   approval.
+
+Right:
+
+**Configuration**
+
+-   label;
+-   required;
+-   visibility condition;
+-   responsible role;
+-   validation;
+-   trigger;
+-   next action.
+
+Bottom:
+
+**Save Draft**
+
+**Submit for Review**
+
+------------------------------------------------------------------------
+
+# 21. SCREEN 15 --- PROTOCOL VERSION HISTORY
+
+Show:
+
+**Protocol: Dementia ADDSB**
+
+Versions:
+
+-   v1.2 Draft
+-   v1.1 Active
+-   v1.0 Archived
+
+Columns:
+
+-   Version
+-   Status
+-   Effective date
+-   Author
+-   Approved by
+-   Changes
+-   Deployment
+
+Actions:
+
+**Compare**
+
+**View**
+
+**Rollback**
+
+Make version control visibly serious.
+
+------------------------------------------------------------------------
+
+# 22. SCREEN 16 --- BILLING DASHBOARD
+
+## Objective
+
+Show that revenue is connected to care.
+
+KPIs:
+
+-   Today's revenue
+-   Outstanding
+-   Paid
+-   Pending
+-   Overdue
+
+Main table:
+
+Patient
+
+Service
+
+Provider
+
+Invoice
+
+Amount
+
+Status
+
+### Revenue flow visual
+
+**Service Delivered → Charge → Invoice → Payment → Reconciliation**
+
+Keep it simple.
+
+------------------------------------------------------------------------
+
+# 23. SCREEN 17 --- INVOICE / TRANSACTION DETAIL
+
+Show:
+
+Patient
+
+Invoice number
+
+Service
+
+Provider
+
+Date
+
+Amount
+
+Payment status
+
+### Audit section
+
+-   created by;
+-   approved by;
+-   issued;
+-   payment received;
+-   adjustments;
+-   refund.
+
+For any adjustment:
+
+show the reason and authorisation.
+
+------------------------------------------------------------------------
+
+# 24. SCREEN 18 --- PEOPLE & PERSONNEL
+
+Header:
+
+**People**
+
+Tabs:
+
+-   Staff
+-   Roles
+-   Credentials
+-   Availability
+-   Activity
+
+Staff row:
+
+Name
+
+Role
+
+Department
+
+Facility
+
+Credential status
+
+Availability
+
+Last activity
+
+Click opens staff profile.
+
+------------------------------------------------------------------------
+
+# 25. SCREEN 19 --- STAFF PROFILE
+
+Show:
+
+Identity
+
+Role
+
+Departments
+
+Facilities
+
+Permissions
+
+Credentials
+
+Activity
+
+### Credential panel
+
+Show:
+
+Credential
+
+Issued
+
+Expires
+
+Status
+
+Reminder
+
+### Activity
+
+Every significant action is traceable.
+
+Do not expose sensitive audit detail by default; allow authorised users
+to drill down.
+
+------------------------------------------------------------------------
+
+# 26. SCREEN 20 --- INSTITUTIONS & PARTNERS
+
+Directory with:
+
+-   institution;
+-   type;
+-   relationship;
+-   contact;
+-   status;
+-   services;
+-   referral volume.
+
+Institution detail:
+
+-   profile;
+-   contacts;
+-   relationship;
+-   referrals;
+-   services;
+-   documents;
+-   activity.
+
+------------------------------------------------------------------------
+
+# 27. SCREEN 21 --- CONSENT MANAGEMENT
+
+## Objective
+
+Make consent a live system state.
+
+Header:
+
+**Consent**
+
+Patient context always visible.
+
+### Current state
+
+**CONSENT ACTIVE**
+
+Show:
+
+-   consent type;
+-   purpose;
+-   version;
+-   signed by;
+-   date;
+-   expiry;
+-   witness;
+-   source.
+
+### History
+
+Timeline:
+
+Consent captured
+
+Consent modified
+
+Consent renewed
+
+Consent withdrawn
+
+### Actions
+
+-   View consent
+-   Renew
+-   Modify
+-   Withdraw
+-   Verify
+
+Never design consent as a simple checkbox.
+
+------------------------------------------------------------------------
+
+# 28. SCREEN 22 --- CHAIN OF CUSTODY
+
+## Objective
+
+Show a practical, serious trust system.
+
+Header:
+
+**Chain of Custody**
+
+Search:
+
+Asset / specimen / document / patient / event
+
+### Asset card
+
+-   Item ID
+-   Type
+-   Current custodian
+-   Status
+-   Current location
+-   Last verified
+
+### Custody timeline
+
+**Received**
+
+Actor
+
+Date/time
+
+Location
+
+Authority
+
+↓
+
+**Stored**
+
+Actor
+
+Date/time
+
+Storage condition
+
+↓
+
+**Transferred**
+
+From
+
+To
+
+Authority
+
+↓
+
+**Used**
+
+Actor
+
+Date/time
+
+Purpose
+
+↓
+
+**Reconciled**
+
+Outcome
+
+Every event must have a timestamp and actor.
+
+Include a small:
+
+**Ledger verified**
+
+indicator.
+
+Do not display a fake cryptocurrency/blockchain aesthetic.
+
+------------------------------------------------------------------------
+
+# 29. SCREEN 23 --- GOVERNANCE / AUDIT LEDGER
+
+Header:
+
+**Trust & Governance**
+
+Tabs:
+
+-   Audit
+-   Consent
+-   Custody
+-   Approvals
+-   Access
+-   Protocol changes
+
+Audit table:
+
+Timestamp
+
+Actor
+
+Action
+
+Object
+
+Authority
+
+Result
+
+Verification
+
+Example:
+
+**25 Aug 10:42**
+
+Dr. Adebayo
+
+Protocol step completed
+
+ATN-000184
+
+Clinical authority
+
+Verified
+
+### Ledger status
+
+**Integrity verified**
+
+Provide:
+
+**View event proof**
+
+The prototype should communicate tamper-evident verification without
+pretending the UI itself is a blockchain explorer.
+
+------------------------------------------------------------------------
+
+# 30. SCREEN 24 --- AI & CLINICAL INTELLIGENCE
+
+## Objective
+
+Show useful AI, not AI theatre.
+
+Header:
+
+**Clinical Intelligence**
+
+Top summary:
+
+-   Protocol adherence
+-   Exceptions
+-   Follow-up risk
+-   Operational bottlenecks
+
+### Recommendation card
+
+**Pattern detected**
+
+"Three protocol deviations have occurred at the post-treatment
+monitoring stage during the last 14 sessions."
+
+Then:
+
+**Potential explanation**
+
+Short explanation.
+
+Then:
+
+**Suggested review**
+
+"Review monitoring workflow and staffing allocation."
+
+Actions:
+
+**Review evidence**
+
+**Accept for review**
+
+**Dismiss**
+
+Always label AI-generated insights.
+
+Use:
+
+**AI-generated recommendation · Human review required**
+
+------------------------------------------------------------------------
+
+# 31. SCREEN 25 --- OGAMI CONVERSATION
+
+## Objective
+
+Show Ogami as a functional digital front office connected to the system.
+
+Desktop split:
+
+Left:
+
+Conversation.
+
+Right:
+
+Patient/lead context.
+
+Example conversation:
+
+Patient:
+
+"I'd like to book a consultation."
+
+Ogami:
+
+"Certainly. I have appointments available Tuesday at 10:30 or Wednesday
+at 14:00. Which works better?"
+
+After selection:
+
+**Appointment created**
+
+Show:
+
+-   patient;
+-   provider;
+-   date;
+-   appointment ID.
+
+CRM should update automatically.
+
+Do not make Ogami look like a generic ChatGPT clone.
+
+It is a **healthcare workflow agent**.
+
+------------------------------------------------------------------------
+
+# 32. SCREEN 26 --- REPORTS
+
+Reports should focus on operational decisions.
+
+Categories:
+
+### Clinical
+
+-   Patient activity
+-   Encounters
+-   Protocol adherence
+-   Outcomes
+
+### Operations
+
+-   Appointments
+-   No-shows
+-   Staff utilisation
+-   Service volume
+
+### Financial
+
+-   Revenue
+-   Outstanding
+-   Collections
+-   Service performance
+
+### Trust
+
+-   Consent status
+-   Access events
+-   Protocol changes
+-   Custody events
+
+### Intelligence
+
+-   Exceptions
+-   Trends
+-   AI recommendations
+
+Each report must have:
+
+-   date range;
+-   facility;
+-   export;
+-   filter.
+
+------------------------------------------------------------------------
+
+# 33. SCREEN 27 --- ADMINISTRATION / CONFIGURATION
+
+The configuration experience is important because the platform is
+explicitly intended to be easy to configure from the backend.
+
+Sections:
+
+-   Organisation
+-   Facilities
+-   Users
+-   Roles
+-   Permissions
+-   Services
+-   Forms
+-   Workflows
+-   Notifications
+-   Protocols
+-   Billing
+-   Integrations
+-   Data
+-   Security
+
+Configuration screens should use structured forms rather than exposing
+technical code.
+
+------------------------------------------------------------------------
+
+# 34. SCREEN 28 --- MOBILE HOME
+
+## Objective
+
+Show that this is a real operational PWA.
+
+Mobile header:
+
+Atunse Health
+
+User avatar
+
+Sync status
+
+Main:
+
+**Good morning**
+
+### Today's care
+
+Appointment cards.
+
+### Tasks
+
+-   pending consent;
+-   clinical task;
+-   protocol step;
+-   follow-up.
+
+### Quick actions
+
+-   Register patient
+-   Search patient
+-   Start encounter
+-   Scan / identify
+-   Book appointment
+
+Bottom nav:
+
+**Home · Patients · Schedule · Tasks · More**
+
+------------------------------------------------------------------------
+
+# 35. SCREEN 29 --- MOBILE PATIENT RECORD
+
+Header:
+
+Patient name
+
+ID
+
+Status
+
+Tabs should become horizontally scrollable or a compact segmented
+control.
+
+Show:
+
+-   patient summary;
+-   allergies;
+-   active protocol;
+-   next appointment;
+-   consent status.
+
+Primary action:
+
+**Start Encounter**
+
+Timeline below.
+
+Mobile must prioritise clinical action over navigation complexity.
+
+------------------------------------------------------------------------
+
+# 36. SCREEN 30 --- MOBILE CLINICAL WORKFLOW
+
+This is the key mobile workflow.
+
+Header:
+
+Patient
+
+Protocol
+
+Session
+
+Large current task.
+
+Example:
+
+**Pre-treatment readiness**
+
+Each item is a large touch target.
+
+Use minimum:
+
+**44--48px touch target**
+
+for interactive controls.
+
+Bottom action:
+
+**Complete Step**
+
+Secondary:
+
+**Record Exception**
+
+Do not use tiny desktop-style checkboxes on mobile.
+
+------------------------------------------------------------------------
+
+# 37. SCREEN 31 --- OFFLINE MODE
+
+## Objective
+
+Make offline capability explicit and credible.
+
+When disconnected:
+
+Top banner:
+
+**Offline mode**
+
+Subtext:
+
+"Changes are stored securely on this device and will synchronise when
+connectivity returns."
+
+Show:
+
+**Pending sync: 4**
+
+List:
+
+-   Patient registration --- pending
+-   Clinical note --- pending
+-   Appointment update --- pending
+-   Protocol step --- pending
+
+Each item:
+
+-   local timestamp;
+-   user;
+-   status.
+
+Do not use alarming red unless there is a genuine conflict/error.
+
+Offline mode should feel controlled, not broken.
+
+------------------------------------------------------------------------
+
+# 38. SCREEN 32 --- SYNC / CONFLICT RESOLUTION
+
+When connectivity returns:
+
+Show:
+
+**Synchronising**
+
+Progress.
+
+Then:
+
+**3 changes synchronised**
+
+If conflict:
+
+**1 item requires review**
+
+Show:
+
+**Local version**
+
+vs.
+
+**Server version**
+
+Actions:
+
+-   Keep server
+-   Keep local
+-   Merge
+-   Review later
+
+Never silently overwrite clinical information.
+
+For high-risk clinical records, force authorised review.
+
+------------------------------------------------------------------------
+
+# 39. PATIENT PORTAL PROTOTYPE
+
+Include a small patient-facing prototype if time allows.
+
+## Patient Home
+
+Show:
+
+-   upcoming appointment;
+-   care plan;
+-   recent results;
+-   consent;
+-   messages;
+-   outstanding balance.
+
+Primary:
+
+**View My Record**
+
+Secondary:
+
+**Book Appointment**
+
+------------------------------------------------------------------------
+
+# 40. PATIENT CONSENT SCREEN
+
+Patient sees:
+
+**Your consent**
+
+Purpose
+
+What information is used
+
+Who may access it
+
+Duration
+
+Status
+
+Actions:
+
+**Agree**
+
+**Decline**
+
+**Ask a question**
+
+Consent changes should require deliberate confirmation.
+
+------------------------------------------------------------------------
+
+# 41. PATIENT APPOINTMENT SCREEN
+
+Show:
+
+Upcoming appointments.
+
+Each card:
+
+Date
+
+Time
+
+Provider
+
+Location
+
+Service
+
+Actions:
+
+-   Reschedule
+-   Cancel
+-   View instructions
+
+------------------------------------------------------------------------
+
+# 42. CROSS-SCREEN INTERACTION RULES
+
+These rules are mandatory.
+
+## 42.1 Patient Identity
+
+Patient identity must remain consistent everywhere.
+
+Use:
+
+**Full name + patient ID**
+
+on clinical screens.
+
+------------------------------------------------------------------------
+
+## 42.2 Consent State
+
+If consent is expired, withdrawn or pending, the system must visibly
+communicate that state.
+
+Never hide it.
+
+------------------------------------------------------------------------
+
+## 42.3 Protocol State
+
+Protocol status must always be clear:
+
+-   Draft
+-   Active
+-   Completed
+-   Suspended
+-   Exception
+-   Archived
+
+------------------------------------------------------------------------
+
+## 42.4 Offline State
+
+When offline, the application must clearly show:
+
+**Offline**
+
+and the number of pending changes.
+
+------------------------------------------------------------------------
+
+## 42.5 Audit State
+
+Where a record is governed or signed, show:
+
+**Verified**
+
+or:
+
+**Pending verification**
+
+------------------------------------------------------------------------
+
+# 43. CRITICAL USER FLOWS
+
+The prototype must support the following clickable journeys.
+
+## Flow A --- New Patient
+
+Login
+
+→ Dashboard
+
+→ Register Patient
+
+→ Consent
+
+→ Patient Record
+
+→ Book Appointment
+
+→ Appointment Confirmation
+
+------------------------------------------------------------------------
+
+## Flow B --- Existing Patient
+
+Dashboard
+
+→ Patient Search
+
+→ Patient Record
+
+→ Timeline
+
+→ Clinical Encounter
+
+→ Save / Sign
+
+→ Billing
+
+------------------------------------------------------------------------
+
+## Flow C --- Protocol
+
+Patient Record
+
+→ Active Protocol
+
+→ Session
+
+→ Eligibility
+
+→ Consent
+
+→ Pre-treatment
+
+→ Administration
+
+→ Monitoring
+
+→ Complete
+
+→ Follow-up
+
+------------------------------------------------------------------------
+
+## Flow D --- Existing Data Migration
+
+Patients
+
+→ Import / Review
+
+→ Match Records
+
+→ Review Exceptions
+
+→ Confirm
+
+→ Patient Record
+
+→ Migration History
+
+------------------------------------------------------------------------
+
+## Flow E --- Consent
+
+Patient Record
+
+→ Consent
+
+→ Current Status
+
+→ View History
+
+→ Renew / Withdraw
+
+→ Verification
+
+→ Audit
+
+------------------------------------------------------------------------
+
+## Flow F --- Chain of Custody
+
+Trust
+
+→ Chain of Custody
+
+→ Search Asset
+
+→ Asset Detail
+
+→ Custody Timeline
+
+→ Transfer
+
+→ Confirm
+
+→ Ledger Verification
+
+------------------------------------------------------------------------
+
+## Flow G --- Offline
+
+Mobile
+
+→ Offline
+
+→ Clinical Workflow
+
+→ Capture Data
+
+→ Pending Sync
+
+→ Reconnect
+
+→ Synchronise
+
+→ Conflict Review if necessary
+
+------------------------------------------------------------------------
+
+## Flow H --- Ogami
+
+Ogami
+
+→ Patient enquiry
+
+→ Identify / create patient
+
+→ Availability
+
+→ Booking
+
+→ CRM update
+
+→ Appointment created
+
+→ Confirmation
+
+------------------------------------------------------------------------
+
+# 44. DESIGNING THE PATIENT RECORD AS THE CENTRE
+
+The patient record should be the most polished screen in the prototype.
+
+It must demonstrate that all other platform capabilities converge around
+the patient.
+
+For one patient, the prototype should be able to show:
+
+**Identity**
+
+↓
+
+**Consent**
+
+↓
+
+**Appointments**
+
+↓
+
+**Clinical encounters**
+
+↓
+
+**Active protocol**
+
+↓
+
+**Billing**
+
+↓
+
+**Communication**
+
+↓
+
+**Documents**
+
+↓
+
+**Audit**
+
+This is the screen that should convince a stakeholder that the product
+is not a collection of disconnected modules.
+
+------------------------------------------------------------------------
+
+# 45. DESIGNING THE PROTOCOL ENGINE AS A DIFFERENTIATOR
+
+The protocol engine must be visually distinct from ordinary EMR forms.
+
+It should show:
+
+-   workflow state;
+-   required actions;
+-   responsible role;
+-   timing;
+-   conditions;
+-   exceptions;
+-   approvals;
+-   version;
+-   evidence.
+
+A normal form says:
+
+> "Enter information."
+
+The protocol engine should communicate:
+
+> **"This is the authorised workflow. This is where you are. This is
+> what must happen next. This is who must perform it. This is what
+> happened."**
+
+------------------------------------------------------------------------
+
+# 46. DESIGNING TRUST WITHOUT BLOCKCHAIN THEATRE
+
+Do not use:
+
+-   chains of glowing blocks;
+-   cryptocurrency symbols;
+-   wallet metaphors;
+-   giant "BLOCKCHAIN" labels;
+-   futuristic circuit graphics.
+
+Instead use:
+
+**Verified**
+
+**Ledger recorded**
+
+**Tamper-evident**
+
+**Signed**
+
+**Actor verified**
+
+**Timestamp verified**
+
+The technology should be visible through **trust outcomes**, not
+gimmicks.
+
+------------------------------------------------------------------------
+
+# 47. DESIGNING AI WITHOUT AI THEATRE
+
+Do not make AI the visual centre of the platform.
+
+AI is an intelligence layer.
+
+Use AI where it helps users make decisions.
+
+Every AI insight should answer:
+
+1.  What was detected?
+2.  Why does it matter?
+3.  What evidence supports it?
+4.  What should the user consider?
+5.  Can the user accept, reject or investigate it?
+
+Always show:
+
+**AI-generated · Human review required**
+
+where appropriate.
+
+------------------------------------------------------------------------
+
+# 48. RESPONSIVE BEHAVIOUR
+
+## Desktop
+
+Optimised for:
+
+**1440 × 900**
+
+Also support:
+
+**1280 × 800**
+
+------------------------------------------------------------------------
+
+## Tablet
+
+Optimised for:
+
+**1024 × 768**
+
+Sidebar may collapse.
+
+------------------------------------------------------------------------
+
+## Mobile
+
+Primary reference:
+
+**390 × 844**
+
+Secondary:
+
+**375 × 812**
+
+Touch-first interaction.
+
+No horizontal scrolling except deliberate tab strips.
+
+------------------------------------------------------------------------
+
+# 49. COMPONENT LIBRARY
+
+Build reusable components before building screens.
+
+Required components:
+
+-   App shell
+-   Sidebar
+-   Top bar
+-   Search
+-   Patient identity header
+-   Status badge
+-   KPI card
+-   Data table
+-   Timeline
+-   Patient timeline event
+-   Appointment card
+-   Protocol step
+-   Checklist
+-   Consent state
+-   Audit event
+-   Chain-of-custody event
+-   AI recommendation card
+-   Alert
+-   Drawer
+-   Modal
+-   Confirmation dialog
+-   Toast
+-   Empty state
+-   Loading state
+-   Offline banner
+-   Sync indicator
+-   Mobile bottom navigation
+
+------------------------------------------------------------------------
+
+# 50. STATES TO DESIGN
+
+Do not design only the happy path.
+
+Every important component needs:
+
+-   default;
+-   hover;
+-   active;
+-   selected;
+-   disabled;
+-   loading;
+-   success;
+-   warning;
+-   error;
+-   empty;
+-   offline where applicable.
+
+Critical workflows also need:
+
+-   pending;
+-   expired;
+-   withdrawn;
+-   exception;
+-   locked;
+-   awaiting approval.
+
+------------------------------------------------------------------------
+
+# 51. DATA VISUALISATION RULES
+
+Use charts only where they help decisions.
+
+Recommended:
+
+-   line chart for trends;
+-   bar chart for volumes;
+-   compact progress bars for adherence;
+-   timeline for events;
+-   table for exact operational data.
+
+Do not turn every KPI into a chart.
+
+Healthcare users need precision.
+
+------------------------------------------------------------------------
+
+# 52. ACCESSIBILITY
+
+Minimum requirements for prototype:
+
+-   readable contrast;
+-   keyboard focus;
+-   clear focus state;
+-   labels on all controls;
+-   no colour-only status;
+-   large mobile touch targets;
+-   meaningful error messages;
+-   logical tab order.
+
+Do not use light grey text for important information.
+
+------------------------------------------------------------------------
+
+# 53. SECURITY UX
+
+The interface must communicate controlled access without making the
+product annoying.
+
+Examples:
+
+Sensitive action:
+
+**Authorisation required**
+
+Critical record:
+
+**Restricted access**
+
+Emergency access:
+
+**Break-glass access**
+
+After use:
+
+**Reason required**
+
+Do not hide security actions in obscure menus.
+
+------------------------------------------------------------------------
+
+# 54. EMPTY STATES
+
+Empty states should be useful.
+
+Bad:
+
+> "Nothing here."
+
+Better:
+
+> **No appointments today** Your schedule is clear. New appointments
+> will appear here.
+
+For protocol:
+
+> **No active protocol** Assign an approved protocol to begin a governed
+> clinical workflow.
+
+For consent:
+
+> **Consent required** No current consent is recorded for this purpose.
+
+------------------------------------------------------------------------
+
+# 55. ERROR STATES
+
+Errors must explain:
+
+-   what happened;
+-   whether data was saved;
+-   what the user should do.
+
+Example:
+
+> **We could not synchronise this record.** Your local changes are
+> preserved. Review the conflict before continuing.
+
+Never use:
+
+> Error 500.
+
+as the primary user-facing message.
+
+------------------------------------------------------------------------
+
+# 56. PROTOTYPE QUALITY BAR
+
+The prototype must feel like a system that could actually be built.
+
+Do not use:
+
+-   placeholder Lorem Ipsum;
+-   random names;
+-   random dates;
+-   inconsistent patient IDs;
+-   disconnected screens;
+-   meaningless charts;
+-   generic SaaS copy;
+-   fake blockchain dashboards;
+-   fake AI conversations;
+-   decorative medical imagery.
+
+Use realistic operational data.
+
+------------------------------------------------------------------------
+
+# 57. PROTOTYPE PRIORITY ORDER
+
+If time is constrained, build in this order.
+
+### Tier 1 --- Mandatory
+
+1.  Dashboard
+2.  Patient Directory
+3.  Patient EMR
+4.  Patient Timeline
+5.  Registration
+6.  Appointment
+7.  Clinical Encounter
+8.  Protocol Execution
+9.  Consent
+10. Billing
+11. Chain of Custody
+12. Mobile Clinical Workflow
+13. Offline / Sync
+
+### Tier 2 --- High Value
+
+14. Protocol Builder
+15. Protocol Version History
+16. AI Intelligence
+17. Ogami
+18. People
+19. Institutions
+20. Governance
+
+### Tier 3 --- Supporting
+
+21. Reports
+22. Administration
+23. Patient Portal
+24. Migration Review
+
+------------------------------------------------------------------------
+
+# 58. THE DEMO STORY
+
+The prototype should be demonstrable in approximately 10 minutes.
+
+## Scene 1 --- Dashboard
+
+Show the organisation's current operating state.
+
+## Scene 2 --- Patient
+
+Search for a patient.
+
+Open the longitudinal EMR.
+
+## Scene 3 --- Appointment
+
+Book the patient.
+
+## Scene 4 --- Clinical
+
+Start an encounter.
+
+## Scene 5 --- Protocol
+
+Launch the active protocol.
+
+Complete a governed workflow.
+
+## Scene 6 --- Trust
+
+Show consent and chain-of-custody events.
+
+## Scene 7 --- Billing
+
+Show the service becoming a financial event.
+
+## Scene 8 --- Intelligence
+
+Show AI identifying a pattern.
+
+## Scene 9 --- Mobile
+
+Open the same patient on mobile.
+
+## Scene 10 --- Offline
+
+Disconnect.
+
+Continue an approved workflow.
+
+Reconnect.
+
+Synchronise.
+
+The final impression should be:
+
+> **This is one system.**
+
+------------------------------------------------------------------------
+
+# 59. FINAL DESIGN TEST
+
+Before approving the prototype, ask:
+
+### EMR
+
+Can I understand the patient's complete history from one place?
+
+### Protocol
+
+Can I see what the authorised workflow requires next?
+
+### CRM
+
+Can I see how a patient moves from enquiry to appointment to follow-up?
+
+### Billing
+
+Can I see how care becomes revenue?
+
+### Trust
+
+Can I prove what happened, when and under whose authority?
+
+### Consent
+
+Can I see the current consent state and its history?
+
+### Chain of Custody
+
+Can I reconstruct the movement of a controlled item, specimen or record?
+
+### Existing Data
+
+Can I see how legacy patient information enters the new longitudinal
+record?
+
+### Mobile
+
+Can a practitioner actually use the important workflows from a phone?
+
+### Offline
+
+Can the system continue selected workflows without connectivity and
+safely synchronise later?
+
+### AI
+
+Does AI help the user understand or improve the system rather than
+merely decorate it?
+
+### Configuration
+
+Does the backend look configurable rather than hard-coded?
+
+### Scale
+
+Does the product look capable of expanding from one facility to multiple
+facilities and partner institutions?
+
+If the answer to these questions is yes, the prototype is doing its job.
+
+------------------------------------------------------------------------
+
+# 60. NON-NEGOTIABLE DESIGN DIRECTIVE
+
+**Do not design thirty separate screens. Design one healthcare operating
+system expressed through thirty views.**
+
+The user should feel that every screen belongs to the same underlying
+record, workflow, trust and intelligence system.
+
+The EMR is the centre.
+
+The Protocol Engine makes care executable.
+
+CRM and scheduling connect the patient to care.
+
+Billing connects care to revenue.
+
+People and institutions connect the organisation.
+
+Consent and chain of custody establish trust.
+
+AI turns operational data into intelligence.
+
+The PWA and offline architecture make the platform usable in the real
+world.
+
+Everything should ultimately reinforce one idea:
+
+# **ATUNSE HEALTH**
+
+## **A secure, protocol-driven EMR that turns healthcare operations into one connected, trusted and continuously improving system.**
