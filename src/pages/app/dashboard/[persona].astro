@@ -34,7 +34,7 @@ function canView(group) {
   return !(p.deny || []).includes(group) && p.allow.includes(group);
 }
 function firstScreenHref(group) {
-  const s = screens.find((x) => x.html && !x.asset && x.group === group);
+  const s = screens.find((x) => !x.asset && x.group === group);
   return s ? `/app/${s.id}/` : null;
 }
 const navHtml = ORDER

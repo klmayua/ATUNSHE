@@ -1,13 +1,224 @@
 ---
 import { screens } from '../../data/screens.mjs';
 import { PERSONAS } from '../../data/personas.mjs';
+import * as D from '../../data/atunse.mjs';
 import '../../styles/global.css';
 
 export function getStaticPaths() {
   return screens
-    .filter((s) => s.html && !s.asset)
-    .map((s) => ({ params: { screen: s.id } }));
+    .filter((s) => !s.asset)
+    .map((s) => ({ params: { screen: s.id }, props: { screen: s } }));
 }
+
+const { screen } = Astro.props;
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+// ---- real renderers per group ----
+function renderBody(s) {
+  const g = s.group;
+  if (g === 'Patient') return patientView(s);
+  if (g === 'Clinical') return clinicalView(s);
+  if (g === 'Scheduling') return schedulingView();
+  if (g === 'Protocols') return protocolsView(s);
+  if (g === 'Billing & Finance') return billingView();
+  if (g === 'Administration') return adminView(s);
+  if (g === 'Compliance & Ledgers') return complianceView(s);
+  if (g === 'Operations & Intelligence') return opsView(s);
+  if (g === 'AI Assistant') return ogamiView();
+  if (g === 'Mobile') return mobileView(s);
+  if (g === 'Dashboards') return `<p class="dash-sub">Return to your <a href="/app/dashboard/clinician/">dashboard</a>.</p>`;
+  return `<div class="card"><h3>${esc(s.title)}</h3><div class="row"><div><div class="t">${esc(s.title)}</div><div class="s">Atunse Health module.</div></div></div></div>`;
+}
+
+function patientView(s) {
+  const p = D.patients[0]; // flagship Amina Okafor
+  let html = `<div class="two-col">`;
+  html += `<div><div class="patient-head"><div class="avatar">${esc(p.name.split(' ').map((w) => w[0]).join('').slice(0, 2))}</div><div><div class="t-lg">${esc(p.name)}</div><div class="s">${esc(p.id)} · ${p.age}y ${esc(p.sex)} · DOB ${esc(p.dob)} · ${esc(p.blood)}</div></div></div>`;
+  html += `<div class="tags"><span class="tag ok">Consent ${esc(p.consent)}</span><span class="tag info">Protocol: ${esc(p.protocol)}</span><span class="tag">Balance ${p.balance}</span></div>`;
+  html += `<div class="tabs"><span class="tab active">Overview</span><span class="tab">Timeline</span><span class="tab">Clinical</span><span class="tab">Protocol</span><span class="tab">Billing</span><span class="tab">Consent</span><span class="tab">Audit</span></div>`;
+  html += `<div class="card"><h3>Clinical summary</h3>`;
+  html += `<div class="sub-h">Active conditions</div>`;
+  p.conditions.forEach((c) => (html += `<div class="row"><div><div class="t">${esc(c.name)}</div><div class="s">${esc(c.detail)}</div></div><span class="tag">${esc(c.status)}</span></div>`));
+  html += `<div class="sub-h">Allergies</div>`;
+  p.allergies.forEach((a) => (html += `<div class="row"><div class="t">${esc(a.name)}</div><div class="s">${esc(a.severity)}</div></div>`));
+  html += `<div class="sub-h">Vitals</div>`;
+  html += `<div class="row"><div class="t">Blood Pressure</div><div class="s">${esc(p.vitals.bp)} — ${esc(p.vitals.bpNote)}</div></div>`;
+  html += `<div class="row"><div class="t">Heart Rate</div><div class="s">${esc(p.vitals.hr)} — ${esc(p.vitals.hrNote)}</div></div></div></div>`;
+  html += `<div><div class="card alert"><h3>Next actions</h3>`;
+  html += `<div class="row"><div><div class="t">Upcoming: ${esc(p.upcoming.title)}</div><div class="s">${esc(p.upcoming.when)} · ${esc(p.upcoming.with)}</div></div><span class="tag">Appt</span></div>`;
+  html += `<div class="row"><div><div class="t">Protocol step overdue</div><div class="s">Dementia ADDSB · Annual Cognitive Assessment (MMSE)</div></div><span class="tag over">Overdue</span></div></div>`;
+  html += `<div class="card"><h3>Recent clinical timeline</h3>`;
+  p.timeline.forEach((t) => (html += `<div class="row"><div><div class="t">${esc(t.type)}</div><div class="s">${esc(t.text)}</div></div><div class="time">${esc(t.date)}</div></div>`));
+  html += `</div></div></div>`;
+  return html;
+}
+
+function clinicalView(s) {
+  if (s.title.startsWith('Patient Directory') || s.title === 'Patient Directory') {
+    let h = `<div class="card"><h3>Patient directory</h3>`;
+    D.patients.forEach((p) => (h += `<div class="row"><div><div class="t">${esc(p.name)}</div><div class="s">${esc(p.id)} · ${p.age}y ${esc(p.sex)} · ${esc(p.blood)}</div></div><span class="tag">${esc(p.consent)}</span></div>`));
+    return h + `</div>`;
+  }
+  if (s.title.startsWith('New Patient')) {
+    return `<div class="card"><h3>New patient registration</h3><div class="row"><div class="t">Capture demographics</div><div class="s">Name, DOB, sex, blood type, contact</div></div><div class="row"><div class="t">Consent</div><div class="s">General consent form (NHIS/HMO)</div></div><div class="row"><div class="t">Baseline vitals</div><div class="s">BP, HR, temp, SpO₂</div></div></div>`;
+  }
+  if (s.title.startsWith('Facility')) {
+    return `<div class="card"><h3>Facility & workspace selection</h3><div class="row"><div class="t">${esc(D.facility.site)}</div><div class="s">${esc(D.facility.region)}</div></div><div class="row"><div class="t">Active workspace</div><div class="s">Cardiology · Ward 3</div></div></div>`;
+  }
+  // Clinical Encounter (default)
+  const p = D.patients[0];
+  return `<div class="card"><h3>Clinical encounter — ${esc(D.staff.clinician.name)}</h3>
+    <div class="row"><div><div class="t">Current patient</div><div class="s">${esc(p.name)} · ${esc(p.id)}</div></div><span class="tag">In encounter</span></div>
+    <div class="row"><div class="t">Presenting</div><div class="s">Hypertension follow-up. BP ${esc(p.vitals.bp)}.</div></div>
+    <div class="row"><div class="t">Plan</div><div class="s">Continue Lisinopril 10mg. Dietary consult ${esc(p.upcoming.when)}.</div></div>
+    <div class="row"><div class="t">Open protocol step</div><div class="s">Dementia ADDSB — Annual Cognitive Assessment (MMSE) · OVERDUE</div></div></div>`;
+}
+
+function schedulingView() {
+  let h = `<div class="card"><h3>This week</h3><div class="cal">`;
+  D.appointments.forEach((a) => {
+    if (!a.time) return;
+    h += `<div class="cal-day"><div class="cal-dow">${esc(a.dow)}</div><div class="cal-date">${esc(a.date)}</div><div class="cal-slot"><div class="t">${esc(a.time)}</div><div class="s">${esc(a.patient)}</div><div class="s">${esc(a.reason)}</div><span class="tag">${esc(a.type)}</span></div></div>`;
+  });
+  h += `</div></div>`;
+  h += `<div class="actions"><button class="btn btn-primary">Book appointment</button><button class="btn btn-ghost">Start encounter</button></div>`;
+  return h;
+}
+
+function protocolsView(s) {
+  if (s.title.startsWith('Protocol Version')) {
+    const pr = D.protocols[0];
+    let h = `<div class="card"><h3>Version history — ${esc(pr.name)}</h3>`;
+    pr.history.forEach((v) => (h += `<div class="row"><div><div class="t">${esc(v.v)}</div><div class="s">${esc(v.by)} · ${esc(v.date)}</div></div><div class="s">${esc(v.note)}</div></div>`));
+    return h + `</div>`;
+  }
+  if (s.title.startsWith('Protocol Configuration')) {
+    let h = `<div class="card"><h3>Protocol configuration builder</h3>`;
+    h += `<div class="row"><div class="t">Select protocol</div><div class="s">Dementia ADDSB · General Clinical Assessment · Follow-up / Review</div></div>`;
+    h += `<div class="row"><div class="t">Add step</div><div class="s">Define cadence, owner, route</div></div></div>`;
+    return h;
+  }
+  // Execution
+  const pr = D.protocols.find((x) => s.title.includes(x.name.split(' ')[0])) || D.protocols[0];
+  let h = `<div class="card"><h3>${esc(pr.name)}</h3><div class="row"><div class="t">${esc(pr.code)}</div><div class="s">${esc(pr.version)} · ${esc(pr.status)} · owner ${esc(pr.owner)}</div></div><div class="sub-h">Steps</div>`;
+  pr.steps.forEach((st) => (h += `<div class="row"><div><div class="t">${st.n}. ${esc(st.name)}</div><div class="s">${esc(st.cadence)} · ${esc(st.patient)}</div></div><span class="tag ${st.status === 'Overdue' ? 'over' : 'ok'}">${esc(st.status)}</span></div>`));
+  return h + `</div>`;
+}
+
+function billingView() {
+  let h = `<div class="card"><h3>Billing & financial operations</h3><div class="kpis" style="margin-bottom:12px"><div class="kpi"><div class="n">${esc(D.billingSummary.revenue)}</div><div class="l">Revenue (MTD)</div></div><div class="kpi"><div class="n">${esc(D.billingSummary.outstanding)}</div><div class="l">Outstanding</div></div><div class="kpi"><div class="n">${esc(D.billingSummary.accounts)}</div><div class="l">Open accounts</div></div><div class="kpi"><div class="n">${esc(D.billingSummary.collected)}</div><div class="l">Collected</div></div></div>`;
+  h += `<div class="sub-h">Recent invoices</div>`;
+  D.invoices.forEach((i) => (h += `<div class="row"><div><div class="t">${esc(i.no)} · ${esc(i.patient)}</div><div class="s">${esc(i.date)} · ${esc(i.items)}</div></div><span class="tag ${i.status === 'Paid' ? 'ok' : 'over'}">${esc(i.amount)} ${esc(i.status)}</span></div>`));
+  return h + `</div>`;
+}
+
+function adminView(s) {
+  if (s.title.startsWith('People')) {
+    let h = `<div class="card"><h3>People & personnel</h3>`;
+    h += `<div class="row"><div><div class="t">${esc(D.staff.clinician.name)}</div><div class="s">${esc(D.staff.clinician.role)} · ${esc(D.staff.clinician.specialty)}</div></div></div>`;
+    h += `<div class="row"><div><div class="t">${esc(D.staff.attending.name)}</div><div class="s">${esc(D.staff.attending.role)}</div></div></div>`;
+    h += `<div class="row"><div><div class="t">${esc(D.staff.admin.name)}</div><div class="s">${esc(D.staff.admin.role)}</div></div></div>`;
+    D.staff.nurses.forEach((n) => (h += `<div class="row"><div><div class="t">${esc(n.name)}</div><div class="s">${esc(n.ward)}</div></div></div>`));
+    return h + `</div>`;
+  }
+  if (s.title.startsWith('Institutions')) {
+    let h = `<div class="card"><h3>Institutions & partners</h3>`;
+    D.institutions.forEach((i) => (h += `<div class="row"><div><div class="t">${esc(i.name)}</div><div class="s">${esc(i.type)}</div></div><span class="tag ${i.status === 'Active' ? 'ok' : 'over'}">${esc(i.status)}</span></div>`));
+    return h + `</div>`;
+  }
+  if (s.title.startsWith('Staff Profile')) {
+    const who = s.title.includes('Sola') ? D.staff.attending : D.staff.clinician;
+    return `<div class="card"><h3>${esc(who.name)}</h3><div class="row"><div class="t">${esc(who.role)}</div><div class="s">${esc(who.specialty || '')}</div></div><div class="row"><div class="t">Performance</div><div class="s">Encounters 31 · on-time 96%</div></div></div>`;
+  }
+  return `<div class="card"><h3>Administration & configuration</h3><div class="row"><div class="t">Facility</div><div class="s">${esc(D.facility.site)}</div></div><div class="row"><div class="t">Personnel</div><div class="s">${D.pendingApprovals || '3 pending approvals'}</div></div><div class="row"><div class="t">Billing</div><div class="s">${esc(D.billingSummary.outstanding)} outstanding</div></div></div>`;
+}
+
+function complianceView(s) {
+  let h = `<div class="card"><h3>${esc(s.title)}</h3>`;
+  const key = s.title.startsWith('Chain') ? 'chainOfCustody' : s.title.startsWith('Consent') ? 'consent' : 'trust';
+  const rows = D.ledgers[key];
+  rows.forEach((r) => {
+    const cells = Object.values(r).map((v) => `<div class="s">${esc(v)}</div>`).join('');
+    h += `<div class="row"><div>${cells}</div></div>`;
+  });
+  return h + `</div>`;
+}
+
+function opsView(s) {
+  if (s.title.startsWith('AI & Clinical')) {
+    let h = `<div class="card"><h3>Clinical intelligence</h3>`;
+    D.reports.intelligence.forEach((f) => (h += `<div class="row"><div><div class="t">${esc(f.finding)}</div><div class="s">${esc(f.cohort)}</div></div><div class="s">${esc(f.action)}</div></div>`));
+    return h + `</div>`;
+  }
+  if (s.title.startsWith('Clinical Performance')) {
+    let h = `<div class="card"><h3>Clinical performance</h3>`;
+    D.reports.performance.forEach((m) => (h += `<div class="row"><div><div class="t">${esc(m.metric)}</div></div><div class="s">${esc(m.value)} · ${esc(m.note)}</div></div>`));
+    return h + `</div>`;
+  }
+  if (s.title.startsWith('Legacy')) {
+    let h = `<div class="card"><h3>Legacy data migration & review</h3>`;
+    D.reports.migration.forEach((m) => (h += `<div class="row"><div><div class="t">${esc(m.ref)}</div><div class="s">${esc(m.source)} · ${esc(m.records)} records</div></div><span class="tag ${m.status === 'Reviewed' ? 'ok' : 'over'}">${esc(m.status)}</span></div>`));
+    return h + `</div>`;
+  }
+  let h = `<div class="card"><h3>Operational reports & analytics</h3>`;
+  D.reports.operational.forEach((m) => (h += `<div class="row"><div><div class="t">${esc(m.metric)}</div></div><div class="s">${esc(m.value)} · ${esc(m.note)}</div></div>`));
+  return h + `</div>`;
+}
+
+function ogamiView() {
+  let h = `<div class="card"><h3>Ogami — clinical assistant</h3><div class="chat">`;
+  D.ogami.forEach((m) => (h += `<div class="msg ${m.from}"><div class="bubble">${esc(m.text)}</div></div>`));
+  h += `</div><div class="actions"><button class="btn btn-ghost">New question</button></div></div>`;
+  return h;
+}
+
+function mobileView(s) {
+  let h = `<div class="card"><h3>${esc(s.title.replace(/^Mobile /, ''))}</h3>`;
+  if (s.title.startsWith('Mobile Home')) {
+    h += `<div class="row"><div class="t">Today</div><div class="s">3 tasks · sync OK</div></div><div class="row"><div class="t">Quick lookup</div><div class="s">Find patient by MRN</div></div>`;
+  } else if (s.title.startsWith('Mobile Schedule')) {
+    D.appointments.filter((a) => a.time).forEach((a) => (h += `<div class="row"><div><div class="t">${esc(a.time)} · ${esc(a.patient)}</div><div class="s">${esc(a.reason)}</div></div><span class="tag">${esc(a.type)}</span></div>`));
+  } else if (s.title.startsWith('Mobile Patient')) {
+    const p = D.patients[0];
+    h += `<div class="row"><div class="t">${esc(p.name)}</div><div class="s">${esc(p.id)} · BP ${esc(p.vitals.bp)}</div></div>`;
+  } else if (s.title.startsWith('Mobile Vitals')) {
+    h += `<div class="row"><div class="t">Capture vitals</div><div class="s">BP, HR, temp, SpO₂</div></div>`;
+  } else if (s.title.startsWith('Mobile Tasks')) {
+    h += `<div class="row"><div class="t">Capture vitals — Okafor, Amina</div><div class="s">Now</div></div><div class="row"><div class="t">Consent — Ojo, P.</div><div class="s">10:30</div></div>`;
+  } else if (s.title.startsWith('Mobile Sync')) {
+    h += `<div class="row"><div class="t">Status</div><div class="s">Online · last synced 2 min ago</div></div>`;
+  } else if (s.title.startsWith('Mobile Consent')) {
+    h += `<div class="row"><div class="t">Capture consent — Ojo, P.</div><div class="s">Pre-visit questionnaire</div></div>`;
+  } else if (s.title.startsWith('Mobile Global')) {
+    h += `<div class="row"><div class="t">Search</div><div class="s">Patients, protocols, staff</div></div>`;
+  } else if (s.title.startsWith('Mobile Profile')) {
+    h += `<div class="row"><div class="t">Field reviewer</div><div class="s">Lagos General Hospital</div></div>`;
+  } else if (s.title.startsWith('Mobile Protocol')) {
+    h += `<div class="row"><div class="t">Dementia ADDSB</div><div class="s">Step: MMSE · Overdue</div></div>`;
+  } else if (s.title.startsWith('Mobile Clinical')) {
+    h += `<div class="row"><div class="t">Workflow</div><div class="s">Encounter → vitals → notes</div></div>`;
+  } else if (s.title.startsWith('Mobile Offline')) {
+    h += `<div class="row"><div class="t">Offline mode</div><div class="s">2 patients cached</div></div>`;
+  } else {
+    h += `<div class="row"><div class="t">${esc(s.title)}</div><div class="s">Field companion module</div></div>`;
+  }
+  return h + `</div>`;
+}
+
+const body = renderBody(screen);
+const me = PERSONAS[0]; // for nav default; real persona resolved client-side
+
+// Nav groups
+const ORDER = [
+  ['Overview', 'Dashboards'], ['Patients', 'Patient'], ['Appointments', 'Scheduling'],
+  ['Clinical', 'Clinical'], ['Protocols', 'Protocols'], ['Trust & Governance', 'Compliance & Ledgers'],
+  ['Billing', 'Billing & Finance'], ['Ogami', 'AI Assistant'], ['Reports', 'Operations & Intelligence'],
+  ['Administration', 'Administration'], ['Mobile', 'Mobile'],
+];
+// We emit the nav client-side after reading the session (so it is role-filtered).
 ---
 
 <html lang="en">
@@ -16,93 +227,53 @@ export function getStaticPaths() {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <title>Atunse Health</title>
+    <title>{screen.title} — Atunse Health</title>
   </head>
   <body>
     <div id="root" class="loading">Loading…</div>
-
-    <script is:inline src="/demo-data.js"></script>
-    <script is:inline>
+    <script is:inline define:vars={{ screenId: screen.id, group: screen.group, title: screen.title, bodyHtml: body, screens: screens, personas: PERSONAS }}>
       (function () {
         var KEY = 'atunse_demo_session';
-        var DATA = window.__ATUNSE__;
-        if (!DATA) { document.getElementById('root').textContent = 'Failed to load.'; return; }
+        var SCREENS = screens, PERSONAS = personas, BODY = bodyHtml;
+        var sesh = null;
+        try { sesh = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+        if (!sesh) { location.replace('/'); return; }
+        var me = PERSONAS.find(function (p) { return p.id === sesh.id; }) || sesh;
 
-        function getSession() {
-          try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; }
+        function canView(g) {
+          if (me.deny && me.deny.indexOf(g) !== -1) return false;
+          return me.allow.indexOf(g) !== -1;
         }
-        function canView(p, group) {
-          if (!p) return false;
-          if (p.deny && p.deny.indexOf(group) !== -1) return false;
-          return p.allow.indexOf(group) !== -1;
+        if (!canView(group)) { location.replace('/app/dashboard/' + me.id + '/'); return; }
+
+        var ORDER = [
+          ['Overview', 'Dashboards'], ['Patients', 'Patient'], ['Appointments', 'Scheduling'],
+          ['Clinical', 'Clinical'], ['Protocols', 'Protocols'], ['Trust & Governance', 'Compliance & Ledgers'],
+          ['Billing', 'Billing & Finance'], ['Ogami', 'AI Assistant'], ['Reports', 'Operations & Intelligence'],
+          ['Administration', 'Administration'], ['Mobile', 'Mobile']
+        ];
+        function firstHref(g) {
+          const sc = SCREENS.find(function (x) { return !x.asset && x.group === g; });
+          return sc ? '/app/' + sc.id + '/' : '/app/dashboard/' + me.id + '/';
         }
-        function personaById(id) {
-          for (var i = 0; i < DATA.personas.length; i++) if (DATA.personas[i].id === id) return DATA.personas[i];
-          return null;
-        }
-
-        var session = getSession();
-        if (!session) { window.location.replace('/'); return; }
-        var persona = personaById(session.id) || session;
-
-        var parts = location.pathname.split('/app/');
-        var activeId = (parts[1] || '').replace(/\/$/, '');
-        var active = null;
-        for (var i = 0; i < DATA.screens.length; i++) if (DATA.screens[i].id === activeId) active = DATA.screens[i];
-        if (active && !canView(persona, active.group)) { window.location.replace('/app/' + persona.landing + '/'); return; }
-
-        // Spec left-nav order.
-        var navOrder = ['Overview','Patients','Appointments','Clinical','Protocols','Billing','People','Institutions','Trust & Governance','Ogami','Reports','Administration','Mobile','AI Assistant','Assets & Docs','Scheduling','Compliance & Ledgers','Operations & Intelligence','Dashboards'];
-        var visible = DATA.screens.filter(function (s) { return s.html && canView(persona, s.group); });
-        var groups = {};
-        visible.forEach(function (s) { (groups[s.group] = groups[s.group] || []).push(s); });
-        var labelMap = { 'Dashboards':'Overview','Patient':'Patients','Clinical':'Clinical','Protocols':'Protocols','Billing & Finance':'Billing','Administration':'Administration','Scheduling':'Appointments','Compliance & Ledgers':'Trust & Governance','Operations & Intelligence':'Reports','Mobile':'Mobile','AI Assistant':'Ogami' };
-        // Auth (the raw Stitch login screen) is not a menu item — session exit is the Log out button.
-        delete groups['Auth'];
-        var ordered = Object.keys(groups).sort(function (a, b) {
-          var la = navOrder.indexOf(labelMap[a] || a), lb = navOrder.indexOf(labelMap[b] || b);
-          return (la === -1 ? 99 : la) - (lb === -1 ? 99 : lb);
-        });
-
-        var navHtml = ordered.map(function (g) {
-          var items = groups[g].map(function (s) {
-            var cls = s.id === activeId ? 'nav-link active' : 'nav-link';
-            return '<a class="' + cls + '" href="/app/' + s.id + '/" title="' + s.title + '">' + s.title + '</a>';
-          }).join('');
-          return '<div class="nav-group">' + (labelMap[g] || g) + '</div>' + items;
+        var nav = ORDER.filter(function (o) {
+          return canView(o[1]);
+        }).map(function (o) {
+          var href = o[1] === 'Dashboards' ? '/app/dashboard/' + me.id + '/' : firstHref(o[1]);
+          var active = o[1] === group ? ' active' : '';
+          return '<a class="nav-link' + active + '" href="' + href + '">' + o[0] + '</a>';
         }).join('');
 
-        var crumb = active ? active.title : 'Dashboard';
-        var isMobile = active && active.deviceType === 'MOBILE';
-        var frameSrc = active ? active.html : '/stitch-screens/' + persona.landing + '.html';
-
         var root = document.getElementById('root');
-        root.className = '';
+        root.className = 'app-shell';
         root.innerHTML =
-          '<div class="app-shell">' +
-            '<aside class="sidenav">' +
-              '<div class="nav-head">' +
-                '<img src="/assets/atunse-logo.png" alt="Atunse Health" class="logo" />' +
-                '<span class="brand">Atunse Health</span>' +
-              '</div>' +
-              '<div class="who">' + persona.name + ' · <b>' + persona.role + '</b></div>' +
-              '<nav class="nav">' + navHtml + '</nav>' +
-              '<div class="nav-foot">' +
-                '<button class="btn-logout" id="logout">Log out</button>' +
-              '</div>' +
-            '</aside>' +
-            '<section class="stage">' +
-              '<header class="stage-bar">' +
-                '<span class="crumb">' + crumb + (isMobile ? ' <span class="tag">MOBILE</span>' : '') + '</span>' +
-              '</header>' +
-              '<div class="frame-host"><iframe src="' + frameSrc + '" title="' + crumb + '"></iframe></div>' +
-            '</section>' +
-          '</div>';
-
-        document.getElementById('logout').addEventListener('click', function () {
-          localStorage.removeItem(KEY);
-          window.location.replace('/');
-        });
+          '<aside class="sidenav"><div class="nav-head"><img src="/assets/atunse-logo.png" alt="Atunse Health" class="logo" /><span class="brand">Atunse Health</span></div>' +
+          '<div class="who">' + me.name + ' · <b>' + me.role + '</b></div>' +
+          '<nav class="nav">' + nav + '</nav>' +
+          '<div class="nav-foot"><a class="btn-logout" href="/" onclick="localStorage.removeItem(\'atunse_demo_session\');">Log out</a></div></aside>' +
+          '<section class="stage"><header class="stage-bar"><span class="crumb">' + title + '</span></header>' +
+          '<div class="dash"><a class="back" href="/app/dashboard/' + me.id + '/">← Back to dashboard</a>' +
+          '<h1 class="dash-greet">' + title + '</h1>' + BODY + '</div></section>';
       })();
     </script>
   </body>

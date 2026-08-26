@@ -5,8 +5,6 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "gen:data": "node scripts/gen-demo-data.mjs",
-    "prebuild": "node scripts/gen-demo-data.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "pull": "node scripts/pull.mjs"
