@@ -13,7 +13,7 @@ const p = PERSONAS.find((x) => x.id === persona);
 const d = DASHBOARDS[persona];
 
 function escape(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  return String(s).replace(/[&<>\x22\x27]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
 // RBAC-filtered nav: only groups this persona is allowed to view.
