@@ -117,12 +117,6 @@ export const screens = [
     "deviceType": "DESKTOP"
   },
   {
-    "id": "67ad91f6261140568a21c8cd0004b8a5",
-    "title": "Main Dashboard",
-    "group": "Dashboards",
-    "deviceType": "DESKTOP"
-  },
-  {
     "id": "0b951f37fd9440d6894fbc9ead842be7",
     "title": "Mobile Clinical Workflow",
     "group": "Mobile",

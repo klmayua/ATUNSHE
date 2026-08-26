@@ -39,38 +39,37 @@ export const DASHBOARDS = {
   },
 
   patient: {
-    greeting: 'Good morning, Amina',
-    sub: 'Patient ID ATN-000184 · Lagos General Hospital',
+    greeting: 'Good morning, Juliet',
+    sub: 'Patient ID ATN-000201 · Lagos General Hospital',
     kpis: [
       { n: '1', l: 'Upcoming appointment' },
       { n: '2', l: 'Active-care team' },
       { n: '1', l: 'Open protocol' },
-      { n: '0.00', l: 'Account balance (₦)' },
+      { n: '12,500', l: 'Account balance (₦)' },
     ],
     sections: [
       {
         title: 'Next appointment',
         items: [
-          { t: 'Dietary Consultation', s: 'with Dr. Sola · Nutritionist', time: 'Nov 15, 2023' },
+          { t: 'Lab Review', s: 'with Dr. Adesenya', time: 'Tue 25 · 10:30' },
         ],
       },
       {
         title: 'My care team',
         items: [
           { t: 'Dr. Adesenya', s: 'Cardiology · Primary' },
-          { t: 'Dr. Sola', s: 'Attending Physician' },
         ],
       },
       {
         title: 'Recent results',
         items: [
-          { t: 'Blood Pressure 130/85', s: 'Slightly elevated · Oct 12' },
-          { t: 'HbA1c', s: 'Slightly elevated · dietary consult recommended' },
+          { t: 'Blood Glucose', s: 'Fasting 7.2 mmol/L · slightly high', time: 'Oct 18' },
+          { t: 'HbA1c', s: '7.1% · monitoring', time: 'Oct 18' },
         ],
       },
     ],
     protocols: [
-      { name: 'Dementia ADDSB Dual-Route', step: 'Annual Cognitive Assessment', status: 'Overdue — book with care team' },
+      { name: 'General Clinical Assessment', step: 'Routine bloods', status: 'Pending — book with care team' },
     ],
     actions: ['Book Appointment', 'Message care team', 'View records'],
   },
