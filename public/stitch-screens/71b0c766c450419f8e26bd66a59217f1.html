@@ -111,48 +111,9 @@
     </script>
 </head>
 <body class="bg-surface text-on-surface font-body-default min-h-screen">
-<!-- SideNavBar -->
-<nav class="hidden md:flex flex-col h-screen fixed left-0 top-0 w-[256px] border-r border-outline-variant bg-primary text-on-primary py-6 z-40">
-<div class="px-6 mb-8">
-<div class="flex items-center gap-3 mb-2">
-<span class="material-symbols-outlined text-secondary-container text-3xl font-bold" data-icon="health_and_safety" data-weight="fill" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
-<div>
-<h1 class="font-section-title text-section-title text-secondary-container">Atunse Health</h1>
-<p class="font-supporting text-supporting text-on-primary/70">Lagos General Hospital</p>
-</div>
-</div>
-</div>
-<div class="px-4 mb-6">
-<button class="w-full flex items-center justify-center gap-2 bg-secondary-container text-on-secondary-container py-2 px-4 rounded-lg font-body-medium hover:bg-secondary-fixed transition-colors">
-<span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
-<span>Global Search</span>
-</button>
-</div>
-<div class="flex-1 overflow-y-auto overflow-x-hidden w-full">
-<ul class="flex flex-col w-full">
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="dashboard">dashboard</span><span class="font-body-medium text-body-medium">Overview</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="group">group</span><span class="font-body-medium text-body-medium">Patients</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span><span class="font-body-medium text-body-medium">Appointments</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="medical_services">medical_services</span><span class="font-body-medium text-body-medium">Clinical</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span><span class="font-body-medium text-body-medium">Protocols</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span><span class="font-body-medium text-body-medium">Billing</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="badge">badge</span><span class="font-body-medium text-body-medium">People</span></a></li>
-<li><a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="account_balance">account_balance</span><span class="font-body-medium text-body-medium">Institutions</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="verified_user">verified_user</span><span class="font-body-medium text-body-medium">Trust &amp; Governance</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="account_tree">account_tree</span><span class="font-body-medium text-body-medium">Ogami</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="analytics">analytics</span><span class="font-body-medium text-body-medium">Reports</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-3 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full" href="#"><span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span><span class="font-body-medium text-body-medium">Admin</span></a></li>
-</ul>
-</div>
-<div class="mt-auto px-4 pt-4 border-t border-outline-variant/30">
-<ul class="flex flex-col w-full gap-1">
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-2 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full rounded-lg" href="#"><span class="material-symbols-outlined" data-icon="help">help</span><span class="font-body-medium text-body-medium">Help</span></a></li>
-<li><a class="text-on-primary/70 hover:text-on-primary hover:bg-primary-container/20 px-4 py-2 flex items-center gap-3 transition-all scale-98 active:opacity-80 w-full rounded-lg" href="#"><span class="material-symbols-outlined" data-icon="settings">settings</span><span class="font-body-medium text-body-medium">Settings</span></a></li>
-</ul>
-</div>
-</nav>
+
 <!-- Main Content Area -->
-<main class="md:ml-[256px] min-h-screen flex flex-col">
+<main class=" min-h-screen flex flex-col">
 <!-- TopAppBar -->
 <header class="hidden md:flex justify-between items-center px-6 py-3 h-[64px] bg-white border-b border-border-subtle sticky top-0 z-30">
 <div class="flex items-center gap-6 h-full">

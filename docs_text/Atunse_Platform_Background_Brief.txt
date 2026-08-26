@@ -1,0 +1,108 @@
+BACKGROUND BRIEF
+A Governed Digital Platform for the Atunse ADDSB Dementia Programme
+Protocol ATN-DEM-ADDSB-2026-001  ·  Prepared ahead of the joint working session  ·  Confidential
+Prepared for: Atunse Healthcare clinical & governance leadership.   Prepared by: the platform delivery team.
+1.  Purpose of this brief
+This note is circulated ahead of our working session so the time together is spent on decisions rather than orientation. It sets out what we have reviewed, the recognised standards this platform is built to uphold, and the points we would like to align on with you. It is deliberately not a finished proposal. The programme is yours; our role is to build the system that runs it to standard, and that is best scoped in the room, together.
+2.  Materials reviewed
+We have read the materials shared with us and worked from them directly, not from generic assumptions:
+The Standardised Clinical Protocol for the dual-route ADDSB regimen (v1.0), including procedure, monitoring and stopping rules.
+The full working-form suite — eligibility & consent, treatment-day timeout & administration record, vital-signs monitoring, AE/SAE form, product accountability & cold-chain log, ViaNase device log, hormone-optimisation worksheet, follow-up forms, and the caregiver diary (Appendices A–I).
+The Patient Information Sheet, the Consent & Agreement approach, and the Implementation Checklist.
+3.  The programme as we understand it
+A physician-supervised, biomarker-informed programme delivering an investigational dual-route extracellular-vesicle regimen — intranasal and intravenous — to adults with dementia over a six-week course, with structured screening, monitoring, follow-up and documentation. It is offered as elective private care, while the structured clinical and safety data it generates supports ongoing research under proper governance. If any part of that reading is off, correcting it is the first thing we would want to do together.
+4.  The standards this platform is built to uphold
+The protocol you have written already embodies most of these. The platform's job is to make each one enforceable in daily operation. We name them here so it is clear we are working to the recognised bar, using the current versions of each standard:
+Standard
+What it governs
+Reflected in the programme & platform
+ICH E6(R3) — Good Clinical Practice (adopted Jan 2025)
+The ethical and scientific quality standard for research involving human participants.
+Screening, documentation, monitoring and oversight in the protocol mirror GCP principles; the platform enforces them as workflow, not paperwork.
+Declaration of Helsinki
+Ethical foundation for medical research — voluntariness, favourable risk–benefit, independent review.
+Built into enrolment: informed consent, documented risk–benefit judgement, and ethics oversight as a precondition to treatment.
+Informed consent & decisional capacity (incl. LAR)
+Valid, documented consent — critical where cognitive capacity may be impaired.
+Consent captured as a versioned, re-consentable record with legally-authorised-representative handling, as your protocol already specifies.
+Pharmacovigilance (ICH E2A terminology)
+Detection, grading and timely reporting of adverse events.
+AE/SAE capture with severity, causality and expectedness; reporting clocks (SAE 24h, AE 7d) that start at event time and flag lateness.
+Nigeria Data Protection Act 2023 (NDPC)
+Lawful processing, security, and cross-border transfer of personal data.
+Personal and clinical data held in-region under Atunse control; only coded research data crosses to the sponsor, under a data-processing agreement.
+Data integrity — ALCOA+
+Records that are attributable, legible, contemporaneous, original, accurate — and complete, consistent, enduring, available.
+Append-only capture with a full audit trail and electronic signatures; corrections are new records, never overwrites.
+Computerised-system validation (GAMP 5 / 21 CFR Part 11 principles)
+Trustworthy electronic records and signatures in a regulated setting.
+The build carries validation evidence; access control, audit and e-signature are enforced by the system itself.
+Good Distribution Practice — cold chain
+Integrity of temperature-sensitive biologic products.
+Product accountability, lot and Certificate-of-Analysis verification, and –20°C cold-chain logging, per the protocol's handling requirements.
+HL7 FHIR
+Standards-based health-data interoperability.
+Records and results move through a standard interface (ingress and egress) rather than bespoke, unauditable feeds.
+Note on the products themselves. The regulatory classification, characterisation and safety documentation of the ExoPure and Rejuvenate products sit with the sponsor (KweHealth); the platform treats these as governed inputs — referenced and filed — rather than something it determines.
+5.  How the platform is organised
+In one line: the system mirrors the clinical workflow and governance you already operate — screen and consent → treat and monitor → track safety and follow-up → governed data — with a strict internal boundary that keeps private-care records and coded research data properly separated. Governance is not a module bolted on at the end; it is the ground the rest is built on. The detailed technical design sits in a separate delivery document and is not needed for this session.
+6.  Points to align on together
+These are not gaps in our understanding of the standards — they are decisions that are properly yours, and that good practice says we confirm with you rather than assume:
+Ethics & governance oversight — Confirm the ethics/IRB arrangement and who holds sign-off authority at each governance point.
+Data sovereignty & sponsor data-sharing — Agree the data-processing-agreement parameters with KweHealth — what the coded research export contains, and on what cadence.
+Existing-data landscape — Understand what patient and clinical records exist today, and in what form, so migration is scoped honestly rather than assumed.
+Roles & access boundaries — Confirm the personas and their access limits against how the clinic actually operates day to day.
+Sponsor product & device inputs — Certificates of Analysis, product regulatory status, and Kurve ViaNase device documentation as governed system inputs.
+7.  Proposed way forward
+A governed, milestone-based build that begins with a foundation phase and releases each milestone against agreed acceptance evidence rather than a demonstration. We would propose confirming scope and governance together in this session, then returning with a dated milestone plan for sign-off. Nothing here commits either side; it is a basis for a good conversation.
+
+
+PROPOSED AGENDA
+Joint Working Session
+Atunse Healthcare × Platform delivery team  ·  ~75 minutes
+Objective. Reach a shared understanding of the programme and the standards it must meet, agree the points above, and leave with named owners and a next step — not to review a finished system.
+#
+Segment
+What we cover
+Min
+1
+Welcome, introductions & objectives
+Confirm what a good outcome from today looks like for both sides.
+5
+2
+The programme as we understand it
+Brief read-back of the ADDSB dual-route programme; correct anything we've misread.
+10
+3
+Standards & compliance alignment
+GCP, consent & capacity, and pharmacovigilance — confirm the bar and who owns oversight.
+15
+4
+Data protection, sovereignty & sponsor data-sharing
+Where data lives, who accesses what, and the coded export to KweHealth under a DPA.
+15
+5
+Systems & data landscape
+Existing records today, any EMR to integrate with, and interoperability.
+10
+6
+Roles, oversight & sign-off authority
+Confirm personas and who authorises each governance gate.
+8
+7
+Delivery approach & milestones
+Governed, milestone-based build beginning with a foundation phase.
+7
+8
+Decisions, owners & next steps
+Capture decisions, assign owners, set the follow-up.
+5
+
+Total
+Approx. 75 minutes, plus room to run over on the questions that matter.
+~75
+To bring / confirm before the session
+Who from your side holds ethics/governance sign-off authority.
+Whatever exists today of patient records — even a description of the format is enough to start.
+The current state of the KweHealth data-sharing / DPA arrangement.
+Working document prepared for discussion. Not a clinical, regulatory or legal instrument; ethics/IRB approval, regulatory authorisation, the KweHealth Data Processing Agreement and the schedule of fees are governed separately and referenced, not superseded, here.

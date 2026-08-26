@@ -1,0 +1,118 @@
+ATUNSE HEALTHCARE LTD.
+
+Implementation Checklist
+Site setup and operational readiness for the dementia ADDSB dual-route program
+Clinical Site
+Atunse Healthcare Ltd.
+Product Sponsor
+KweHealth, LLC
+Protocol ID
+ATN-DEM-ADDSB-2026-001-v1.0
+Indication
+Dementia (adults)
+
+For use by Atunse Healthcare Ltd. to set up and run this protocol (and to serve as a template for future KweHealth-collaboration protocols). Tick each item; record date and initials.
+Section 1 — Pre-implementation
+✓
+Activity
+Date / initials
+☐
+Review and sign the Clinical Collaboration Agreement with KweHealth
+
+☐
+Review and sign the Data Use Agreement with KweHealth
+
+☐
+Designate a primary contact / principal investigator for the collaboration
+
+☐
+Obtain ethics committee / IRB approval for the protocol
+
+☐
+Confirm any required regulatory authorization is on file
+
+☐
+Train all relevant staff on the protocol, including eligibility, administration, data collection, and adverse-event reporting
+
+☐
+Confirm emergency and anaphylaxis preparedness on site
+
+Section 2 — Patient onboarding
+✓
+Activity
+Date / initials
+☐
+Identify potential patients who meet eligibility criteria (protocol §5.1)
+
+☐
+Provide the Patient Information Sheet
+
+☐
+Obtain informed consent (patient or legally authorized representative)
+
+☐
+Complete screening, baseline assessments, and baseline labs/biomarkers
+
+☐
+Schedule the six weekly treatment sessions and follow-up visits
+
+Section 3 — Data collection and management
+✓
+Activity
+Date / initials
+☐
+Set up a system for collecting and storing clinical data securely
+
+☐
+Collect data per protocol and Good Clinical Practice
+
+☐
+Maintain the case report forms / appendix forms for each patient
+
+☐
+Submit data to KweHealth on the agreed schedule
+
+Section 4 — Product management
+✓
+Activity
+Date / initials
+☐
+Establish ordering, receiving, and cold-chain storage (–20°C / dry ice)
+
+☐
+Verify Certificates of Analysis and lot numbers on receipt
+
+☐
+Maintain product accountability and temperature logs (Appendix E)
+
+☐
+Confirm course supply: 6 vials Rejuvenate Serum (1 mL) and 6 vials ExoPure 140B (3 mL) per patient
+
+☐
+Establish ViaNase™ device readiness and cleaning per manufacturer instructions (Appendix F)
+
+Section 5 — Safety and reporting
+✓
+Activity
+Date / initials
+☐
+Implement the adverse-event identification and reporting process (see AE Quick-Reference)
+
+☐
+Ensure all staff know the SAE 24-hour / AE 7-day reporting timelines to KweHealth
+
+☐
+Maintain AE/SAE forms (Appendix D) and the protocol stopping rules (§6.3)
+
+☐
+Confirm the emergency referral pathway and 24-hour contact
+
+
+Role
+Name / Signature
+Date
+Principal Investigator
+
+
+Clinic Lead / Coordinator
+

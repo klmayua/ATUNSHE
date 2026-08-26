@@ -127,86 +127,9 @@
     </style>
 </head>
 <body class="bg-surface text-on-surface antialiased min-h-screen flex font-body-default text-body-default overflow-x-hidden">
-<!-- SideNavBar -->
-<nav class="sidebar bg-primary dark:bg-tertiary w-sidebar-width h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex flex-col py-6 z-40 transition-transform md:translate-x-0 hidden md:flex">
-<div class="px-6 mb-8 flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 overflow-hidden">
-<img alt="Atunse Health Logo" class="w-full h-full object-cover" data-alt="A clean, minimalist abstract logo design for a medical institution, featuring geometric shapes in deep navy blue and crisp white. High contrast, sharp edges, conveying professionalism and precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQnmK7vP0mwz8Lg44h8OHy9xywqrEx62xeOs9wi-xk1n3OL_jXkCh-ahe9lHqk8GzBBGRCmQPEViHI65FY_NUvK5oTMT_2u_DwKG8k3Eb_IFhb3dDB_TqLN7z07LcthOFG7hUjh_b5qsaqPmtcVaYGe32AYzLIdt-cJJcEoPmtbEZ9BUlWmlDCBlJD4LxdW8QQ0xQu_VLd1GO4blJuyBfk0h1iHDAx1MLZPsh6pt9D5se6yAdLjOtU"/>
-</div>
-<div>
-<h1 class="font-headline-lg text-headline-lg text-secondary-container dark:text-secondary-fixed text-xl tracking-tight leading-tight">Atunse Health</h1>
-<p class="font-supporting text-supporting text-on-primary/70">Lagos General Hospital</p>
-</div>
-</div>
-<div class="px-4 mb-6">
-<button class="w-full bg-secondary-container text-on-secondary-container font-body-medium text-body-medium py-2 rounded flex items-center justify-center gap-2 hover:bg-secondary-fixed-dim transition-colors scale-98 active:opacity-80">
-<span class="material-symbols-outlined text-[18px]">search</span>
-                Global Search
-            </button>
-</div>
-<div class="flex-1 overflow-y-auto px-2 space-y-1">
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">dashboard</span>
-                Overview
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">group</span>
-                Patients
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">calendar_today</span>
-                Appointments
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">medical_services</span>
-                Clinical
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">assignment_turned_in</span>
-                Protocols
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">account_balance_wallet</span>
-                Billing
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">badge</span>
-                People
-            </a>
-<a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold font-body-medium text-body-medium px-4 py-3 flex items-center gap-3 transition-colors rounded-r" href="#">
-<span class="material-symbols-outlined text-[20px] fill">account_balance</span>
-                Institutions
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">verified_user</span>
-                Trust &amp; Governance
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">account_tree</span>
-                Ogami
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">analytics</span>
-                Reports
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[20px] group-hover:fill">settings_suggest</span>
-                Admin
-            </a>
-</div>
-<div class="mt-auto px-2 pt-4 border-t border-outline-variant/30 space-y-1">
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-2 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[18px] group-hover:fill">help</span>
-                Help
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-2 flex items-center gap-3 transition-colors rounded-r hover:bg-primary-container/20 font-body-medium text-body-medium group" href="#">
-<span class="material-symbols-outlined text-[18px] group-hover:fill">settings</span>
-                Settings
-            </a>
-</div>
-</nav>
+
 <!-- Main Content Area -->
-<div class="content-area flex-1 md:ml-[256px] flex flex-col min-h-screen relative w-full transition-all">
+<div class="content-area flex-1  flex flex-col min-h-screen relative w-full transition-all">
 <!-- TopAppBar -->
 <header class="top-bar bg-surface dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant flex justify-between items-center px-6 py-3 h-[64px] sticky top-0 z-30">
 <div class="flex items-center gap-4">

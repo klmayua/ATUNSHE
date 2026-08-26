@@ -51,7 +51,7 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: space-between;
 }
 .login-aside .brand { display: flex; align-items: center; gap: 14px; font-size: 22px; font-weight: 700; }
-.login-aside .brand .logo { width: 34px; height: 34px; object-fit: contain; }
+.login-aside .brand .logo { width: 64px; height: 64px; object-fit: contain; }
 .login-aside .brand .dot { width: 34px; height: 34px; border-radius: 9px; background: var(--gold); display: grid; place-items: center; color: var(--navy-deep); font-weight: 800; }
 .login-aside h1 { font-size: 34px; line-height: 1.15; margin: 0 0 14px; font-weight: 700; max-width: 14ch; }
 .login-aside p { color: #c9d4e6; max-width: 42ch; line-height: 1.6; }
@@ -141,7 +141,7 @@ button { font-family: inherit; cursor: pointer; }
   flex: none;
   border-bottom: 1px solid #0a1a33;
 }
-.topbar .logo { width: 30px; height: 30px; object-fit: contain; }
+.topbar .logo { width: 40px; height: 40px; object-fit: contain; }
 .topbar .tb-left { display: flex; align-items: center; gap: 10px; }
 .topbar .dot { width: 30px; height: 30px; border-radius: 8px; background: var(--gold); color: var(--navy-deep); display: grid; place-items: center; font-weight: 800; }
 .topbar .brand { font-weight: 700; font-size: 15px; }

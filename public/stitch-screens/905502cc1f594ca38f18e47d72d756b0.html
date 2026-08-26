@@ -116,67 +116,9 @@
     </style>
 </head>
 <body class="bg-surface text-on-surface flex h-screen overflow-hidden">
-<!-- SideNavBar -->
-<nav class="bg-primary dark:bg-tertiary w-[256px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex flex-col h-full py-6 z-20 md:flex hidden">
-<div class="px-6 mb-8">
-<h1 class="font-headline-lg text-headline-lg text-secondary-container dark:text-secondary-fixed">Atunse Health</h1>
-<p class="font-body-medium text-body-medium text-on-primary/70">Lagos General Hospital</p>
-</div>
-<div class="px-4 mb-6">
-<button class="w-full bg-secondary-container text-on-secondary-container font-body-medium text-body-medium py-2 px-4 rounded flex items-center justify-center gap-2 hover:bg-secondary-fixed transition-colors">
-<span class="material-symbols-outlined">search</span>
-                Global Search
-            </button>
-</div>
-<div class="flex-1 overflow-y-auto px-2 space-y-1">
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">dashboard</span> Overview
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">group</span> Patients
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">calendar_today</span> Appointments
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">medical_services</span> Clinical
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">assignment_turned_in</span> Protocols
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">account_balance_wallet</span> Billing
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">badge</span> People
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">account_balance</span> Institutions
-            </a>
-<a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 rounded-r font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined filled-icon">verified_user</span> Trust &amp; Governance
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">account_tree</span> Ogami
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">analytics</span> Reports
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">settings_suggest</span> Admin
-            </a>
-</div>
-<div class="mt-auto px-2 border-t border-outline-variant/30 pt-4 space-y-1">
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">help</span> Help
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded font-body-medium text-body-medium scale-98 active:opacity-80 transition-all" href="#">
-<span class="material-symbols-outlined">settings</span> Settings
-            </a>
-</div>
-</nav>
+
 <!-- Main Content Area -->
-<div class="flex-1 flex flex-col md:ml-[256px] w-full min-h-screen relative">
+<div class="flex-1 flex flex-col  w-full min-h-screen relative">
 <!-- TopAppBar -->
 <header class="bg-surface dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant flex justify-between items-center px-6 py-3 h-[64px] bg-white dark:bg-black sticky top-0 z-10 hidden md:flex">
 <div class="flex items-center gap-6">
