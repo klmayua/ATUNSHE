@@ -8,17 +8,6 @@ export function getStaticPaths() {
     .filter((s) => s.html && !s.asset)
     .map((s) => ({ params: { screen: s.id } }));
 }
-
-// Inline lightweight data so the bootstrap script needs ZERO imports (no bundler risk).
-const DATA = JSON.stringify({
-  screens: screens.map((s) => ({
-    id: s.id, title: s.title, group: s.group, deviceType: s.deviceType, html: s.html,
-  })),
-  personas: PERSONAS.map((p) => ({
-    id: p.id, name: p.name, role: p.role, landing: p.landing, initials: p.initials,
-    allow: p.allow, deny: p.deny || [],
-  })),
-});
 ---
 
 <html lang="en">
@@ -27,17 +16,17 @@ const DATA = JSON.stringify({
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <title>Atunse Health — Demo</title>
+    <title>Atunse Health</title>
   </head>
   <body>
-    <div id="root" class="loading">Loading demo session…</div>
+    <div id="root" class="loading">Loading…</div>
 
     <script is:inline src="/demo-data.js"></script>
     <script is:inline>
       (function () {
         var KEY = 'atunse_demo_session';
         var DATA = window.__ATUNSE__;
-        if (!DATA) { document.getElementById('root').textContent = 'Failed to load demo data.'; return; }
+        if (!DATA) { document.getElementById('root').textContent = 'Failed to load.'; return; }
 
         function getSession() {
           try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; }
@@ -60,25 +49,25 @@ const DATA = JSON.stringify({
         var activeId = (parts[1] || '').replace(/\/$/, '');
         var active = null;
         for (var i = 0; i < DATA.screens.length; i++) if (DATA.screens[i].id === activeId) active = DATA.screens[i];
+        if (active && !canView(persona, active.group)) { window.location.replace('/app/' + persona.landing + '/'); return; }
 
-        // Role-based deep-link guard.
-        if (active && !canView(persona, active.group)) {
-          window.location.replace('/app/' + persona.landing + '/');
-          return;
-        }
-
-        var groupOrder = ['Auth','Dashboards','Patient','Clinical','Protocols','Compliance & Ledgers','Scheduling','Billing & Finance','Administration','Operations & Intelligence','Mobile','AI Assistant','Assets & Docs'];
+        // Spec left-nav order.
+        var navOrder = ['Overview','Patients','Appointments','Clinical','Protocols','Billing','People','Institutions','Trust & Governance','Ogami','Reports','Administration','Mobile','AI Assistant','Assets & Docs','Scheduling','Compliance & Ledgers','Operations & Intelligence','Dashboards'];
         var visible = DATA.screens.filter(function (s) { return s.html && canView(persona, s.group); });
         var groups = {};
         visible.forEach(function (s) { (groups[s.group] = groups[s.group] || []).push(s); });
-        var ordered = Object.keys(groups).sort(function (a, b) { return groupOrder.indexOf(a) - groupOrder.indexOf(b); });
+        var labelMap = { 'Dashboards':'Overview','Patient':'Patients','Clinical':'Clinical','Protocols':'Protocols','Billing & Finance':'Billing','Administration':'Administration','Scheduling':'Appointments','Compliance & Ledgers':'Trust & Governance','Operations & Intelligence':'Reports','Mobile':'Mobile','AI Assistant':'Ogami' };
+        var ordered = Object.keys(groups).sort(function (a, b) {
+          var la = navOrder.indexOf(labelMap[a] || a), lb = navOrder.indexOf(labelMap[b] || b);
+          return (la === -1 ? 99 : la) - (lb === -1 ? 99 : lb);
+        });
 
         var navHtml = ordered.map(function (g) {
           var items = groups[g].map(function (s) {
             var cls = s.id === activeId ? 'nav-link active' : 'nav-link';
-            return '<a class="' + cls + '" href="/app/' + s.id + '/" data-id="' + s.id + '">' + s.title + '</a>';
+            return '<a class="' + cls + '" href="/app/' + s.id + '/" title="' + s.title + '">' + s.title + '</a>';
           }).join('');
-          return '<div class="nav-group">' + g + '</div>' + items;
+          return '<div class="nav-group">' + (labelMap[g] || g) + '</div>' + items;
         }).join('');
 
         var crumb = active ? active.title : 'Dashboard';
@@ -89,40 +78,28 @@ const DATA = JSON.stringify({
         root.className = '';
         root.innerHTML =
           '<div class="app-shell">' +
-            '<header class="topbar">' +
-              '<div class="tb-left">' +
+            '<aside class="sidenav">' +
+              '<div class="nav-head">' +
                 '<img src="/assets/atunse-logo.png" alt="Atunse Health" class="logo" />' +
                 '<span class="brand">Atunse Health</span>' +
-                '<span class="crumb">' + crumb + (isMobile ? ' <span class="tag">MOBILE</span>' : '') + '</span>' +
               '</div>' +
-              '<div class="tb-right">' +
-                '<span class="who">' + persona.name + ' · <b>' + persona.role + '</b></span>' +
+              '<div class="who">' + persona.name + ' · <b>' + persona.role + '</b></div>' +
+              '<nav class="nav">' + navHtml + '</nav>' +
+              '<div class="nav-foot">' +
                 '<button class="btn-logout" id="logout">Log out</button>' +
               '</div>' +
-            '</header>' +
-            '<div class="body">' +
-              '<button class="nav-toggle" id="navtoggle" aria-label="Menu">☰</button>' +
-              '<aside class="sidenav" id="sidenav">' +
-                '<div class="login-as">' +
-                  '<span class="av">' + persona.initials + '</span>' +
-                  '<div><div class="nm">' + persona.name + '</div><div class="rl">' + persona.role + '</div></div>' +
-                '</div>' +
-                '<nav class="nav">' + navHtml + '</nav>' +
-              '</aside>' +
-              '<section class="stage">' +
-                '<div class="frame-host">' +
-                  '<iframe src="' + frameSrc + '" title="' + crumb + '"></iframe>' +
-                '</div>' +
-              '</section>' +
-            '</div>' +
+            '</aside>' +
+            '<section class="stage">' +
+              '<header class="stage-bar">' +
+                '<span class="crumb">' + crumb + (isMobile ? ' <span class="tag">MOBILE</span>' : '') + '</span>' +
+              '</header>' +
+              '<div class="frame-host"><iframe src="' + frameSrc + '" title="' + crumb + '"></iframe></div>' +
+            '</section>' +
           '</div>';
 
         document.getElementById('logout').addEventListener('click', function () {
           localStorage.removeItem(KEY);
           window.location.replace('/');
-        });
-        document.getElementById('navtoggle').addEventListener('click', function () {
-          document.getElementById('sidenav').classList.toggle('open');
         });
       })();
     </script>

@@ -109,14 +109,14 @@ export const screens = [
   },
   {
     "id": "e1c47f5b53fb4efeb13cd44e5e82cbfa",
-    "title": "Patient Profile - Juliet Okafor",
+    "title": "Patient Profile - Amina Okafor",
     "group": "Clinical",
     "deviceType": "DESKTOP",
     "html": "/stitch-screens/e1c47f5b53fb4efeb13cd44e5e82cbfa.html"
   },
   {
     "id": "eaeb377d6e70427195a93f5f7fae47f5",
-    "title": "Patient Timeline - Juliet Okafor",
+    "title": "Patient Timeline - Amina Okafor",
     "group": "Clinical",
     "deviceType": "DESKTOP",
     "html": "/stitch-screens/eaeb377d6e70427195a93f5f7fae47f5.html"

@@ -20,10 +20,15 @@ const landings = new Set(PERSONAS.map((p) => p.landing));
 function fixTitle(t) {
   return t
     .replace('Clinical Encounter - Amina Okafor', 'Clinical Encounter - Adesenya')
-    .replace('Patient Profile - Amina Okafor', 'Patient Profile - Juliet Okafor')
-    .replace('Patient Timeline - Amina Okafor', 'Patient Timeline - Juliet Okafor')
+    // restore already-mangled titles to the canonical spec names
+    .replace('Patient Profile - Adesenya', 'Patient Profile - Amina Okafor')
+    .replace('Patient Timeline - Adesenya', 'Patient Timeline - Amina Okafor')
+    .replace('Patient Profile - Amina Okafor', 'Patient Profile - Amina Okafor')
+    .replace('Patient Timeline - Amina Okafor', 'Patient Timeline - Amina Okafor')
+    .replace('Patient Profile - Juliet Okafor', 'Patient Profile - Amina Okafor')
+    .replace('Patient Timeline - Amina Okafor', 'Patient Timeline - Amina Okafor')
+    .replace('Patient Timeline - Juliet Okafor', 'Patient Timeline - Amina Okafor')
     .replace('Staff Profile - Dr. Samuel Ojo', 'Staff Profile - Dr. Sola')
-    .replace(/Amina Okafor/g, 'Adesenya')
     .replace(/Samuel Ojo/g, 'Sola');
 }
 manifest.forEach((s) => { s.title = fixTitle(s.title); });

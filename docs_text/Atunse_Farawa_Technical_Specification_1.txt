@@ -1,5 +1,5 @@
-ATUNSE HEALTH   ×   FARAWA
 
+ATUNSE HEALTH   ×   FARAWA
 OUTCOME-BASED TECHNICAL SPECIFICATION
 The Atunse Health Digital Platform
 Architecture, capability domains, process flows and delivery scope
@@ -8,7 +8,6 @@ Prepared for the leadership of Atunse Health
 August 2026
 FARAWA
 Technology. Products. Systems. Built for Continuity.
-
 SECTION 1
 The Intended Outcome
 Atunse Health today runs care across records, appointments, billing, communication and administration that do not speak to each other. This platform replaces that fragmentation with a single operating environment in which the entire patient lifecycle runs as one connected chain, with a patient-centred Electronic Medical Record at its centre and the intelligence, trust and mobility layers built around it.
@@ -34,7 +33,7 @@ Capability layers
 ACCESS
 Patient portal  ·  Mobile PWA  ·  Offline capability  ·  Ogami digital front office  ·  Role-based staff portals
 APPLICATION
-EMR & Clinical Care  ·  Protocol Engine  ·  CRM, Booking & Scheduling  ·  Billing & Revenue  ·  People & Institutions
+EMR &amp; Clinical Care  ·  Protocol Engine  ·  CRM, Booking &amp; Scheduling  ·  Billing &amp; Revenue  ·  People &amp; Institutions
 INTELLIGENCE
 AI continuous learning  ·  Protocol analytics  ·  Operational insight
 TRUST
@@ -46,7 +45,7 @@ Within the application, intelligence and trust layers sit six capability domains
 SECTION 3
 EMR and Clinical Care
 Outcome.  Every patient has one authoritative, longitudinal record that they help build and can access, and that authorised staff can rely on wherever care is delivered.
-The record is patient-centred by design. It is organised around the patient rather than around a department or a visit, so a patient's whole history sits in one timeline, one identity carries across every facility, and the patient participates in their own record rather than being a passive subject of it. Practitioner tools exist to serve that record accurately and quickly.
+The record is patient-centred by design. It is organised around the patient rather than around a department or a visit, so a patient&apos;s whole history sits in one timeline, one identity carries across every facility, and the patient participates in their own record rather than being a passive subject of it. Practitioner tools exist to serve that record accurately and quickly.
 The patient record
 A single longitudinal record per patient: one timeline of every encounter, result, prescription and interaction
 One patient identity that carries across all facilities, departments and visits
@@ -82,7 +81,7 @@ Migration governed by agreed source formats, data-quality rules and field mappin
 Validation and reconciliation of migrated data before go-live
 SECTION 4
 Protocol and Clinical Intelligence Engine
-Outcome.  Atunse Health's clinical protocols stop being documents and institutional memory, and become active, executable components of daily care that do not leave when staff do.
+Outcome.  Atunse Health&apos;s clinical protocols stop being documents and institutional memory, and become active, executable components of daily care that do not leave when staff do.
 The engine turns written protocols into structured, versioned, executable workflows that guide care at the point of delivery, capture what actually happened, and feed a learning loop that improves the protocols over time under human clinical authority.
 The continuous learning loop
 PROTOCOL
@@ -249,10 +248,9 @@ Figure 7. The same platform scales outward from a single facility to a multi-fac
 SECTION 11
 The Continuous Operating Cycle
 The domains combine into a single, continuously improving cycle. This is the point of the platform: not an EMR in isolation, but an environment that records care, enforces structured processes, protects trust, connects people and institutions, learns from operations and continuously improves.
-
 PATIENT
 →
-REGISTRATION & CONSENT
+REGISTRATION &amp; CONSENT
 →
 BOOKING
 →
@@ -266,11 +264,11 @@ BILLING
 →
 FOLLOW-UP
 →
-GOVERNANCE & AUDIT
+GOVERNANCE &amp; AUDIT
 →
 DATA
 ↓
-AI & INTELLIGENCE
+AI &amp; INTELLIGENCE
 →
 WORKFLOW IMPROVEMENT
 →
