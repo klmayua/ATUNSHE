@@ -122,72 +122,7 @@
     </style>
 </head>
 <body class="antialiased overflow-hidden flex h-screen">
-<!-- SideNavBar (Shared Component) -->
-<nav class="bg-primary dark:bg-tertiary text-on-primary dark:text-on-tertiary w-[256px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex flex-col h-full py-6 z-50 transition-transform duration-300 transform -translate-x-full md:translate-x-0" id="mobile-sidebar">
-<!-- Header -->
-<div class="px-6 mb-8 flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold text-on-secondary-container">AH</div>
-<div>
-<h1 class="font-headline-lg text-headline-lg text-secondary-container dark:text-secondary-fixed text-lg leading-tight">Atunse Health</h1>
-<p class="font-supporting text-supporting text-on-primary/70">Lagos General Hospital</p>
-</div>
-</div>
-<!-- Global Search CTA -->
-<div class="px-4 mb-6">
-<button class="w-full bg-surface-tint text-on-primary rounded flex items-center justify-center gap-2 py-2 font-body-medium text-body-medium hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 transition-all scale-98 active:opacity-80">
-<span class="material-symbols-outlined text-[18px]">search</span>
-                Global Search
-            </button>
-</div>
-<!-- Navigation Tabs -->
-<div class="flex-1 overflow-y-auto font-body-medium text-body-medium flex flex-col gap-1 px-2">
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>Overview
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="group">group</span>Patients
-            </a>
-<a class="border-l-2 border-secondary-container bg-primary-container text-on-primary-container font-bold px-4 py-3 flex items-center gap-3 transition-colors rounded-r-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="calendar_today">calendar_today</span>Appointments
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="medical_services">medical_services</span>Clinical
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="assignment_turned_in">assignment_turned_in</span>Protocols
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="account_balance_wallet">account_balance_wallet</span>Billing
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="badge">badge</span>People
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="account_balance">account_balance</span>Institutions
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="verified_user">verified_user</span>Trust &amp; Governance
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="account_tree">account_tree</span>Ogami
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="analytics">analytics</span>Reports
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="settings_suggest">settings_suggest</span>Admin
-            </a>
-</div>
-<!-- Footer Tabs -->
-<div class="mt-auto px-2 font-body-medium text-body-medium flex flex-col gap-1 border-t border-outline-variant/30 pt-4">
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>Help
-            </a>
-<a class="text-on-primary/70 hover:text-on-primary px-4 py-3 flex items-center gap-3 transition-colors hover:bg-primary-container/20 dark:hover:bg-tertiary-container/20 rounded-DEFAULT" href="#">
-<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>Settings
-            </a>
-</div>
-</nav>
+
 <!-- Main Content Canvas -->
 <div class="flex-1 flex flex-col  h-screen w-full relative">
 <!-- TopAppBar (Shared Component) -->
