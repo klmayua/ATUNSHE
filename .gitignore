@@ -10,3 +10,9 @@ pull.log
 
 # Atunse clinical docs (not part of the demo site)
 WorkingDocs/
+
+# build/install logs
+*.log
+build.log
+npm_install.log
+preview.log
