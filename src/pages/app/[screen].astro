@@ -271,9 +271,9 @@ const ORDER = [
   </head>
   <body>
     <div id="root" class="loading">Loading…</div>
-    <script type="application/json" id="screen-meta">{metaJson}</script>
+    <script type="application/json" id="screen-meta" set:html={metaJson}></script>
     <div id="body-src" hidden set:html={body}></div>
-    <script type="application/json" id="app-data">{dataJson}</script>
+    <script type="application/json" id="app-data" set:html={dataJson}></script>
     <script is:inline src="/app-shell.js"></script>
   </body>
 </html>
