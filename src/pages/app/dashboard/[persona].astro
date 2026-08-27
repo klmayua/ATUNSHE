@@ -2,6 +2,8 @@
 import { PERSONAS } from '../../../data/personas.mjs';
 import { DASHBOARDS } from '../../../data/dashboards.mjs';
 import { screens } from '../../../data/screens.mjs';
+import * as D from '../../../data/atunse.mjs';
+import { navFor, hrefForGroup } from '../../../data/nav.mjs';
 import '../../../styles/global.css';
 
 export function getStaticPaths() {
@@ -16,35 +18,46 @@ function escape(s) {
   return String(s).replace(/[&<>\x22\x27]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-// RBAC-filtered nav: only groups this persona is allowed to view.
-const ORDER = [
-  ['Overview', 'Dashboards'],
-  ['Patients', 'Patient'],
-  ['Appointments', 'Scheduling'],
-  ['Clinical', 'Clinical'],
-  ['Protocols', 'Protocols'],
-  ['Trust & Governance', 'Compliance & Ledgers'],
-  ['Billing', 'Billing & Finance'],
-  ['Ogami', 'AI Assistant'],
-  ['Reports', 'Operations & Intelligence'],
-  ['Administration', 'Administration'],
-  ['Mobile', 'Mobile'],
-];
-function canView(group) {
-  return !(p.deny || []).includes(group) && p.allow.includes(group);
-}
-function firstScreenHref(group) {
-  const s = screens.find((x) => !x.asset && x.group === group);
-  return s ? `/app/${s.id}/` : null;
-}
-const navHtml = ORDER
-  .filter(([, group]) => canView(group))
-  .map(([label, group]) => {
-    const href = group === 'Dashboards' ? `/app/dashboard/${persona}/` : firstScreenHref(group) || `/app/dashboard/${persona}/`;
-    const active = group === 'Dashboards';
-    return `<a class="nav-link${active ? ' active' : ''}" href="${href}">${label}</a>`;
-  })
-  .join('');
+const navTree = navFor(p); // RBAC-filtered, real screens (shared with [screen].astro)
+
+// ---- REAL clinician workbench, built from atunse.mjs ----
+const todayAppts = D.appointments.filter((a) => a.patient && a.status && a.status !== 'Done');
+const overdueSteps = D.protocols.flatMap((pr) =>
+  pr.steps.filter((s) => s.status === 'Overdue').map((s) => ({ protocol: pr.name, step: s.name, patient: s.patient }))
+);
+const vitalsGaps = D.patients
+  .filter((pt) => pt.vitals && /gap|5d|old/i.test(pt.timeline?.[0]?.text || ''))
+  .map((pt) => pt.name);
+const carePatients = D.patients.map((pt) => ({
+  name: pt.name,
+  id: pt.id,
+  dx: (pt.conditions || []).map((c) => c.name).join(', '),
+  profileHref: `/app/e1c47f5b53fb4efeb13cd44e5e82cbfa/`,
+  timelineHref: `/app/eaeb377d6e70427195a93f5f7fae47f5/`,
+}));
+const activeProtocols = D.protocols.map((pr) => ({
+  name: pr.name,
+  code: pr.code,
+  steps: pr.steps.length,
+  overdue: pr.steps.filter((s) => s.status === 'Overdue').length,
+  href: hrefForGroup(p, 'Protocols'),
+}));
+
+// Action button -> concrete href (not "first of group")
+const ACTION_HREF = {
+  'Start Encounter': hrefForGroup(p, 'Clinical'),
+  'Book Appointment': hrefForGroup(p, 'Scheduling'),
+  'Review protocols': hrefForGroup(p, 'Protocols'),
+  'Message care team': `/app/4a98aee24a83424db3010d3076a5a42c/`,
+  'View records': hrefForGroup(p, 'Patient'),
+  'Add staff': hrefForGroup(p, 'Administration'),
+  'Review approvals': hrefForGroup(p, 'Administration'),
+  'Billing ops': hrefForGroup(p, 'Billing & Finance'),
+  'Staff oversight': hrefForGroup(p, 'Administration'),
+  'Quick lookup': hrefForGroup(p, 'Mobile'),
+  'Sync now': hrefForGroup(p, 'Mobile'),
+  'View reports': hrefForGroup(p, 'Operations & Intelligence'),
+};
 ---
 
 <html lang="en">
@@ -63,7 +76,16 @@ const navHtml = ORDER
           <span class="brand">Atunse Health</span>
         </div>
         <div class="who">{p.name} · <b>{p.role}</b></div>
-        <nav class="nav" set:html={navHtml}></nav>
+        <nav class="nav">
+          {navTree.map((g) => (
+            <div class="nav-group">
+              <div class="nav-group-label">{g.label}</div>
+              {g.items.map((it) => (
+                <a class={`nav-link${it.id === '__dash' ? ' active' : ''}`} href={it.href}>{it.title}</a>
+              ))}
+            </div>
+          ))}
+        </nav>
         <div class="nav-foot"><a class="btn-logout" href="/" onclick="localStorage.removeItem('atunse_demo_session');">Log out</a></div>
       </aside>
 
@@ -73,91 +95,96 @@ const navHtml = ORDER
           <h1 class="dash-greet">{escape(d.greeting)}</h1>
           <p class="dash-sub">{escape(d.sub)}</p>
 
-          <div class="kpis">
-            {d.kpis.map((k) => (
-              <div class="kpi">
-                <div class="n">{escape(k.n)}</div>
-                <div class="l">{escape(k.l)}</div>
-                {k.delta ? <div class={`delta ${k.dir || 'flat'}`}>{escape(k.delta)}</div> : null}
+          {persona === 'clinician' || persona === 'attending' ? (
+            <div class="dash-grid">
+              <!-- Today's schedule -->
+              <div class="card">
+                <h3>Today's schedule</h3>
+                {todayAppts.length ? (
+                  todayAppts.map((a) => (
+                    <div class="row">
+                      <div>
+                        <div class="t">{escape(a.patient)}</div>
+                        <div class="s">{escape(a.reason)} · {escape(a.provider)}</div>
+                      </div>
+                      <div class="time">{escape(a.time)}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div class="row"><div class="s">No further appointments today.</div></div>
+                )}
               </div>
-            ))}
-          </div>
 
-          <div class="dash-grid">
-            {d.sections.map((sec) => (
-              <div class={`card${sec.alert ? ' alert' : ''}`}>
-                <h3>{escape(sec.title)}</h3>
-                {sec.chart ? (
-                  sec.chart.type === 'bars'
-                    ? <div class="chart bars">{sec.chart.vals.split(',').map((v) => <span class="bar" style={`--h:${v}%`}></span>)}</div>
-                    : <div class="chart line">{sec.chart.vals.split(',').map((v) => <span class="dot" style={`--h:${v}%`}></span>)}</div>
-                ) : null}
-                {sec.items.map((it) => (
+              <!-- My alerts / overdue protocol steps -->
+              <div class="card alert">
+                <h3>My alerts</h3>
+                {overdueSteps.map((o) => (
                   <div class="row">
                     <div>
-                      <div class="t">{escape(it.t)}{it.tag ? ` <span class="tag">${escape(it.tag)}</span>` : ''}</div>
-                      <div class="s">{escape(it.s)}</div>
+                      <div class="t">Overdue — {escape(o.protocol)}</div>
+                      <div class="s">{escape(o.step)} · {escape(o.patient)}</div>
                     </div>
-                    {it.time ? <div class="time">{escape(it.time)}</div> : null}
+                    <div class="tag over">Urgent</div>
+                  </div>
+                ))}
+                {vitalsGaps.length ? (
+                  <div class="row">
+                    <div><div class="t">Vitals gap</div><div class="s">{escape(vitalsGaps.join(', '))} · last captured 5d ago</div></div>
+                    <div class="tag">Watch</div>
+                  </div>
+                ) : null}
+              </div>
+
+              <!-- Patients in my care -->
+              <div class="card">
+                <h3>Patients in my care</h3>
+                {carePatients.map((pt) => (
+                  <div class="row">
+                    <div>
+                      <div class="t">{escape(pt.name)} <span class="muted">{escape(pt.id)}</span></div>
+                      <div class="s">{escape(pt.dx)}</div>
+                    </div>
+                    <div class="row-actions">
+                      <a class="btn btn-ghost btn-sm" href={pt.profileHref}>Record</a>
+                      <a class="btn btn-ghost btn-sm" href={pt.timelineHref}>Timeline</a>
+                    </div>
                   </div>
                 ))}
               </div>
-            ))}
 
-            {d.protocols && d.protocols.length ? (
+              <!-- Active protocols -->
               <div class="card">
-                <h3>Protocols</h3>
-                {d.protocols.map((pr) => {
-                  const over = /overdue|book/i.test(pr.status);
-                  return (
-                    <div class="protocol">
-                      <div>
-                        <div class="pn">{escape(pr.name)}</div>
-                        <div class="ps">{escape(pr.step)}{pr.patient ? ` · ${escape(pr.patient)}` : ''}</div>
-                      </div>
-                      <div class={`pst ${over ? 'over' : 'ok'}`}>{escape(pr.status)}</div>
+                <h3>Active protocols</h3>
+                {activeProtocols.map((pr) => (
+                  <div class="protocol">
+                    <div>
+                      <div class="pn">{escape(pr.name)}</div>
+                      <div class="ps">{escape(pr.code)} · {pr.steps} steps</div>
                     </div>
-                  );
-                })}
+                    <div class={`pst ${pr.overdue ? 'over' : 'ok'}`}>{pr.overdue ? `${pr.overdue} overdue` : 'On track'}</div>
+                  </div>
+                ))}
               </div>
-            ) : null}
-          </div>
+            </div>
+          ) : (
+            <div class="kpis">
+              {d.kpis.map((k) => (
+                <div class="kpi">
+                  <div class="n">{escape(k.n)}</div>
+                  <div class="l">{escape(k.l)}</div>
+                  {k.delta ? <div class={`delta ${k.dir || 'flat'}`}>{escape(k.delta)}</div> : null}
+                </div>
+              ))}
+            </div>
+          )}
 
           <div class="actions">
             {d.actions.map((a) => (
-              <button class={/book|message|view|quick|sync|add|review|staff/i.test(a) ? 'btn btn-ghost' : 'btn btn-primary'} data-action={a}>{escape(a)}</button>
+              <a class="btn btn-primary" href={ACTION_HREF[a] || `/app/dashboard/${persona}/`}>{escape(a)}</a>
             ))}
           </div>
         </div>
       </section>
     </div>
-    <script is:inline define:vars={{ screens: screens, persona: persona }}>
-      const SCREENS = screens;
-      const PID = persona;
-      function hrefForGroup(group) {
-        const s = SCREENS.find((x) => !x.asset && x.group === group);
-        return s ? '/app/' + s.id + '/' : '/app/dashboard/' + PID + '/';
-      }
-      const MAP = {
-        'Start Encounter': 'Clinical',
-        'Book Appointment': 'Scheduling',
-        'Message care team': 'Patient',
-        'View records': 'Patient',
-        'Add staff': 'Administration',
-        'Review approvals': 'Administration',
-        'Billing ops': 'Billing & Finance',
-        'Review protocols': 'Protocols',
-        'Staff oversight': 'Administration',
-        'Quick lookup': 'Mobile',
-        'Sync now': 'Mobile',
-      };
-      document.querySelectorAll('button[data-action]').forEach((b) => {
-        b.addEventListener('click', () => {
-          const g = MAP[b.dataset.action];
-          if (g) window.location.assign(hrefForGroup(g));
-          else alert(b.dataset.action + ' — demo action');
-        });
-      });
-    </script>
   </body>
 </html>

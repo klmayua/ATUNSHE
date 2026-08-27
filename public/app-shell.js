@@ -25,15 +25,25 @@
     ['Billing', 'Billing & Finance'], ['Ogami', 'AI Assistant'], ['Reports', 'Operations & Intelligence'],
     ['Administration', 'Administration'], ['Mobile', 'Mobile']
   ];
-  function firstHref(g) {
-    var sc = SCREENS.find(function (x) { return !x.asset && x.group === g; });
-    return sc ? '/app/' + sc.id + '/' : '/app/dashboard/' + me.id + '/';
+  // Screens a non-patient sees under "Patients": the clinical record, not the portal home.
+  var CLINICAL_PATIENT = ['fe22f6b0e70e44e69c62b4c69019163d', 'e1c47f5b53fb4efeb13cd44e5e82cbfa', 'eaeb377d6e70427195a93f5f7fae47f5'];
+  function screensFor(g) {
+    if (g === 'Dashboards') return [{ title: 'My dashboard', href: '/app/dashboard/' + me.id + '/', id: '__dash' }];
+    var list = SCREENS.filter(function (x) { return !x.asset && x.group === g; });
+    if (g === 'Patient' && me.id !== 'patient') {
+      list = list.filter(function (x) { return CLINICAL_PATIENT.indexOf(x.id) !== -1; });
+    }
+    return list.map(function (x) { return { title: x.title, href: '/app/' + x.id + '/', id: x.id }; });
   }
   var nav = ORDER.filter(function (o) { return canView(o[1]); })
     .map(function (o) {
-      var href = o[1] === 'Dashboards' ? '/app/dashboard/' + me.id + '/' : firstHref(o[1]);
-      var active = o[1] === group ? ' active' : '';
-      return '<a class="nav-link' + active + '" href="' + href + '">' + o[0] + '</a>';
+      var items = screensFor(o[1]);
+      if (!items.length) return '';
+      var links = items.map(function (it) {
+        var active = (it.id === META.screenId) ? ' active' : '';
+        return '<a class="nav-link' + active + '" href="' + it.href + '">' + it.title + '</a>';
+      }).join('');
+      return '<div class="nav-group"><div class="nav-group-label">' + o[0] + '</div>' + links + '</div>';
     }).join('');
 
   var root = document.getElementById('root');
