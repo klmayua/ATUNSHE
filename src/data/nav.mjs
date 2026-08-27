@@ -19,9 +19,11 @@ export const GROUP_LABELS = [
   ['Mobile', 'Mobile'],
 ];
 
+// Mobile is a companion app — one nav entry (home), not 16 workflow links in the staff nav.
+const MOBILE_HOME = '484bcbff1a75426cb9f6c1ee990f2e06';
+
 // Screens we surface in the left panel per group. A clinician's "Patients" view
-// should show the clinical record (Directory/Profile/Timeline), NOT the patient
-// portal — so we pick the right screens per (group, persona) here.
+// should show the clinical record (Directory/Profile/Timeline), NOT the patient portal.
 const PATIENT_CLINICAL = ['fe22f6b0e70e44e69c62b4c69019163d', 'e1c47f5b53fb4efeb13cd44e5e82cbfa', 'eaeb377d6e70427195a93f5f7fae47f5'];
 
 export function screensForGroup(group) {
@@ -50,6 +52,10 @@ export function navFor(persona) {
       items = screens
         .filter((s) => !s.asset && s.group === 'Patient' && PATIENT_CLINICAL.includes(s.id))
         .map((s) => ({ title: s.title, href: `/app/${s.id}/`, id: s.id }));
+    } else if (group === 'Mobile') {
+      // Companion app: single entry, not 16 links
+      const m = screens.find((s) => !s.asset && s.id === MOBILE_HOME);
+      items = m ? [{ title: 'Mobile companion', href: `/app/${m.id}/`, id: m.id }] : [];
     } else {
       items = screensForGroup(group).map((s) => ({ title: s.title, href: `/app/${s.id}/`, id: s.id }));
     }

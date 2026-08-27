@@ -1,0 +1,55 @@
+CLINICAL PROTOCOL — WORKING FORM
+Appendix A   Eligibility & Consent Checklist
+Inclusion criteria — all must be “Yes”
+Exclusion criteria — all must be “No”
+Consent
+Eligibility determination
+
+--- TABLE 1 ---
+Site | Atunse Healthcare Ltd. | Sponsor | KweHealth, LLC
+Patient ID |  | Visit / Date | 
+Initials |  | Protocol ID | 
+
+--- TABLE 2 ---
+Yes | Criterion | Note
+☐ | Adult with documented dementia or progressive cognitive decline | 
+☐ | Condition serious or disabling | 
+☐ | Limited benefit from / limited access to standard care | 
+☐ | Physician determines regimen clinically reasonable | 
+☐ | Informed consent obtainable (patient or LAR) | 
+☐ | Caregiver available for monitoring/follow-up | 
+☐ | Able to complete baseline and follow-up assessments | 
+☐ | Able to undergo intranasal and intravenous administration | 
+
+--- TABLE 3 ---
+No | Criterion | Note
+☐ | Active systemic infection or fever | 
+☐ | Unstable cardiovascular disease | 
+☐ | Recent stroke/TIA (unless physician judges risk acceptable) | 
+☐ | Recent or uncontrolled seizures | 
+☐ | Severe uncontrolled hypertension | 
+☐ | Severe renal or hepatic failure | 
+☐ | Active malignancy (unless physician-reviewed) | 
+☐ | Severe coagulopathy or bleeding disorder | 
+☐ | Known hypersensitivity to product components | 
+☐ | Active nasal infection/obstruction/epistaxis/recent nasal surgery/anatomy precluding intranasal delivery | 
+☐ | Severe agitation precluding safe administration | 
+☐ | Pregnancy (where biologically applicable) | 
+☐ | Any condition making IV or intranasal administration unsafe | 
+☐ | Hormone-specific contraindication (if hormone optimization considered) | 
+
+--- TABLE 4 ---
+Item | Confirmed / Date
+Consent discussion completed with patient | 
+LAR consent obtained (if patient capacity impaired) | 
+Patient assent sought to extent possible | 
+Signed consent form filed | 
+Copy provided to patient/caregiver | 
+
+--- TABLE 5 ---
+Eligible? | ☐ Yes    ☐ No    ☐ Hold pending: ____________________
+
+--- TABLE 6 ---
+Role | Name / Signature | Date
+Supervising Physician / PI |  | 
+Study Coordinator |  | 

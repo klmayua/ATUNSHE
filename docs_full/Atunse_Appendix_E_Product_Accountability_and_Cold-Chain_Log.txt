@@ -1,0 +1,45 @@
+CLINICAL PROTOCOL — WORKING FORM
+Appendix E   Product Accountability & Cold-Chain Log
+Receipt & storage
+Temperature / cold-chain checks
+Thaw & use
+Reconciliation
+Course total per patient: 6 vials Rejuvenate Serum™ (1 mL) and 6 vials ExoPure™ 140B (3 mL) — one of each per weekly session.
+
+--- TABLE 1 ---
+Site | Atunse Healthcare Ltd. | Sponsor | KweHealth, LLC
+Patient ID |  | Visit / Date | 
+Initials |  | Protocol ID | 
+
+--- TABLE 2 ---
+Field | ExoPure™ 140B | Rejuvenate Serum™
+Lot # |  | 
+Quantity received |  | 
+Expiry date |  | 
+Condition on receipt | ☐ OK | ☐ OK
+Storage (≤ –20°C) | ☐ Confirmed | ☐ Confirmed
+
+--- TABLE 3 ---
+Date | Time | Temp (°C) | In range? | Initials
+ |  |  | ☐ Y ☐ N | 
+ |  |  | ☐ Y ☐ N | 
+ |  |  | ☐ Y ☐ N | 
+ |  |  | ☐ Y ☐ N | 
+
+--- TABLE 4 ---
+Product / lot | Thaw time | Used by (within window) | Operator
+ |  |  | 
+ |  |  | 
+
+--- TABLE 5 ---
+Field | ExoPure™ 140B | Rejuvenate Serum™
+Received |  | 
+Administered |  | 
+Wasted / discarded |  | 
+Returned |  | 
+Balance |  | 
+
+--- TABLE 6 ---
+Role | Name / Signature | Date
+Product Custodian / Pharmacist |  | 
+Verified by |  | 

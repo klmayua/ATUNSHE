@@ -127,23 +127,71 @@ function schedulingView() {
 }
 
 function protocolsView(s) {
+  const pr = D.protocols.find((x) => s.title.includes(x.name.split(' ')[0])) || D.protocols[0];
   if (s.title.startsWith('Protocol Version')) {
-    const pr = D.protocols[0];
     let h = `<div class="card"><h3>Version history — ${esc(pr.name)}</h3>`;
     pr.history.forEach((v) => (h += `<div class="row"><div><div class="t">${esc(v.v)}</div><div class="s">${esc(v.by)} · ${esc(v.date)}</div></div><div class="s">${esc(v.note)}</div></div>`));
     return h + `</div>`;
   }
   if (s.title.startsWith('Protocol Configuration')) {
     let h = `<div class="card"><h3>Protocol configuration builder</h3>`;
-    h += `<div class="row"><div class="t">Select protocol</div><div class="s">Dementia ADDSB · General Clinical Assessment · Follow-up / Review</div></div>`;
-    h += `<div class="row"><div class="t">Add step</div><div class="s">Define cadence, owner, route</div></div></div>`;
+    h += `<div class="row"><div class="t">Active protocols</div><div class="s">${D.protocols.map((p) => esc(p.code)).join(' · ')}</div></div>`;
+    h += `<div class="row"><div class="t">Add step</div><div class="s">Define cadence, owner, route, deviation reason code</div></div></div>`;
     return h;
   }
-  // Execution
-  const pr = D.protocols.find((x) => s.title.includes(x.name.split(' ')[0])) || D.protocols[0];
-  let h = `<div class="card"><h3>${esc(pr.name)}</h3><div class="row"><div class="t">${esc(pr.code)}</div><div class="s">${esc(pr.version)} · ${esc(pr.status)} · owner ${esc(pr.owner)}</div></div><div class="sub-h">Steps</div>`;
-  pr.steps.forEach((st) => (h += `<div class="row"><div><div class="t">${st.n}. ${esc(st.name)}</div><div class="s">${esc(st.cadence)} · ${esc(st.patient)}</div></div><span class="tag ${st.status === 'Overdue' ? 'over' : 'ok'}">${esc(st.status)}</span></div>`));
-  return h + `</div>`;
+  // Execution — render the REAL protocol from the document library.
+  let h = `<div class="card"><h3>${esc(pr.name)}</h3>`;
+  h += `<div class="row"><div><div class="t">${esc(pr.code)}</div><div class="s">${esc(pr.version)} · ${esc(pr.status)}</div></div><div class="s">${esc(pr.owner)}</div></div>`;
+  if (pr.sponsor) h += `<div class="row"><div class="t">Sponsor</div><div class="s">${esc(pr.sponsor)}</div></div>`;
+  if (pr.indication) h += `<div class="row"><div class="t">Indication</div><div class="s">${esc(pr.indication)}</div></div>`;
+  if (pr.design) h += `<div class="row"><div class="t">Design</div><div class="s">${esc(pr.design)}</div></div>`;
+  if (pr.regimen) h += `<div class="row"><div class="t">Regimen</div><div class="s">${esc(pr.regimen)}</div></div>`;
+  h += `</div>`;
+
+  // Treatment-day workflow (executable steps)
+  h += `<div class="card"><h3>Treatment-day workflow</h3>`;
+  (pr.steps || []).forEach((st) => (h += `<div class="row"><div><div class="t">${esc(st.n)}. ${esc(st.name)}</div><div class="s">${esc(st.detail)}</div></div></div>`));
+  h += `</div>`;
+
+  // 6-week course (ADDSB)
+  if (pr.course && pr.course.length) {
+    h += `<div class="card"><h3>Course — 6 weekly sessions</h3>`;
+    pr.course.forEach((c) => (h += `<div class="row"><div><div class="t">Week ${esc(c.wk)}</div><div class="s">IV: ${esc(c.iv)}</div><div class="s">IN: ${esc(c.in)}</div></div><span class="tag ${c.status === 'Overdue' ? 'over' : c.status === 'Complete' ? 'ok' : ''}">${esc(c.status)}</span></div>`));
+    h += `</div>`;
+  }
+
+  // Vital-signs monitoring timepoints
+  if (pr.exigence && pr.exigence.monitoring && pr.exigence.monitoring.length) {
+    h += `<div class="card"><h3>Vital-signs monitoring (per session)</h3>`;
+    pr.exigence.monitoring.forEach((m) => (h += `<div class="row"><div><div class="t">${esc(m.timepoint)}</div><div class="s">${m.fields.join(' · ')}</div></div></div>`));
+    h += `</div>`;
+  }
+
+  // Reaction watch + stopping rules
+  if (pr.exigence && pr.exigence.reactionWatch && pr.exigence.reactionWatch.length) {
+    h += `<div class="card"><h3>Reaction watch</h3>`;
+    h += `<div class="row"><div class="s">${pr.exigence.reactionWatch.join(' · ')}</div></div></div>`;
+  }
+  if (pr.exigence && pr.exigence.stopRules && pr.exigence.stopRules.length) {
+    h += `<div class="card"><h3>Stopping rules</h3>`;
+    pr.exigence.stopRules.forEach((r) => (h += `<div class="row"><div class="s">${esc(r)}</div></div>`));
+    h += `</div>`;
+  }
+
+  // Working-form appendices (the clinician's toolkit)
+  if (pr.forms && pr.forms.length) {
+    h += `<div class="card"><h3>Working forms (appendices)</h3>`;
+    pr.forms.forEach((f) => (h += `<div class="row"><div><div class="t">Appendix ${esc(f.id)} — ${esc(f.title)}</div><div class="s">${esc(f.note)}</div></div></div>`));
+    h += `</div>`;
+  }
+
+  // Quality metrics
+  if (pr.quality && pr.quality.length) {
+    h += `<div class="card"><h3>Quality metrics</h3>`;
+    pr.quality.forEach((q) => (h += `<div class="row"><div><div class="t">${esc(q.metric)}</div><div class="s">${esc(q.target)} · ${esc(q.freq)}</div></div></div>`));
+    h += `</div>`;
+  }
+  return h;
 }
 
 function billingView() {

@@ -1,0 +1,1410 @@
+
+===== PAGE 1 =====
+ 
+EMR  
+ 
+   
+OUTCOME-BASED  TECHNICAL  PROPOSAL The  Atunse  Health  EMR
+ Architecture,  capability  domains,  process  flows  and  delivery  scope 
+One  secure,  patient-centred,  protocol-driven  operating  environment  for  the  whole  of  Atunse  Health:  records,  protocols,  scheduling,  billing,  consent,  governance  and  AI  intelligence,  connected  end  to  end  and  usable  on  mobile,  even  offline.   
+ 
+ 
+ 
+ 
+Prepared  for  the  leadership  of  Atunse  Health August  2026 
+  Technology.  Products.  Systems.  Built  for  Continuity. 
+ 
+
+===== PAGE 2 =====
+ 
+__________________________________________________________________________________________________  
+SECTION  1:  The  Intended  Outcome  Atunse  Health  today  runs  care  across  records,  appointments,  billing,  communication  and  administration  that  do  not  
+speak
+ 
+to
+ 
+each
+ 
+other.
+ 
+This
+ 
+platform
+ 
+replaces
+ 
+that
+ 
+fragmentation
+ 
+with
+ 
+a
+ 
+single
+ 
+operating
+ 
+environment
+ 
+in
+ 
+which
+ 
+the
+ 
+entire
+ 
+patient
+ 
+lifecycle
+ 
+runs
+ 
+as
+ 
+one
+ 
+connected
+ 
+chain,
+ 
+with
+ 
+a
+ 
+patient-centred
+ 
+Electronic
+ 
+Medical
+ 
+Record
+ 
+at
+ 
+its
+ 
+centre
+ 
+and
+ 
+the
+ 
+intelligence,
+ 
+trust
+ 
+and
+ 
+mobility
+ 
+layers
+ 
+built
+ 
+around
+ 
+it.
+ 
+At  completion  of  the  initial  programme,  Atunse  Health  has  a  production-ready  environment  supporting  the  core  patient  
+lifecycle
+ 
+from
+ 
+registration
+ 
+through
+ 
+care,
+ 
+payment,
+ 
+follow-up
+ 
+and
+ 
+ongoing
+ 
+engagement,
+ 
+with
+ 
+agreed
+ 
+existing
+ 
+patient
+ 
+data
+ 
+migrated
+ 
+in
+ 
+so
+ 
+that
+ 
+no
+ 
+patient
+ 
+starts
+ 
+again. 
+The  patient  lifecycle  
+REGISTER → CONSENT → SCHEDULE → CLINICAL  CARE → BILLING → FOLLOW-UP 
+Figure  1.  The  core  patient  lifecycle,  executed  as  one  connected  flow  rather  than  in  separate,  disconnected  systems. 
+ 
+Each  stage  feeds  the  next.  Registration  establishes  the  patient  identity  and  consent;  scheduling  brings  the  patient  to  care;  
+care
+ 
+executes
+ 
+against
+ 
+clinical
+ 
+protocols;
+ 
+billing
+ 
+captures
+ 
+the
+ 
+revenue;
+ 
+follow-up
+ 
+returns
+ 
+the
+ 
+patient
+ 
+to
+ 
+the
+ 
+cycle.
+ 
+Governance
+ 
+and
+ 
+intelligence
+ 
+run
+ 
+across
+ 
+every
+ 
+stage,
+ 
+so
+ 
+that
+ 
+the
+ 
+record
+ 
+stays
+ 
+accurate,
+ 
+trusted,
+ 
+and
+ 
+continuously
+ 
+improving.
+ 
+  
+SECTION  2  Platform  Architecture
+ 
+The  platform  is  organised  as  layered  capability,  not  a  set  of  disconnected  tools.  Patients  and  staff  reach  it  through  an  
+access
+ 
+layer;
+ 
+clinical
+ 
+and
+ 
+operational
+ 
+work
+ 
+happens
+ 
+in
+ 
+the
+ 
+application
+ 
+domains;
+ 
+a
+ 
+trust
+ 
+layer
+ 
+secures
+ 
+consent,
+ 
+custody
+ 
+and
+ 
+governance;
+ 
+an
+ 
+intelligence
+ 
+layer
+ 
+learns
+ 
+from
+ 
+operations;
+ 
+and
+ 
+a
+ 
+multi-tenant
+ 
+foundation
+ 
+carries
+ 
+it
+ 
+all.
+ 
+Capability  layers 
+1.  ACCESS Patient  portal   ·   Mobile  PWA   ·   Offline  capability   ·   Ogami  digital  front  office   ·   Role-based  staff  portals  
+2.  APPLICATION 
+EMR  &  Clinical  Care   ·   Protocol  Engine   ·   CRM,  Booking  &  Scheduling   ·   Billing  &  Revenue   ·   People  &  Institutions  
+3.  INTELLIGENCE 
+AI  continuous  learning   ·   Protocol  analytics   ·   Operational  insight   
+4.  TRUST Consent  management   ·   Chain  of  custody   ·   Governance  ledger   ·   Audit  
+5.  FOUNDATION Multi-tenant  architecture   ·   Security   ·   Infrastructure   ·   Structured  data  layer  
+Figure  2.  Platform  capability  layers.  The  patient-centred  EMR  sits  at  the  heart  of  the  application  layer;  every  other  layer  exists  to  keep  the  record  
+accurate,
+ 
+trusted,
+ 
+accessible
+ 
+and
+ 
+improving. 
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         2 
+
+===== PAGE 3 =====
+ 
+__________________________________________________________________________________________________  Within  the  application,  intelligence  and  trust  layers  sit  across  six  capability  domains.  They  are  the  architecture  of  one  
+environment,
+ 
+not
+ 
+separately
+ 
+priced
+ 
+products,
+ 
+and
+ 
+their
+ 
+value
+ 
+is
+ 
+that
+ 
+they
+ 
+operate
+ 
+together.
+ 
+Each
+ 
+is
+ 
+specified
+ 
+in
+ 
+the
+ 
+sections
+ 
+that
+ 
+follow,
+ 
+with
+ 
+the
+ 
+outcome
+ 
+it
+ 
+produces
+ 
+and
+ 
+the
+ 
+technical
+ 
+capabilities
+ 
+that
+ 
+deliver
+ 
+it.
+ 
+ SECTION  3  EMR  and  Clinical  Care
+ 
+Outcome.   Every  patient  has  one  authoritative,  longitudinal  record  that  they  help  build  and  can  access,  and  that  
+authorised
+ 
+staff
+ 
+can
+ 
+rely
+ 
+on
+ 
+wherever
+ 
+care
+ 
+is
+ 
+delivered.
+ 
+The  record  is  patient-centred  by  design.  It  is  organised  around  the  patient  rather  than  around  a  department  or  a  visit,  so  
+a
+ 
+patient's
+ 
+whole
+ 
+history
+ 
+sits
+ 
+in
+ 
+one
+ 
+timeline,
+ 
+one
+ 
+identity
+ 
+carries
+ 
+across
+ 
+every
+ 
+facility,
+ 
+and
+ 
+the
+ 
+patient
+ 
+participates
+ 
+in
+ 
+their
+ 
+own
+ 
+record
+ 
+rather
+ 
+than
+ 
+being
+ 
+a
+ 
+passive
+ 
+subject
+ 
+of
+ 
+it.
+ 
+Practitioner
+ 
+tools
+ 
+exist
+ 
+to
+ 
+serve
+ 
+that
+ 
+record
+ 
+accurately
+ 
+and
+ 
+quickly.
+ 
+The  patient  record  •  A  single  longitudinal  record  per  patient:  one  timeline  of  every  encounter,  result,  prescription  and  interaction  •  One  patient  identity  that  carries  across  all  facilities,  departments  and  visits  •  Demographics,  next-of-kin  and  emergency  contacts,  and  payer  or  insurance  details  •  Patient  photograph  and  identity  documents,  with  duplicate  detection  and  safe  record  merge  
+Patient  access  and  participation  (patient-driven)  •  Patient  portal  access  to  their  own  record,  results  and  care  plans  where  authorised  •  Patient-entered  demographics,  history  and  pre-visit  questionnaires  that  flow  straight  into  the  record  •  Patient-reported  symptoms  and  outcomes  captured  before,  during  and  after  care  •  Patient  view  of  upcoming  and  past  appointments,  reminders  and  instructions  •  Patient-held  consent  and  communication  preferences,  editable  by  the  patient  
+Clinical  documentation  (practitioner  tools)  •  Encounters,  consultation  notes  and  structured  problem  list  •  Diagnoses  and  conditions  coded  to  standard  clinical  terminologies  for  consistency  and  reporting  •  Allergies,  current  and  past  medications,  and  immunisation  history  •  Vital  signs,  measurements  and  trend  or  growth  charts  over  time  •  Laboratory  and  imaging  results,  procedures  and  interventions  •  Configurable  clinical  forms  and  templates,  with  free-text  and  structured  capture  
+Care  coordination  •  Care  plans  and  protocol-linked  care  pathways  attached  to  the  patient  •  Internal  and  external  referrals,  handovers  and  clinical  task  assignment  •  Attachments  (scans,  images,  documents)  and  electronic  signatures  on  clinical  entries  
+Data  model,  access  and  audit  (technical)  •  A  structured  clinical  data  model  built  for  reporting,  analytics  and  interoperable  exchange  
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         3 
+
+===== PAGE 4 =====
+ 
+__________________________________________________________________________________________________  •  Role-based  access  control  with  controlled  break-glass  access  for  emergencies  •  An  immutable,  time-stamped  audit  trail  and  full  record  versioning  •  Clinical  search,  filtering  and  rapid  record  retrieval  across  the  whole  population  
+Existing  patient  data  integration  •  Structured  migration  of  agreed  existing  patient  demographics  and  identifiers  •  Historical  patient  and  clinical  records  brought  into  the  new  longitudinal  record  •  Existing  appointment  and  relevant  historical  administrative  information  •  Migration  governed  by  agreed  source  formats,  data-quality  rules  and  field  mapping  •  Validation  and  reconciliation  of  migrated  data  before  go-live  
+ SECTION  4:  Protocol  and  Clinical  Intelligence  Engine  Outcome.   Atunse  Health's  clinical  protocols  stop  being  documents  and  institutional  memory,  and  become  active,  
+executable
+ 
+components
+ 
+of
+ 
+daily
+ 
+care
+ 
+that
+ 
+do
+ 
+not
+ 
+leave
+ 
+when
+ 
+staff
+ 
+do.
+ 
+The  engine  turns  written  protocols  into  structured,  versioned,  executable  workflows  that  guide  care  at  the  point  of  
+delivery,
+ 
+capture
+ 
+what
+ 
+actually
+ 
+happened,
+ 
+and
+ 
+feed
+ 
+a
+ 
+learning
+ 
+loop
+ 
+that
+ 
+improves
+ 
+the
+ 
+protocols
+ 
+over
+ 
+time
+ 
+under
+ 
+human
+ 
+clinical
+ 
+authority.
+ 
+The  continuous  learning  loop 
+PROTOCOL → EXECUTION → DATA → AI  ANALYSIS → HUMAN  REVIEW → IMPROVEMENT 
+Figure  3.  Improvement  feeds  back  into  the  protocol.  AI  surfaces  patterns  and  exceptions;  human  clinical  review  authorises  change.  AI  never  overrides  
+an
+ 
+authorised
+ 
+protocol;
+ 
+clinical
+ 
+authority
+ 
+remains
+ 
+with
+ 
+Atunse
+ 
+Health. 
+Protocol  authoring  •  Protocol  and  care-pathway  builder  with  reusable  components  •  Clinical  decision  rules,  order  sets  and  protocol-linked  forms  •  Configurable  triggers,  conditions  and  expected  actions  
+Protocol  lifecycle  and  control  •  Versioning  with  draft,  review  and  approval  workflow  •  Controlled  deployment,  effective  dating  and  rollback  to  a  prior  version  •  Full  protocol  change  history  and  approval  audit  
+Protocol  execution  •  Protocol-driven  task  lists,  prompts  and  reminders  at  the  point  of  care  •  In-workflow  alerts  and  structured  exception  capture  •  Deviation  recording  with  reason  codes  for  later  analysis  
+Monitoring  and  analytics  •  Adherence  and  deviation  dashboards  by  protocol,  team  and  site  •  Protocol  performance  metrics  and  outcome  tracking  over  time  
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         4 
+
+===== PAGE 5 =====
+ 
+__________________________________________________________________________________________________  
+ SECTION  5:  CRM,  Booking,  Scheduling  and  Engagement  Outcome.   No  enquiry  is  lost,  and  no  appointment  goes  untracked.  Every  patient  is  guided  from  first  contact  through  
+booking,
+ 
+care
+ 
+and
+ 
+follow-up.
+ 
+This  domain  manages  the  patient  relationship  and  access  journey,  connecting  the  front  office,  the  schedule  and  the  
+record
+ 
+so
+ 
+that
+ 
+demand
+ 
+is
+ 
+captured,
+ 
+converted
+ 
+and
+ 
+retained
+ 
+rather
+ 
+than
+ 
+leaking
+ 
+away
+ 
+at
+ 
+the
+ 
+edges.
+ 
+The  engagement  journey 
+ENQUIRY → BOOKING → CARE → FOLLOW-UP → ENGAGEMENT 
+Figure  4.  Ogami  and  the  CRM  keep  the  patient  moving  through  one  continuous  journey,  capturing  every  enquiry  and  returning  every  patient. 
+CRM  •  Patient  and  prospect  profiles  with  unified  interaction  history  •  Multi-channel  enquiry  and  lead  capture,  with  pipeline  and  relationship  stage  •  Segmentation,  targeted  communication  and  consent-aware  messaging  •  Full  communication  log  tied  to  the  patient  record  
+Booking  and  scheduling  •  Patient  self-booking  and  staff-side  booking  •  Provider,  room  and  resource  availability  across  multiple  locations  •  Service  catalogue,  waitlists,  rescheduling,  cancellations  and  no-show  tracking  •  Automated  reminders  by  SMS,  WhatsApp  and  email,  and  follow-up  or  recall  scheduling  
+Ogami  digital  front  office  •  Conversational  assistant  across  web  and  WhatsApp  •  Guided  enquiry,  triage  and  booking  journeys  with  human  escalation  •  Appointment  information,  patient  guidance  and  lead  capture  •  Live  synchronisation  with  the  CRM,  the  schedule  and  the  record  
+ SECTION  6:  Billing,  Payments  and  Revenue  Outcome.   Every  service  rendered  is  captured,  billed  and  reconciled,  so  revenue  that  currently  leaks  through  untracked  
+activity
+ 
+is
+ 
+closed
+ 
+off.
+ 
+ 
+Billing  is  connected  directly  to  clinical  activity,  so  a  charge  is  raised  from  the  care  that  was  actually  delivered,  tracked  to  
+payment,
+ 
+and
+ 
+reconciled,
+ 
+giving
+ 
+Atunse
+ 
+Health
+ 
+a
+ 
+complete
+ 
+and
+ 
+trustworthy
+ 
+view
+ 
+of
+ 
+revenue.
+ 
+Revenue  flow 
+PATIENT → SERVICE → PROVIDER → TRANSACTION → REVENUE 
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         5 
+
+===== PAGE 6 =====
+ 
+__________________________________________________________________________________________________  Figure  5.  Every  clinical  service  is  connected  to  a  provider,  a  transaction  and  recognised  revenue,  closing  the  gap  between  care  delivered  and  revenue  
+captured. 
+Charging  and  invoicing  •  Service  catalogue  with  configurable  pricing  and  tariffs  •  Charge  capture  linked  directly  to  clinical  activity  •  Invoicing,  receipts  and  patient  statements  
+Payments  •  Payment  recording  across  cash,  card,  transfer  and  payment  gateway  •  Part-payments,  outstanding  balances  and  ageing  •  Refunds,  adjustments  and  discounts  with  controls  
+Payers  and  reporting  •  Corporate,  payer  and  insurance  billing  •  Revenue  reporting,  transaction  ledger  and  reconciliation  •  Administrative  controls  and  approval  thresholds  
+ SECTION  7:  People,  Institutions  and  Administration  Outcome.   The  people,  facilities  and  partner  institutions  that  deliver  care  are  mapped  around  the  patient  and  the  clinical  
+record,
+ 
+not
+ 
+held
+ 
+in
+ 
+separate
+ 
+lists.
+ 
+ 
+This  domain  gives  Atunse  Health  an  accurate  institutional  map:  who  works  where  and  with  what  credentials,  which  
+partners
+ 
+and
+ 
+referral
+ 
+relationships
+ 
+exist,
+ 
+and
+ 
+how
+ 
+the
+ 
+organisation
+ 
+is
+ 
+configured
+ 
+and
+ 
+administered.
+ 
+Personnel  •  Staff  profiles,  professional  roles,  departments  and  responsibilities  •  Assignments,  availability  and  rostering  •  Credentials  and  licences  with  expiry  tracking  and  reminders  •  Permissions  and  a  full  activity  record  
+Institutions  and  partners  •  Partner-institution  and  referring-organisation  directory  •  Laboratories,  pharmacies,  specialists  and  corporate  partners  •  Contracted  relationships,  referral  and  service-relationship  tracking  
+Administration  •  Facilities,  locations,  departments  and  units  •  User  management  and  role-based  access  control  •  Forms  builder,  notification  templates  and  workflow  configuration  •  System  settings  and  administrative  audit  
+ 
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         6 
+
+===== PAGE 7 =====
+ 
+__________________________________________________________________________________________________  
+  SECTION  8:  Trust,  Consent,  Chain  of  Custody  and  Governance  Outcome.   Consent  and  critical  events  are  verifiable  and  tamper-evident,  so  Atunse  Health  can  establish  what  happened,  
+when,
+ 
+and
+ 
+under
+ 
+whose
+ 
+authority,
+ 
+with
+ 
+confidence.
+ 
+This  layer  provides  the  institutional  trust  that  clinical  and  administrative  operations  depend  on:  consent  held  as  a  live,  
+verifiable
+ 
+state;
+ 
+a
+ 
+tamper-evident
+ 
+record
+ 
+of
+ 
+custody
+ 
+and
+ 
+governance
+ 
+events;
+ 
+and
+ 
+the
+ 
+security
+ 
+that
+ 
+protects
+ 
+it
+ 
+all.
+ 
+Chain-of-custody  record 
+WHO → DID  WHAT → WHEN → AUTHORITY → TO  WHAT → WHAT  NEXT 
+Figure  6.  Every  custody  and  governance  event  is  reconstructable  as  a  verifiable  record  of  who  did  what,  when,  and  under  what  authority. 
+Consent  management  •  Granular  consent  types  bound  to  a  specific  purpose  •  Digital  capture  with  signature  or  witness  •  Version,  status,  timestamp,  giver  and  expiry  •  Modification,  withdrawal,  verification  and  full  history  •  Consent  held  as  an  active  digital  state,  not  a  static  document  
+Chain  of  custody  •  Registry  of  assets,  specimens,  documents  and  critical  records  •  Custody  events:  transfer,  receipt  and  handover  •  Timestamped  entries  recording  the  actor  and  the  authority  •  Tamper-evident  ledger  entries  with  independent  verification  
+Governance  and  security  (technical)  •  Administrative  and  protocol  approval  workflows  and  authorisations  •  Critical-access  logging  and  record-status  change  tracking  •  Administrative  signatures  with  ledger-backed  verification  •  Encryption  in  transit  and  at  rest,  role-based  access  and  full  audit  •  A  blockchain-backed  ledger  provides  tamper-evident  verification  of  governance  events;  sensitive  patient  records  remain  in  
+the
+ 
+secure
+ 
+data
+ 
+layer,
+ 
+not
+ 
+on
+ 
+a
+ 
+public
+ 
+chain
+ 
+ SECTION  9:  Mobile  and  Offline  Capability  Outcome.   The  system  is  usable  in  real  healthcare  environments,  on  the  devices  staff  and  patients  already  have,  and  does  
+not
+ 
+stop
+ 
+working
+ 
+when
+ 
+the
+ 
+network
+ 
+does.
+ 
+The  platform  is  delivered  as  a  Progressive  Web  Application,  so  authorised  users  reach  it  on  any  supported  phone,  tablet  
+or
+ 
+desktop
+ 
+without
+ 
+an
+ 
+app-store
+ 
+deployment,
+ 
+and
+ 
+selected
+ 
+workflows
+ 
+continue
+ 
+working
+ 
+through
+ 
+unreliable
+ 
+connectivity.
+ 
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         7 
+
+===== PAGE 8 =====
+ 
+__________________________________________________________________________________________________  Mobile  •  Responsive  clinical  and  patient  interfaces  on  any  device  •  Mobile  patient  registration,  clinical  workflows  and  scheduling  •  Mobile  access  to  authorised  patient  information  and  notifications  
+Offline  •  Offline  data  capture  and  local  workflow  continuation  •  Temporary  encrypted  local  storage  with  synchronisation  when  connectivity  returns  •  Conflict  handling  and  clear  synchronisation  status  •  Applied  selectively  to  appropriate  workflows,  because  not  every  clinical  operation  should  permit  unrestricted  offline  access  
+ SECTION  10:  Multi-Tenant  Architecture  Outcome.   Atunse  Health  can  expand  beyond  the  initial  deployment  without  replacing  the  underlying  technology.  
+The  platform  is  built  on  a  multi-tenant  architecture  that  supports  multiple  organisational  environments  while  
+maintaining
+ 
+appropriate
+ 
+separation
+ 
+of
+ 
+data
+ 
+and
+ 
+access.
+ 
+This
+ 
+creates
+ 
+the
+ 
+foundation
+ 
+for
+ 
+expansion
+ 
+across
+ 
+additional
+ 
+facilities,
+ 
+departments,
+ 
+services,
+ 
+operational
+ 
+units,
+ 
+locations
+ 
+and
+ 
+partner
+ 
+organisations,
+ 
+on
+ 
+shared
+ 
+infrastructure
+ 
+with
+ 
+isolated
+ 
+data.
+ 
+SINGLE  FACILITY → DEPARTMENTS → MULTIPLE  FACILITIES → PARTNER  NETWORK 
+Figure  7.  The  same  platform  scales  outward  from  a  single  facility  to  a  multi-facility  and  partner  network  on  shared,  separated  tenancy. 
+ 
+SECTION  11:  The  Continuous  Operating  Cycle  The  domains  combine  into  a  single,  continuously  improving  cycle.  This  is  the  point  of  the  platform:  not  an  EMR  in  
+isolation,
+ 
+but
+ 
+an
+ 
+environment
+ 
+that
+ 
+records
+ 
+care,
+ 
+enforces
+ 
+structured
+ 
+processes,
+ 
+protects
+ 
+trust,
+ 
+connects
+ 
+people
+ 
+and
+ 
+institutions,
+ 
+learns
+ 
+from
+ 
+operations
+ 
+and
+ 
+continuously
+ 
+improves.
+ 
+ 
+PATIENT →REGISTRATION  &  CONSENT → BOOKING → EMR → PROTOCOL 
+↓ 
+CLINICAL  EXECUTION → BILLING → FOLLOW-UP → GOVERNANCE  &  AUDIT → DATA 
+↓ 
+AI  &  INTELLIGENCE → WORKFLOW  IMPROVEMENT → BETTER  CARE 
+Figure  8.  The  operating  cycle.  Data  from  every  stage  feeds  intelligence;  intelligence  improves  protocols  and  workflows;  improved  workflows  produce  
+better
+ 
+care,
+ 
+and
+ 
+the
+ 
+cycle
+ 
+repeats. 
+ 
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         8 
+
+===== PAGE 9 =====
+ 
+__________________________________________________________________________________________________  
+SECTION  12:  Delivery  Scope  and  Responsibilities  The  initial  programme  establishes  a  secure,  operational  first  production  environment.  It  does  not  attempt  every  possible  
+future
+ 
+feature;
+ 
+it
+ 
+establishes
+ 
+the
+ 
+foundation
+ 
+on
+ 
+which
+ 
+the
+ 
+platform
+ 
+continuously
+ 
+evolves.
+ 
+Detailed
+ 
+commercial
+ 
+terms
+ 
+are
+ 
+set
+ 
+out
+ 
+in
+ 
+the
+ 
+accompanying
+ 
+Commercial
+ 
+Proposal.
+ 
+Atunse  Health  provides Farawa  provides 
+Clinical  expertise,  protocols  and  clinical  governance  Technology  architecture  and  product  engineering  
+Operational  requirements  and  institutional  knowledge  Platform  development,  deployment  and  infrastructure  
+Data  required  for  migration  Security,  AI  enablement  and  migration  implementation  
+UAT  participation  and  clinical  decision  authority  Technical  support  and  platform  maintenance  
+Strategic  direction  Continuous  product  evolution   
+SECTION  13:  Delivery  Timeline   PHASE  I:  06  -  WEEK  BUILD  &  PRODUCTION  DEPLOYMENT    Week  Focus  Primary  Deliverables  Exit  Gate  
+01  Foundation  &  Architecture  
+Production  architecture,  environments,  database/data  model,  tenancy  structure,  authentication/RBAC,  security  baseline,  CI/CD,  core  UX  shell  
+Architecture  and  environment  approved  
+02  Patient  Foundation  Patient  identity,  registration,  demographics,  documents,  duplicate  detection,  longitudinal  record  structure,  consent  foundation  
+Patient  record  can  be  created  and  managed  end-to-end  
+03  EMR  &  Clinical  Care  Encounters,  notes,  diagnoses,  allergies,  medications,  vitals,  investigations,  attachments,  clinical  forms,  audit  trail  
+Core  clinical  workflow  operational  
+04  Protocol  Engine  Protocol  structures,  versioning,  approval  workflow,  protocol-linked  forms,  tasks,  prompts,  deviations,  exception  capture  
+First  agreed  Atunse  protocol  executable  
+05  CRM,  Booking,  Ogami,  Billing  &  Administration  
+CRM,  enquiry  capture,  patient/prospect  profiles,  booking,  scheduling,  reminders,  follow-up,  Ogami  integration,  Services/tariffs,  charge  capture,  invoicing,  receipts,  payments,  balances,  reconciliation,  staff,  facilities,  institutions,  permissions  
+Enquiry  →  booking  →  patient  journey  operational  Care  →  charge  →  payment  workflow  operational  
+06  Trust,  Data  Migration,  Mobile,  Integration,  UAT  &  Go-Live  
+Consent,  chain  of  custody,  governance  ledger,  blockchain-backed  verification,  migration  pipeline,  PWA,  offline  workflows,  synchronisation,  Full  lifecycle  integration,  security  testing,  migration  validation,  UAT,  defect  resolution,  training,  production  deployment,  go-live  readiness  
+Integrated  system  passes  technical  integration  testing,  Production  Go-Live  
+ 
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         9 
+
+===== PAGE 10 =====
+ 
+__________________________________________________________________________________________________  The  sequence  deliberately  follows  the  platform's  intended  patient  lifecycle  —  registration  →  consent  →  scheduling  →  
+clinical
+ 
+care
+ 
+→
+ 
+billing
+ 
+→
+ 
+follow-up
+ 
+—
+ 
+rather
+ 
+than
+ 
+building
+ 
+six
+ 
+isolated
+ 
+modules.
+  The  architecture  also  needs  to  preserve  the  specification's  layered  model:  access,  application,  intelligence,  trust  and  
+foundation.
+  
+PHASE  II:  6  -  WEEK  TEST,  BEDDING-DOWN  &  OPTIMISATION  It  is  the  period  in  which  Atunse  actually  begins  operating  the  system,  while  Farawa  remains  closely  involved  in  
+monitoring,
+ 
+correcting,
+ 
+tuning
+ 
+and
+ 
+stabilising
+ 
+it.
+  Weeks  07  -  08:  Controlled  Production  Objective:  Stabilise  the  live  environment  ●  Controlled  production  usage  begins  ●  Existing  patient  data  monitored  for  integrity  ●  Registration  and  patient  identification  monitored  ●  Clinical  workflows  observed  ●  Scheduling  and  CRM  workflows  monitored  ●  Billing/revenue  capture  reconciled  against  actual  activity  ●  User  support  desk  activated  ●  Daily  technical  monitoring  ●  Critical  defects  prioritised  and  resolved  ●  Workflow  friction  documented  ●  Initial  user  feedback  captured   Gate:  Core  patient  lifecycle  operates  reliably  in  production.   Weeks  08   -  09:  Workflow  Validation  Objective:  Validate  the  system  against  real  Atunse  operations   Focus  moves  from  "does  the  software  work?"  to  "does  the  organisation  work  better  with  it?"  ●  Clinical  workflow  optimisation  ●  Protocol  execution  review  ●  Protocol  deviation  analysis  ●  Booking/no-show  analysis  ●  CRM  and  Ogami  enquiry  conversion  review  ●  Billing  leakage/reconciliation  review  ●  Consent  and  governance  verification  ●  Mobile/PWA  performance  testing  ●  Offline  workflow  validation  ●  Data  quality  review  ●  Role  and  permission  refinement  ●  Staff  workflow  adjustments   The  protocol  engine  is  specifically  intended  to  create  a  continuous  loop  of  protocol  →  execution  →  data  →  AI  analysis  
+→
+ 
+human
+ 
+review
+ 
+→
+ 
+improvement
+,
+ 
+so
+ 
+this
+ 
+period
+ 
+is
+ 
+where
+ 
+that
+ 
+loop
+ 
+starts
+ 
+generating
+ 
+useful
+ 
+operational
+ 
+evidence.
+  Gate:  Major  operational  workflows  validated  and  tuned.   
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         10 
+
+===== PAGE 11 =====
+ 
+__________________________________________________________________________________________________  Weeks  09  -  10:  Performance  &  Intelligence  Objective:  Move  from  functional  system  to  operational  intelligence  ●  Protocol  adherence  reporting  ●  Clinical/operational  dashboards  ●  Revenue  and  billing  analytics  ●  Patient  journey  analytics  ●  Appointment  and  engagement  analytics  ●  Data-quality  monitoring  ●  AI  insight  generation  ●  Exception  identification  ●  Workflow  performance  analysis  ●  Management  reporting  ●  Security  and  audit  review  ●  Infrastructure/performance  optimisation   This  is  also  where  the  intelligence  layer  begins  becoming  genuinely  useful  rather  than  merely  existing  technically.  The  
+specification
+ 
+calls
+ 
+for
+ 
+AI
+ 
+continuous
+ 
+learning,
+ 
+protocol
+ 
+analytics
+ 
+and
+ 
+operational
+ 
+insight
+ 
+across
+ 
+the
+ 
+platform.
+  Gate:  Management  can  see  what  is  happening  across  the  operating  environment  and  act  on  it.     Weeks  10  -  11:   Scale  &  Resilience  Testing  Objective:  Test  whether  the  platform  is  ready  to  become  institutional  infrastructure  ●  Increased  user-load  testing  ●  Multi-location  readiness  testing  ●  Tenant  isolation  verification  ●  Disaster  recovery  testing  ●  Backup/restore  validation  ●  Security  review  ●  Audit-log  verification  ●  Chain-of-custody  verification  ●  Offline/online  reconciliation  testing  ●  Migration/reconciliation  procedures  tested  ●  Failure  scenarios  and  recovery  procedures  ●  Infrastructure  cost/performance  optimisation   This  matters  because  the  architecture  is  explicitly  intended  to  scale  from  single  facility  →  departments  →  multiple  
+facilities
+ 
+→
+ 
+partner
+ 
+network
+ 
+without
+ 
+replacing
+ 
+the
+ 
+underlying
+ 
+technology.
+  Gate:  Platform  demonstrates  operational  resilience  beyond  the  initial  facility.    Weeks  11  -  12:  Institutionalisation  &  Handover  Objective:  Convert  the  project  into  a  managed  operating  platform  ●  Final  production  audit  ●  Outstanding  defect  closure  ●  Final  data  reconciliation  ●  SOP  validation  
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         11 
+
+===== PAGE 12 =====
+ 
+__________________________________________________________________________________________________  ●  Administrator  training  ●  Clinical  super-user  training  ●  Technical  documentation  ●  Support  escalation  procedures  ●  Monitoring  and  maintenance  procedures  ●  Product  roadmap  for  next  release  ●  Final  acceptance  review  ●  Transition  into  managed  service/evolution  cycle   Gate:  OPERATIONAL  ACCEPTANCE   At  this  point,  the  system  stops  being  treated  as  a  project  being  delivered  and  becomes  Atunse  Health's  operating  
+infrastructure
+.
+   
+ 
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         12 
+
+===== PAGE 13 =====
+ 
+__________________________________________________________________________________________________  
+NEXT  STEPS  
+Following  completion  of  the  Atunse  Health  vetting  and  evaluation  process,  the  engagement  now  moves  into  formal  
+execution
+ 
+and
+ 
+delivery
+.
+ 
+Discovery
+ 
+is
+ 
+already
+ 
+underway,
+ 
+the
+ 
+delivery
+ 
+teams
+ 
+are
+ 
+established,
+ 
+and
+ 
+the
+ 
+initial
+ 
+product
+ 
+direction
+ 
+and
+ 
+interface
+ 
+work
+ 
+are
+ 
+in
+ 
+progress.
+ 
+The
+ 
+next
+ 
+steps
+ 
+are
+ 
+therefore
+ 
+focused
+ 
+on
+ 
+completing
+ 
+discovery,
+ 
+activating
+ 
+the
+ 
+engagement
+ 
+and
+ 
+moving
+ 
+directly
+ 
+into
+ 
+implementation.
+ 
+01  |  Agreement  &  NDA  
+Execute  the  project  agreement  and  NDA  to  formally  establish  the  engagement,  agreed  scope,  commercial  terms,  
+responsibilities
+ 
+and
+ 
+confidentiality
+ 
+obligations.
+ 
+02  |  Initial  Payment  
+Complete  the  agreed  initial  project  payment  to  activate  the  implementation  engagement  and  release  the  delivery  
+programme.
+ 
+03  |  Discovery  Completion  
+Complete  the  ongoing  discovery  and  product  definition  activities,  translating  the  approved  technical  specification  and  
+existing
+ 
+product
+ 
+work
+ 
+into
+ 
+the
+ 
+detailed
+ 
+implementation
+ 
+backlog
+ 
+and
+ 
+delivery
+ 
+priorities.
+ 
+04  |  Technical  Implementation  
+Commence  the  6-week  implementation  programme  covering  engineering,  integration,  data  migration,  testing,  
+deployment
+ 
+and
+ 
+production
+ 
+readiness.
+ 
+05  |  Production  Go  Live  
+Deploy  the  agreed  initial  production  environment  at  the  conclusion  of  the  6-week  implementation  period,  subject  to  
+completion
+ 
+of
+ 
+the
+ 
+agreed
+ 
+acceptance
+ 
+and
+ 
+go-live
+ 
+criteria.
+ 
+06  |  Production  Bedding  Down  
+Enter  the  6-week  production  bedding  down  and  optimisation  period ,  during  which  the  platform  is  monitored,  validated  
+in
+ 
+live
+ 
+operations
+ 
+and
+ 
+progressively
+ 
+tuned
+ 
+against
+ 
+actual
+ 
+usage.
+ 
+07  |  Managed  Operations  
+Transition  into  the  ongoing  managed  platform  operating  model  following  completion  of  the  bedding  down  period.  
+DELIVERY  PATH:  AGREEMENT  &  NDA  →  INITIAL  PAYMENT  →  DISCOVERY  COMPLETION  →  6  WEEK  
+IMPLEMENTATION
+ 
+→
+ 
+PRODUCTION
+ 
+GO
+ 
+LIVE
+ 
+→
+ 
+6
+ 
+WEEK
+ 
+BEDDING
+ 
+DOWN
+ 
+→
+ 
+MANAGED
+ 
+OPERATIONS
+ 
+Atunse  Health  EMR  ·  High-Level  Technical  Specification   ·      Confidential   ·         13 

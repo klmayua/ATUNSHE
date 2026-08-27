@@ -1,0 +1,87 @@
+
+===== PAGE 1 =====
+C O N F I D E N T I A L
+Atunse EMR
+A working note on how we see it
+Our current understanding, offered for discussion
+1.  About this note
+This note sets out our current understanding, nothing more. It gathers what we have seen and discussed so far 
+into one place, so the conversation starts from a shared view. Everything here is provisional and offered for your 
+steer.
+2.  What we have reviewed
+We have gone through the materials shared with us in detail: the clinical protocol, its full suite of working forms, 
+the consent and patient information, and the implementation notes. Read through the lens of a record system, 
+they show us the kind of workflow the platform must hold faithfully and provably. A few examples of what that 
+means in practice:
+● Multi-step supervised administration with pre-dose verification, timed post-session monitoring, and a 
+structured follow-up path.
+● Product custody with cold-chain handling, lot and certificate verification and reconciliation, alongside 
+device logs.
+● A coded, not named, subject model, adverse-event reporting on defined clocks, and a caregiver 
+observation record.
+The clinical judgement behind these remains entirely yours. Our concern is only that the record holds them, and can 
+prove it later.
+3.  What Atunse EMR is
+Atunse EMR is, first and foremost, an architecture: a governed clinical record and operations platform. What runs 
+on it first, and which programme becomes the flywheel, is entirely your call. The value is a record that can carry 
+whatever workflow you choose, and the next one after it, without a rebuild: audit-ready, interoperable, and 
+extensible. The clinical direction is yours to set; our focus is the foundation it stands on.
+===== PAGE 2 =====
+4.  How we see the architecture
+This is how we currently picture it, offered as a starting point rather than a fixed design. A configurable protocol 
+engine at the centre, wrapped by a standards-based interoperability surface, standing on a governance and 
+security substrate that applies across every layer:
+Atunse EMR: a high-level view, anchored to recognised health-IT standards.
+A note on access: the patient is a first-class role, not only the subject of the record. Consent, sight of their own 
+information, and patient-reported outcomes sit with them, with a caregiver or authorised representative alongside 
+where capacity calls for it.
+It is deliberately built on recognised frameworks: HL7 FHIR R4 for interoperability, IHE profiles, maturity measured 
+against HIMSS EMRAM, an ISO/IEC 27001 aligned security posture, NDPA 2023 data residency, and GAMP 5 with 
+ALCOA+ for validation and data integrity.
+5.  Points we would value understanding
+Most of what we bring is questions. These are the areas we would value working through with you, each with 
+where we would hope to get to and what we would want to learn:
+A R E A W H E R E  W E  W O U L D  W A N T  T O  G E T  T O W H A T  W E  W O U L D  H O P E  T O  L E A R N
+Protocol configuration & 
+sign-off
+Your protocol held as versioned 
+configuration, with a clear approval path.
+Who signs off a protocol version, and how 
+amendments flow.
+Existing records & data A clean, trustworthy starting point for the 
+record.
+What records exist today, and in what form.
+Interoperability Labs, devices, billing and reporting on a 
+standards-based surface.
+Which systems matter, and what already 
+connects.
+Identity, consent & access Roles and a coded-subject model matched to 
+how you work.
+Your roles, and who holds the identity 
+mapping.
+Data residency & 
+confidentiality
+Data in-region under your control, shared out 
+only as coded and agreed.
+Your preferences, and any sponsor data-
+sharing in view.
+Security & governance A validated, audit-ready posture. The standards and expectations we should 
+design to.
+===== PAGE 3 =====
+6.  Working in confidence
+We are treating everything shared with us in strict confidence, to the standard we would expect under a formal 
+agreement, and putting that agreement in place is a natural early step. An engagement agreement covering scope, 
+deliverables and ownership would sit alongside it when the time is right. We are not proposing terms here, only 
+noting the footing we are already working to.
+7.  What we hope to explore
+We are coming mostly to listen. These are the topics we would value working through, in whatever order and 
+depth suits you:
+1. Your goals, and where a record platform fits them.
+2. The workflow you would want it to support first.
+3. How your protocols are authored and approved.
+4. The records and systems already in place.
+5. Data residency, confidentiality and any sponsor data-sharing.
+6. Roles, access and ownership.
+7. Security and governance expectations.
+8. How you would like to work together from here.
+Confidential working note, prepared for discussion. Not a clinical, regulatory or legal instrument.

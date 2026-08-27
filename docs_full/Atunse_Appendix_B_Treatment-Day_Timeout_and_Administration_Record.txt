@@ -1,0 +1,64 @@
+CLINICAL PROTOCOL — WORKING FORM
+Appendix B   Treatment-Day Timeout & Administration Record
+Pre-treatment readiness
+Two-person pre-dose timeout
+Intravenous administration — Rejuvenate Serum™
+Fixed regimen: one 1 mL vial (70 billion EV) by slow IV push over 10–15 minutes at every session. No dose escalation across the course.
+Intranasal administration — ExoPure™ 140B via ViaNase™
+Deviations
+
+--- TABLE 1 ---
+Site | Atunse Healthcare Ltd. | Sponsor | KweHealth, LLC
+Patient ID |  | Visit / Date | 
+Initials |  | Protocol ID | 
+
+--- TABLE 2 ---
+Treatment session | Session ____ of 6 (☐ Wk1 ☐ Wk2 ☐ Wk3 ☐ Wk4 ☐ Wk5 ☐ Wk6)
+Prior session tolerated? | ☐ Yes  ☐ No  ☐ N/A (Session 1)
+Fixed dose (no escalation) | IV: 1 mL Rejuvenate Serum™ (70B EV) • IN: one 3 mL ExoPure™ 140B (140B EV)
+
+--- TABLE 3 ---
+✓ | Item
+☐ | Authorizations on file
+☐ | Products in-date; Certificates of Analysis reviewed
+☐ | Cold chain intact; within post-thaw stability window
+☐ | ViaNase™ device ready; performance check passed
+☐ | Emergency / anaphylaxis kit present
+☐ | Forms and logs prepared
+
+--- TABLE 4 ---
+Verify | Confirmed by (initials)
+Correct patient | 
+Correct product(s) | 
+Correct route(s) | 
+Correct dose / volume | 
+Correct device | 
+Correct lot & expiry | 
+Documentation complete | 
+Physician authorization recorded | 
+
+--- TABLE 5 ---
+Field | Entry | Field / Entry
+Lot # |  | Vials used: 1 × 1 mL
+Diluent | 0.9% saline (product formulation) | Dose: 1 mL (70B EV)
+Method | Slow IV push, 0.5 mL increments | 
+Start time |  | Stop time:
+Pauses 30–60 s between increments | ☐ Yes | Not given as bolus: ☐ Confirmed
+Visual inspection (clarity, no aggregation) | ☐ Pass | Operator initials:
+
+--- TABLE 6 ---
+Field | Entry | Field / Entry
+Lot # |  | Vial volume: 3 mL
+Nasal assessment (no epistaxis/obstruction) | ☐ Pass | Device perf. check: ☐ Pass
+Dose | 1.4 × 10¹¹ EV / session | Volume delivered:
+Start time |  | Stop time:
+Tolerated without event | ☐ Yes / ☐ No (AE form) | Operator initials:
+
+--- TABLE 7 ---
+
+
+
+--- TABLE 8 ---
+Role | Name / Signature | Date
+Administering Nurse |  | 
+Supervising Physician / PI |  | 

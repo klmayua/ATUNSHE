@@ -1,0 +1,50 @@
+CLINICAL PROTOCOL — WORKING FORM
+Appendix H   Follow-Up Visit Form
+Interval review
+Assessments due this visit
+Repeat-treatment decision
+Notes
+
+--- TABLE 1 ---
+Site | Atunse Healthcare Ltd. | Sponsor | KweHealth, LLC
+Patient ID |  | Visit / Date | 
+Initials |  | Protocol ID | 
+
+--- TABLE 2 ---
+Visit type | ☐ Weekly session (Wk 1–6)   ☐ End of course (Wk 6)   ☐ 4 wk post   ☐ 8 wk post   ☐ 12 wk post   ☐ 6 mo   ☐ 12 mo
+Session # (if weekly) | ____ of 6
+Date | 
+
+--- TABLE 3 ---
+✓ | Item
+☐ | Interval symptoms reviewed
+☐ | Adverse events captured (AE form if any)
+☐ | Medication changes reviewed
+☐ | Vital signs recorded
+☐ | Caregiver report reviewed
+
+--- TABLE 4 ---
+Assessment | Result / score | N/A this visit
+Safety labs |  | ☐
+Inflammatory markers (hs-CRP/ESR) |  | ☐
+MMSE / MoCA |  | ☐
+CDR-SB |  | ☐
+ADCS-ADL |  | ☐
+NPI-Q |  | ☐
+Biomarker panel |  | ☐
+Hormone panel (if therapy) |  | ☐
+Physician global impression |  | ☐
+Caregiver global impression |  | ☐
+
+--- TABLE 5 ---
+Safety review completed; no stopping criterion met | ☐ Yes ☐ No
+Proceed to repeat treatment? | ☐ Yes ☐ No ☐ Defer
+
+--- TABLE 6 ---
+
+
+
+--- TABLE 7 ---
+Role | Name / Signature | Date
+Assessing Clinician |  | 
+Supervising Physician / PI |  | 

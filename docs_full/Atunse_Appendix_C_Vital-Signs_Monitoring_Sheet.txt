@@ -1,0 +1,44 @@
+CLINICAL PROTOCOL — WORKING FORM
+Appendix C   Vital-Signs / Monitoring Sheet
+Record at each timepoint. Escalate per §6.3 of the protocol for any concerning change.
+Reaction watch (tick if observed; complete AE form)
+Discharge
+
+--- TABLE 1 ---
+Site | Atunse Healthcare Ltd. | Sponsor | KweHealth, LLC
+Patient ID |  | Visit / Date | 
+Initials |  | Protocol ID | 
+
+--- TABLE 2 ---
+Timepoint | Time | BP | HR | RR | SpO₂ | Temp | Neuro / notes | Init.
+Pre-dose |  |  |  |  |  |  |  | 
+During IV |  |  |  |  |  |  |  | 
+During intranasal |  |  |  |  |  |  |  | 
+15 min post |  |  |  |  |  |  |  | 
+30 min post |  |  |  |  |  |  |  | 
+60 min post |  |  |  |  |  |  |  | 
+120 min post |  |  |  |  |  |  |  | 
+24 h |  |  |  |  |  |  |  | 
+72 h |  |  |  |  |  |  |  | 
+
+--- TABLE 3 ---
+✓ | Sign
+☐ | Rash / urticaria / angioedema
+☐ | Dyspnea / wheeze / stridor
+☐ | Hypotension or hypertension
+☐ | Chest pain
+☐ | Fever / chills
+☐ | Dizziness / headache
+☐ | Nasal irritation / epistaxis
+☐ | Neurologic change / confusion
+☐ | Other (specify in notes)
+
+--- TABLE 4 ---
+Discharge criteria met | ☐ Yes  ☐ No
+Caregiver instructions & emergency contact given | ☐ Yes
+Follow-up scheduled | ☐ Yes
+
+--- TABLE 5 ---
+Role | Name / Signature | Date
+Monitoring Nurse |  | 
+Supervising Physician / PI |  | 

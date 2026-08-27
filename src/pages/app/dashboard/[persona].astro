@@ -22,8 +22,9 @@ const navTree = navFor(p); // RBAC-filtered, real screens (shared with [screen].
 
 // ---- REAL clinician workbench, built from atunse.mjs ----
 const todayAppts = D.appointments.filter((a) => a.patient && a.status && a.status !== 'Done');
+// Overdue = any protocol session (ADDSB course) still 'Overdue'.
 const overdueSteps = D.protocols.flatMap((pr) =>
-  pr.steps.filter((s) => s.status === 'Overdue').map((s) => ({ protocol: pr.name, step: s.name, patient: s.patient }))
+  (pr.course || []).filter((s) => s.status === 'Overdue').map((s) => ({ protocol: pr.name, step: `Week ${s.wk} session`, patient: pr.indication }))
 );
 const vitalsGaps = D.patients
   .filter((pt) => pt.vitals && /gap|5d|old/i.test(pt.timeline?.[0]?.text || ''))
@@ -40,8 +41,8 @@ const carePatients = D.patients.map((pt) => ({
 const activeProtocols = D.protocols.map((pr) => ({
   name: pr.name,
   code: pr.code,
-  steps: pr.steps.length,
-  overdue: pr.steps.filter((s) => s.status === 'Overdue').length,
+  steps: (pr.course && pr.course.length) || (pr.steps && pr.steps.length) || 0,
+  overdue: (pr.course || []).filter((s) => s.status === 'Overdue').length,
   href: hrefForGroup(p, 'Protocols'),
 }));
 

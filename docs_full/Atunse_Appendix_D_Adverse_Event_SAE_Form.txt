@@ -1,0 +1,45 @@
+CLINICAL PROTOCOL — WORKING FORM
+Appendix D   Adverse Event / Serious Adverse Event Form
+Complete one form per event. Serious events require immediate physician notification and reporting to the ethics committee and regulatory authority per required timelines.
+Action taken
+Outcome & narrative
+
+--- TABLE 1 ---
+Site | Atunse Healthcare Ltd. | Sponsor | KweHealth, LLC
+Patient ID |  | Visit / Date | 
+Initials |  | Protocol ID | 
+
+--- TABLE 2 ---
+Event # | 
+Event description | 
+Onset date / time | 
+Resolution date / time | 
+
+--- TABLE 3 ---
+Field | Selection
+Serious? | ☐ No (AE)   ☐ Yes (SAE)
+SAE criterion (if applicable) | ☐ Death  ☐ Life-threatening  ☐ Hospitalization  ☐ Disability  ☐ Other important
+Severity | ☐ Mild  ☐ Moderate  ☐ Severe
+Relatedness to product/device | ☐ Unrelated  ☐ Unlikely  ☐ Possible  ☐ Probable  ☐ Definite
+Expectedness | ☐ Expected  ☐ Unexpected
+Attributed to | ☐ IV product  ☐ Intranasal product  ☐ Device  ☐ Hormone therapy  ☐ Other
+
+--- TABLE 4 ---
+✓ | Action
+☐ | Treatment paused
+☐ | Treatment stopped
+☐ | Supportive care given
+☐ | Emergency referral
+☐ | Stopping rule triggered (§6.3)
+☐ | Reported to physician
+☐ | Reported to ethics/regulatory
+
+--- TABLE 5 ---
+
+
+
+
+--- TABLE 6 ---
+Role | Name / Signature | Date
+Reported by |  | 
+Supervising Physician / PI |  | 

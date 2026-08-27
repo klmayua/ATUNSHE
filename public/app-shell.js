@@ -31,8 +31,14 @@
   ];
   // Screens a non-patient sees under "Patients": the clinical record, not the portal home.
   var CLINICAL_PATIENT = ['fe22f6b0e70e44e69c62b4c69019163d', 'e1c47f5b53fb4efeb13cd44e5e82cbfa', 'eaeb377d6e70427195a93f5f7fae47f5'];
+  // Mobile is a companion app — show ONE entry (home), not 16 workflow links in the staff nav.
+  var MOBILE_HOME = '484bcbff1a75426cb9f6c1ee990f2e06';
   function screensFor(g) {
     if (g === 'Dashboards') return [{ title: 'My dashboard', href: '/app/dashboard/' + me.id + '/', id: '__dash' }];
+    if (g === 'Mobile') {
+      var m = SCREENS.find(function (x) { return !x.asset && x.id === MOBILE_HOME; });
+      return m ? [{ title: 'Mobile companion', href: '/app/' + m.id + '/', id: m.id }] : [];
+    }
     var list = SCREENS.filter(function (x) { return !x.asset && x.group === g; });
     if (g === 'Patient' && me.id !== 'patient') {
       list = list.filter(function (x) { return CLINICAL_PATIENT.indexOf(x.id) !== -1; });

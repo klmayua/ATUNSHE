@@ -1,0 +1,46 @@
+CLINICAL PROTOCOL — WORKING FORM
+Appendix F   ViaNase™ Device Log
+Device identification
+Pre-use performance check
+Use record
+Cleaning / disinfection
+Malfunction report (if any)
+
+--- TABLE 1 ---
+Site | Atunse Healthcare Ltd. | Sponsor | KweHealth, LLC
+Patient ID |  | Visit / Date | 
+Initials |  | Protocol ID | 
+
+--- TABLE 2 ---
+Device model | 
+Serial number | 
+Manufacturer instructions version | 
+Single-use components used | 
+
+--- TABLE 3 ---
+✓ | Item
+☐ | Device charged / powered
+☐ | Visual inspection of device and components
+☐ | Performance / output check per IFU
+☐ | Correct cartridge/reservoir loaded
+☐ | No prior malfunction outstanding
+
+--- TABLE 4 ---
+Date | Patient ID | Product/lot | Delivered | Operator
+ |  |  |  | 
+ |  |  |  | 
+ |  |  |  | 
+
+--- TABLE 5 ---
+Date | Method per IFU | Components disposed | Initials
+ |  |  | 
+ |  |  | 
+
+--- TABLE 6 ---
+
+
+
+--- TABLE 7 ---
+Role | Name / Signature | Date
+Device Operator |  | 
+Supervising Physician / PI |  | 

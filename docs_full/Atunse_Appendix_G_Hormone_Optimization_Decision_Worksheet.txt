@@ -1,0 +1,53 @@
+CLINICAL PROTOCOL — WORKING FORM
+Appendix G   Hormone Optimization Decision Worksheet
+Optional. Complete only where individualized hormone optimization is considered. Therapy is individualized to labs, symptoms, and risk; complete contraindication screening before initiation.
+Relevant findings & panel
+Decision matrix
+Contraindication screen (must all be “No” to proceed)
+Plan, monitoring & stopping
+
+--- TABLE 1 ---
+Site | Atunse Healthcare Ltd. | Sponsor | KweHealth, LLC
+Patient ID |  | Visit / Date | 
+Initials |  | Protocol ID | 
+
+--- TABLE 2 ---
+Marker | Result | Reference / flag
+TSH / free T4 |  | 
+Testosterone (total / free) |  | 
+Estradiol |  | 
+Progesterone |  | 
+SHBG |  | 
+DHEA-S |  | 
+LH / FSH |  | 
+Prolactin |  | 
+Cortisol (morning) |  | 
+IGF-1 / Vitamin D |  | 
+
+--- TABLE 3 ---
+Finding | Possible relevance | Strategy considered | Required safety checks
+Hypothyroidism | Reversible cognitive contributor | Thyroid replacement | Cardiac status
+Male hypogonadism | Energy, mood, cognition | Testosterone optimization | Hct, PSA, thrombotic/prostate Hx
+Female deficiency/menopausal | Sleep, mood, cognition | Per current guidance | Breast/endometrial Hx, VTE risk, bleeding
+Low DHEA-S | Adjunct (uncertain) | Only with clear deficiency | Hormone-sensitive malignancy
+Adrenal abnormality | Energy, stress response | Endocrinology referral | Specialist review
+
+--- TABLE 4 ---
+No | Contraindication
+☐ | Hormone-sensitive malignancy
+☐ | Active thromboembolic disease
+☐ | Uncontrolled erythrocytosis
+☐ | Unexplained vaginal bleeding
+☐ | Severe untreated sleep apnea
+☐ | Other sex-specific contraindication
+
+--- TABLE 5 ---
+Agent / dose (if any) | 
+Baseline labs confirmed | ☐ Yes
+Monitoring labs & interval | 
+Stopping criteria noted | Thrombotic event, erythrocytosis, bleeding, malignancy concern, CV event
+
+--- TABLE 6 ---
+Role | Name / Signature | Date
+Supervising Physician / PI |  | 
+Endocrinology (if consulted) |  | 

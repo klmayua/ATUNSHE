@@ -73,56 +73,115 @@ export const appointments = [
   { day: 'MON 24', dow: 'Mon', date: '24', time: '09:00', patient: 'Edet, Dr Peter', reason: 'Lipid Review', provider: 'Dr. Adesenya', type: 'F/U', status: 'Done' },
 ];
 
+// Real protocol library, built from the Atunse clinical document set
+// (ADDSB dual-route dementia protocol ATN-DEM-ADDSB-2026-001 + its 9 working-form
+// appendices A–I, and the CSDH corticosteroid+AF-exosome combination hypothesis).
 export const protocols = [
   {
-    name: 'Dementia ADDSB Dual-Route',
+    name: 'Dementia ADDSB — Dual-Route',
     code: 'ATN-DEM-ADDSB-2026-001',
-    version: 'v2.3',
+    version: 'v1.0',
     status: 'Active',
     owner: 'Dr. Sola',
-    description: 'Dual-route cognitive assessment and monitoring protocol for at-risk patients.',
-    steps: [
-      { n: 1, name: 'MMSE Screening', cadence: 'Annual', status: 'Overdue', patient: 'Okafor, Amina' },
-      { n: 2, name: 'Caregiver Interview', cadence: 'Annual', status: 'Complete', patient: 'Okafor, Amina' },
-      { n: 3, name: 'MoCA Re-assessment', cadence: '6-month', status: 'Pending', patient: 'Okafor, Amina' },
+    sponsor: 'KweHealth, LLC',
+    indication: 'Adults with documented dementia / progressive cognitive decline',
+    design: 'Open-label, physician-supervised, biomarker-informed early clinical study',
+    regimen: '6 weekly sessions; each = IV Rejuvenate Serum™ (70B EV) + intranasal ExoPure™ 140B (140B EV via ViaNase™). Fixed dose, no escalation.',
+    description: 'Investigational dual-route extracellular-vesicle regimen for dementia, with structured screening, treatment-day timeout, monitoring, and follow-up.',
+    // The 9 working-form appendices that make up the clinician's day-to-day protocol toolkit.
+    forms: [
+      { id: 'A', title: 'Eligibility & Consent Checklist', note: '§5.1 inclusion/exclusion; consent/LAR' },
+      { id: 'B', title: 'Treatment-Day Timeout & Administration Record', note: '§5.2 two-person verification; IV + IN dose, volume, times, operator' },
+      { id: 'C', title: 'Vital-Signs / Monitoring Sheet', note: 'Pre-dose, intra-administration, 15/30/60/120 min, 24h/72h' },
+      { id: 'D', title: 'AE / SAE Form', note: '§6.3 severity, relatedness, reporting' },
+      { id: 'E', title: 'Product Accountability & Cold-Chain Log', note: 'Receipt, temperature, lot reconciliation' },
+      { id: 'F', title: 'ViaNase™ Device Log', note: 'Performance check, use, cleaning, malfunction' },
+      { id: 'G', title: 'Hormone Optimization Decision Worksheet', note: 'Individualized matrix; contraindication screen' },
+      { id: 'H', title: 'Follow-Up Visit Form', note: 'Weekly (Wk1–6) + post-course schedule' },
+      { id: 'I', title: 'Caregiver Daily Observation Diary', note: 'Daily symptoms, behaviour, sleep, function' },
     ],
+    // Per-session treatment-day workflow (the executable protocol steps).
+    steps: [
+      { n: 'A', name: 'Before arrival', detail: 'Authorizations on file; products in-date; CoA reviewed; cold chain intact; device ready; emergency kit present; forms prepared.' },
+      { n: 'B', name: 'Check-in', detail: 'Confirm identity; consent current; caregiver present; interval symptoms/meds reviewed; baseline vitals; focused exam.' },
+      { n: 'C', name: 'Pre-dose timeout (two-person)', detail: 'Verify patient, product, route, dose, device, lot & expiry, documentation; physician authorization recorded.' },
+      { n: 'D', name: 'IV administration (Rejuvenate Serum)', detail: 'Slow IV push in 0.5 mL increments, 30–60 s pauses, 10–15 min; monitor for infusion reaction; flush & document.' },
+      { n: 'E', name: 'Intranasal (ExoPure 140B via ViaNase)', detail: 'Nasal assessment; load 3 mL; two 40-s cycles per nostril; confirm reservoir empty; monitor.' },
+      { n: 'F', name: 'Post-session monitoring', detail: 'Vitals, SpO₂, temp, neuro, nasal at 15/30/60/120 min; apply discharge criteria; caregiver instructions.' },
+    ],
+    course: [
+      { wk: 1, iv: '1 mL Rejuvenate Serum (70B EV)', in: '3 mL ExoPure 140B (140B EV)', status: 'Complete' },
+      { wk: 2, iv: '1 mL Rejuvenate Serum (70B EV)', in: '3 mL ExoPure 140B (140B EV)', status: 'Complete' },
+      { wk: 3, iv: '1 mL Rejuvenate Serum (70B EV)', in: '3 mL ExoPure 140B (140B EV)', status: 'Complete' },
+      { wk: 4, iv: '1 mL Rejuvenate Serum (70B EV)', in: '3 mL ExoPure 140B (140B EV)', status: 'Overdue' },
+      { wk: 5, iv: '1 mL Rejuvenate Serum (70B EV)', in: '3 mL ExoPure 140B (140B EV)', status: 'Pending' },
+      { wk: 6, iv: '1 mL Rejuvenate Serum (70B EV)', in: '3 mL ExoPure 140B (140B EV)', status: 'Pending' },
+    ],
+    exigence: {
+      monitoring: [
+        { timepoint: 'Pre-dose', fields: ['BP', 'HR', 'RR', 'SpO₂', 'Temp', 'Neuro/notes'] },
+        { timepoint: 'During IV', fields: ['BP', 'HR', 'RR', 'SpO₂', 'Temp', 'Neuro/notes'] },
+        { timepoint: 'During intranasal', fields: ['BP', 'HR', 'RR', 'SpO₂', 'Temp', 'Neuro/notes'] },
+        { timepoint: '15 min post', fields: ['BP', 'HR', 'RR', 'SpO₂', 'Temp', 'Neuro/notes'] },
+        { timepoint: '30 min post', fields: ['BP', 'HR', 'RR', 'SpO₂', 'Temp', 'Neuro/notes'] },
+        { timepoint: '60 min post', fields: ['BP', 'HR', 'RR', 'SpO₂', 'Temp', 'Neuro/notes'] },
+        { timepoint: '120 min post', fields: ['BP', 'HR', 'RR', 'SpO₂', 'Temp', 'Neuro/notes'] },
+      ],
+      reactionWatch: ['Rash/urticaria/angioedema', 'Dyspnea/wheeze/stridor', 'Hypotension/hypertension', 'Chest pain', 'Fever/chills', 'Dizziness/headache', 'Nasal irritation/epistaxis', 'Neuro change/confusion', 'Other'],
+      stopRules: [
+        'Anaphylaxis/serious hypersensitivity → stop; epinephrine; airway; refer; report SAE',
+        'Infusion reaction → pause/stop; supportive care; physician assessment',
+        'Neurologic worsening (stroke/TIA/seizure) → stop; urgent eval; report SAE',
+        'Infection/sepsis signs → stop; cultures; treat; product-quality review',
+        'Cardiovascular event → stop; stabilize; refer; report SAE',
+      ],
+    },
     history: [
-      { v: 'v2.3', date: '2026-01-12', by: 'Dr. Sola', note: 'Added dual-route MMSE + MoCA.' },
-      { v: 'v2.1', date: '2025-08-03', by: 'Dr. Sola', note: 'Cadence aligned to annual.' },
-      { v: 'v1.0', date: '2025-02-20', by: 'Dr. Adesenya', note: 'Initial publication.' },
+      { v: 'v1.0', date: '2026-06-29', by: 'KweHealth, LLC', note: 'Standardized dual-route ADDSB regimen mapped to KweHealth template.' },
+    ],
+    quality: [
+      { metric: 'Completion of planned administration', target: 'Both routes delivered safely', freq: 'Per session' },
+      { metric: 'Adverse-event capture', target: '100% recorded and graded', freq: 'Continuous' },
+      { metric: 'Cold-chain integrity', target: 'Within stability window', freq: 'Per shipment/use' },
+      { metric: 'Documentation completeness', target: '100% of forms filed', freq: 'Per visit' },
     ],
   },
   {
-    name: 'General Clinical Assessment',
-    code: 'ATN-GCA-2026-002',
-    version: 'v1.4',
-    status: 'Active',
-    owner: 'Dr. Adesenya',
-    description: 'Standard baseline assessment for new and returning patients.',
-    steps: [
-      { n: 1, name: 'Vitals Capture', cadence: 'Per visit', status: 'Complete', patient: 'Adeniyi, Prof' },
-      { n: 2, name: 'History Review', cadence: 'Per visit', status: 'Complete', patient: 'Adeniyi, Prof' },
-      { n: 3, name: 'Risk Stratification', cadence: 'Annual', status: 'Complete', patient: 'Adeniyi, Prof' },
-    ],
-    history: [
-      { v: 'v1.4', date: '2026-02-01', by: 'Dr. Adesenya', note: 'Added risk stratification step.' },
-      { v: 'v1.0', date: '2025-05-10', by: 'Dr. Adesenya', note: 'Initial publication.' },
-    ],
-  },
-  {
-    name: 'Follow-up / Review',
-    code: 'ATN-FUR-2026-003',
-    version: 'v1.1',
-    status: 'Active',
+    name: 'CSDH — Corticosteroid + AF-Exosome Combination',
+    code: 'ATN-CSDH-COMBO-2026-002',
+    version: 'Hypothesis v1.0',
+    status: 'Investigational (hypothesis-stage)',
     owner: 'Dr. Sola',
-    description: 'Structured follow-up and review workflow for chronic care.',
-    steps: [
-      { n: 1, name: 'Outcome Check', cadence: 'Per review', status: 'Complete', patient: 'Edet, Dr Peter' },
-      { n: 2, name: 'Medication Reconciliation', cadence: 'Per review', status: 'Complete', patient: 'Edet, Dr Peter' },
+    sponsor: 'KweHealth, LLC',
+    indication: 'Chronic subdural hematoma (CSDH) — biologically active, self-perpetuating membrane',
+    design: 'Two-signal convergence hypothesis: steroid suppression + AF-exosome resolution signal',
+    regimen: 'Corticosteroid (suppression) + amniotic-fluid extracellular-vesicle / secretome (resolution-biased, macrophage M1→M2).',
+    description: 'Combination hypothesis reframing CSDH therapy: corticosteroids lower inflammatory gain; AF-EV cargo supplies a resolution signal correcting the M1-skewed polarization that drives recurrence.',
+    forms: [
+      { id: 'R', title: 'Risk Model & Safety Rails', note: 'Angiogenic axis is the designated safety rail; requires imaging confirmation' },
+      { id: 'B', title: 'Biomarker / Endpoint Tiers', note: 'Symptom tier (early) vs imaging tier (confirmatory)' },
     ],
+    steps: [
+      { n: '1', name: 'Suppression arm (steroid)', detail: 'GR/NR3C1 transrepression of NF-κB/AP-1; lower inflammatory gene expression, endothelial activation, matrix remodeling.' },
+      { n: '2', name: 'Resolution arm (AF-EV)', detail: 'Macrophage M1→M2 repolarization via CD44 delivery code; ↑IL-10/TGF-β/Arg1/CD206/CD163; JAK/STAT1 down.' },
+      { n: '3', name: 'Convergent node', detail: 'Two signals meet at macrophage polarization — expected supra-additive effect at lower steroid exposure.' },
+      { n: '4', name: 'Safety rail (angiogenesis)', detail: 'Monitor VEGF-A/Ang-2/Tie2; imaging gate before any volume claim; per-lot cargo characterization; predefined stopping rule for expansion.' },
+    ],
+    course: [],
+    exigence: {
+      monitoring: [],
+      reactionWatch: [],
+      stopRules: [
+        'Symptom improvement is NOT evidence of hematoma resolution — requires serial neuroimaging.',
+        'Radiographic expansion → manage per predefined stopping rule and standard neurosurgical pathways.',
+      ],
+    },
     history: [
-      { v: 'v1.1', date: '2026-03-15', by: 'Dr. Sola', note: 'Added medication reconciliation.' },
-      { v: 'v1.0', date: '2025-09-01', by: 'Dr. Sola', note: 'Initial publication.' },
+      { v: 'Hypothesis v1.0', date: '2026', by: 'KweHealth, LLC', note: 'Two-signal convergence model for CSDH; hypothesis-stage, not a treatment protocol.' },
+    ],
+    quality: [
+      { metric: 'Macrophage/resolution panel', target: 'M1/M2 ratio, CD206/CD163, IL-10', freq: 'Priority endpoint' },
+      { metric: 'Angiogenic safety rail', target: 'VEGF-A/Ang-2/Tie2 stable', freq: 'Per imaging gate' },
     ],
   },
 ];
