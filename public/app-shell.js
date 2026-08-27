@@ -10,10 +10,14 @@
 
   var sesh = null;
   try { sesh = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
-  if (!sesh) { location.replace('/'); return; }
-  var me = PERSONAS.find(function (p) { return p.id === sesh.id; }) || sesh;
+  if (!sesh || !sesh.id) { location.replace('/'); return; }
+  // Always resolve to the full persona record (has allow/deny), not the slim session.
+  var me = PERSONAS.find(function (p) { return p.id === sesh.id; });
+  if (!me) { location.replace('/'); return; }
+  me = Object.assign({}, me, { name: sesh.name || me.name, role: sesh.role || me.role });
 
   function canView(g) {
+    if (!me.allow) return false;
     if (me.deny && me.deny.indexOf(g) !== -1) return false;
     return me.allow.indexOf(g) !== -1;
   }
@@ -53,7 +57,8 @@
     '<div class="who">' + me.name + ' &middot; <b>' + me.role + '</b></div>' +
     '<nav class="nav">' + nav + '</nav>' +
     '<div class="nav-foot"><a class="btn-logout" href="/" onclick="localStorage.removeItem(\'atunse_demo_session\');">Log out</a></div></aside>' +
-    '<section class="stage"><header class="stage-bar"><span class="crumb">' + title + '</span></header>' +
+    '<section class="stage"><header class="stage-bar"><span class="crumb">' + title + '</span>' +
+    '<div class="user-chip"><div class="un"><div class="nm">' + me.name + '</div><div class="rl">' + me.role + '</div></div><div class="ava">' + (me.initials || me.name.charAt(0)) + '</div></div></header>' +
     '<div class="dash"><a class="back" href="/app/dashboard/' + me.id + '/">&larr; Back to dashboard</a>' +
     '<h1 class="dash-greet">' + title + '</h1>' + BODY + '</div></section>';
 

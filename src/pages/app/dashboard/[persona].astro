@@ -32,8 +32,10 @@ const carePatients = D.patients.map((pt) => ({
   name: pt.name,
   id: pt.id,
   dx: (pt.conditions || []).map((c) => c.name).join(', '),
-  profileHref: `/app/e1c47f5b53fb4efeb13cd44e5e82cbfa/`,
-  timelineHref: `/app/eaeb377d6e70427195a93f5f7fae47f5/`,
+  // Only Amina has dedicated Profile/Timeline screens in the demo registry;
+  // all patient cards open the Patient Directory (the real longitudinal record entry).
+  profileHref: `/app/fe22f6b0e70e44e69c62b4c69019163d/`,
+  timelineHref: `/app/fe22f6b0e70e44e69c62b4c69019163d/`,
 }));
 const activeProtocols = D.protocols.map((pr) => ({
   name: pr.name,
@@ -90,7 +92,12 @@ const ACTION_HREF = {
       </aside>
 
       <section class="stage">
-        <header class="stage-bar"><span class="crumb">Dashboard</span></header>
+        <header class="stage-bar"><span class="crumb">Dashboard</span>
+          <div class="user-chip">
+            <div class="un"><div class="nm">{p.name}</div><div class="rl">{p.role}</div></div>
+            <div class="ava">{p.initials}</div>
+          </div>
+        </header>
         <div class="dash">
           <h1 class="dash-greet">{escape(d.greeting)}</h1>
           <p class="dash-sub">{escape(d.sub)}</p>
@@ -145,8 +152,8 @@ const ACTION_HREF = {
                       <div class="s">{escape(pt.dx)}</div>
                     </div>
                     <div class="row-actions">
-                      <a class="btn btn-ghost btn-sm" href={pt.profileHref}>Record</a>
-                      <a class="btn btn-ghost btn-sm" href={pt.timelineHref}>Timeline</a>
+                      <a class="btn btn-ghost btn-sm" href={pt.profileHref}>Open record</a>
+                      <a class="btn btn-ghost btn-sm" href={pt.timelineHref}>Directory</a>
                     </div>
                   </div>
                 ))}
