@@ -47,18 +47,19 @@ const activeProtocols = D.protocols.map((pr) => ({
 }));
 
 // Action button -> concrete href (not "first of group")
+const P = '?p=' + persona;
 const ACTION_HREF = {
-  'Start Encounter': hrefForGroup(p, 'Clinical'),
-  'Book Appointment': hrefForGroup(p, 'Scheduling'),
-  'Review protocols': hrefForGroup(p, 'Protocols'),
-  'Message care team': `/app/4a98aee24a83424db3010d3076a5a42c/`,
-  'View records': hrefForGroup(p, 'Patient'),
-  'Add staff': hrefForGroup(p, 'Administration'),
-  'Review approvals': hrefForGroup(p, 'Administration'),
-  'Billing ops': hrefForGroup(p, 'Billing & Finance'),
-  'Staff oversight': hrefForGroup(p, 'Administration'),
-  'Quick lookup': hrefForGroup(p, 'Mobile'),
-  'Sync now': hrefForGroup(p, 'Mobile'),
+  'Start Encounter': hrefForGroup(p, 'Clinical') + P,
+  'Book Appointment': hrefForGroup(p, 'Scheduling') + P,
+  'Review protocols': hrefForGroup(p, 'Protocols') + P,
+  'Message care team': `/app/4a98aee24a83424db3010d3076a5a42c/` + P,
+  'View records': hrefForGroup(p, 'Patient') + P,
+  'Add staff': hrefForGroup(p, 'Administration') + P,
+  'Review approvals': hrefForGroup(p, 'Administration') + P,
+  'Billing ops': hrefForGroup(p, 'Billing & Finance') + P,
+  'Staff oversight': hrefForGroup(p, 'Administration') + P,
+  'Quick lookup': hrefForGroup(p, 'Mobile') + P,
+  'Sync now': hrefForGroup(p, 'Mobile') + P,
   'View reports': hrefForGroup(p, 'Operations & Intelligence'),
 };
 ---
@@ -84,12 +85,12 @@ const ACTION_HREF = {
             <div class="nav-group">
               <div class="nav-group-label">{g.label}</div>
               {g.items.map((it) => (
-                <a class={`nav-link${it.id === '__dash' ? ' active' : ''}`} href={it.href}>{it.title}</a>
+                <a class={`nav-link${it.id === '__dash' ? ' active' : ''}`} href={it.href + '?p=' + persona}>{it.title}</a>
               ))}
             </div>
           ))}
         </nav>
-        <div class="nav-foot"><a class="btn-logout" href="/" onclick="localStorage.removeItem('atunse_demo_session');">Log out</a></div>
+        <div class="nav-foot"><a class="btn-logout" href={`/?p=${persona}`} onclick="try{localStorage.removeItem('atunse_demo_session');}catch(e){}">Log out</a></div>
       </aside>
 
       <section class="stage">
@@ -194,5 +195,21 @@ const ACTION_HREF = {
         </div>
       </section>
     </div>
+
+    <script is:inline define:vars={{ personaObj: p }}>
+      // Restore session from the URL/known persona if localStorage is empty/cleared,
+      // so a click into any screen page never dead-ends on a login bounce.
+      (function () {
+        try {
+          var KEY = 'atunse_demo_session';
+          var cur = null;
+          try { cur = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+          if (!cur || !cur.id) {
+            var pj = personaObj;
+            if (pj) localStorage.setItem(KEY, JSON.stringify({ id: pj.id, name: pj.name, role: pj.role, username: pj.username, initials: pj.initials, accent: pj.accent, at: Date.now() }));
+          }
+        } catch (e) {}
+      })();
+    </script>
   </body>
 </html>

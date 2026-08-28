@@ -66,11 +66,15 @@ const year = new Date().getFullYear();
       }
       function go(persona) {
         if (!persona) return fail('Unknown persona.');
-        localStorage.setItem(KEY, JSON.stringify({
-          id: persona.id, name: persona.name, role: persona.role,
-          username: persona.username, initials: persona.initials, accent: persona.accent, at: Date.now(),
-        }));
-        window.location.assign('/app/dashboard/' + persona.id + '/');
+        try {
+          localStorage.setItem(KEY, JSON.stringify({
+            id: persona.id, name: persona.name, role: persona.role,
+            username: persona.username, initials: persona.initials, accent: persona.accent, at: Date.now(),
+          }));
+        } catch (e) {}
+        // Carry the persona in the URL so downstream screen pages work even if
+        // localStorage is unavailable/cleared (no more dead-end login bounce).
+        window.location.assign('/app/dashboard/' + persona.id + '/?p=' + persona.id);
       }
       form.addEventListener('submit', (e) => {
         e.preventDefault();
