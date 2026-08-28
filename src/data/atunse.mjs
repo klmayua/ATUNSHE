@@ -66,11 +66,11 @@ export const patients = [
 ];
 
 export const appointments = [
-  { day: 'TUE 25', dow: 'Tue', date: '25', time: '10:30', patient: 'Ojo, P.', reason: 'Lab Review', provider: 'Dr. Adesenya', type: 'Lab', status: 'Arrived' },
-  { day: 'WED 26', dow: 'Wed', date: '26', time: '—', patient: '—', reason: 'Admin Block', provider: '—', type: 'Admin', status: 'Block' },
-  { day: 'THU 27', dow: 'Thu', date: '27', time: '', patient: '', reason: '', provider: '', type: '', status: '' },
-  { day: 'FRI 28', dow: 'Fri', date: '28', time: '', patient: '', reason: '', provider: '', type: '', status: '' },
-  { day: 'MON 24', dow: 'Mon', date: '24', time: '09:00', patient: 'Edet, Dr Peter', reason: 'Lipid Review', provider: 'Dr. Adesenya', type: 'F/U', status: 'Done' },
+  { day: 'TUE 25', dow: 'Tue', date: '25', time: '09:30', patient: 'Amina Okafor', reason: 'BP Follow-up', provider: 'Dr. Adesenya', type: 'F/U', status: 'Arrived' },
+  { day: 'TUE 25', dow: 'Tue', date: '25', time: '11:00', patient: 'Juliet Okafor', reason: 'ADDSB Week 4 Session', provider: 'Dr. Sola', type: 'Protocol', status: 'Confirmed' },
+  { day: 'WED 26', dow: 'Wed', date: '26', time: '10:30', patient: 'Prof Adeniyi', reason: 'Cardiology Review', provider: 'Dr. Adesenya', type: 'F/U', status: 'Confirmed' },
+  { day: 'THU 27', dow: 'Thu', date: '27', time: '14:00', patient: 'Dr Peter Edet', reason: 'Lipid Review', provider: 'Dr. Adesenya', type: 'F/U', status: 'Pending' },
+  { day: 'MON 24', dow: 'Mon', date: '24', time: '09:00', patient: 'Dr Peter Edet', reason: 'Lipid Review', provider: 'Dr. Adesenya', type: 'F/U', status: 'Done' },
 ];
 
 // Real protocol library, built from the Atunse clinical document set

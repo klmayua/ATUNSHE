@@ -29,15 +29,22 @@ const overdueSteps = D.protocols.flatMap((pr) =>
 const vitalsGaps = D.patients
   .filter((pt) => pt.vitals && /gap|5d|old/i.test(pt.timeline?.[0]?.text || ''))
   .map((pt) => pt.name);
-const carePatients = D.patients.map((pt) => ({
-  name: pt.name,
-  id: pt.id,
-  dx: (pt.conditions || []).map((c) => c.name).join(', '),
-  // Only Amina has dedicated Profile/Timeline screens in the demo registry;
-  // all patient cards open the Patient Directory (the real longitudinal record entry).
-  profileHref: `/app/fe22f6b0e70e44e69c62b4c69019163d/`,
-  timelineHref: `/app/fe22f6b0e70e44e69c62b4c69019163d/`,
-}));
+const DIR = '/app/fe22f6b0e70e44e69c62b4c69019163d/';
+const AMINA_PROFILE = '/app/e1c47f5b53fb4efeb13cd44e5e82cbfa/';
+const AMINA_TIMELINE = '/app/eaeb377d6e70427195a93f5f7fae47f5/';
+const carePatients = D.patients.map((pt) => {
+  const isAmina = pt.id === 'ATN-000184';
+  return {
+    name: pt.name,
+    id: pt.id,
+    dx: (pt.conditions || []).map((c) => c.name).join(', '),
+    // All patients open the Patient Directory (real longitudinal record).
+    // Amina additionally has dedicated Profile + Timeline screens.
+    recordHref: DIR,
+    profileHref: isAmina ? AMINA_PROFILE : DIR,
+    timelineHref: isAmina ? AMINA_TIMELINE : DIR,
+  };
+});
 const activeProtocols = D.protocols.map((pr) => ({
   name: pr.name,
   code: pr.code,
@@ -155,7 +162,7 @@ const ACTION_HREF = {
                     </div>
                     <div class="row-actions">
                       <a class="btn btn-ghost btn-sm" href={pt.profileHref}>Open record</a>
-                      <a class="btn btn-ghost btn-sm" href={pt.timelineHref}>Directory</a>
+                      <a class="btn btn-ghost btn-sm" href={pt.timelineHref}>Timeline</a>
                     </div>
                   </div>
                 ))}
