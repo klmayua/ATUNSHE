@@ -1,0 +1,188 @@
+---
+// Live OgaChat surface. Posts to OGAMI with Atunse's own public key, keeps
+// session continuity across turns, and falls back to the configured answers
+// if the engine is unreachable or degraded — announcing which mode it is in
+// rather than pretending.
+import { ogamiConfig, ogamiGreeting, fallback } from '../data/ogami.mjs';
+
+const { compact = false, suggestions = [] } = Astro.props;
+const chips = suggestions.length
+  ? suggestions
+  : ['Can my mother join?', 'Does it actually work?', 'What happens at a session?', 'Book a screening'];
+---
+
+<div class="ogami" data-endpoint={ogamiConfig.endpoint} data-key={ogamiConfig.publicKey}>
+  <div class="ogami-head">
+    <div class="ogami-id">
+      <span class="ogami-dot" id="og-dot" title="Connecting…"></span>
+      <div>
+        <div class="ogami-nm">Ogami</div>
+        <div class="ogami-rl" id="og-state">Connecting to OgaChat…</div>
+      </div>
+    </div>
+    <span class="chip ref">{ogamiConfig.publicKey}</span>
+  </div>
+
+  <div class="ogami-log" id="og-log" role="log" aria-live="polite">
+    <div class="bubble-row ai">
+      <div class="bubble"><div class="who">Ogami</div>{ogamiGreeting}</div>
+    </div>
+  </div>
+
+  <div class="ogami-chips" id="og-chips">
+    {chips.map((c) => <button type="button" class="og-chip" data-q={c}>{c}</button>)}
+  </div>
+
+  <form class="ogami-input" id="og-form" autocomplete="off">
+    <input id="og-msg" type="text" placeholder="Ask Ogami a question…" aria-label="Message" maxlength="900" />
+    <button class="btn primary" type="submit" id="og-send" aria-label="Send">Send</button>
+  </form>
+
+  {!compact && (
+    <div class="card-note">
+      This is a live connection to OGAMI using Atunse Health's own public key. The assistant answers
+      from the business profile held against the client record — the same profile that drives the
+      WhatsApp channel, so the web and WhatsApp front doors cannot drift apart.
+    </div>
+  )}
+</div>
+
+<script is:inline define:vars={{ FALLBACK: fallback.map((f) => ({ src: f.match ? f.match.source : null, flags: f.match ? f.match.flags : null, reply: f.reply, urgent: !!f.urgent, handoff: !!f.handoff })) }}>
+  (function () {
+    var root = document.querySelector('.ogami');
+    if (!root) return;
+    var ENDPOINT = root.dataset.endpoint;
+    var KEY = root.dataset.key;
+    var log = document.getElementById('og-log');
+    var form = document.getElementById('og-form');
+    var input = document.getElementById('og-msg');
+    var send = document.getElementById('og-send');
+    var dot = document.getElementById('og-dot');
+    var stateEl = document.getElementById('og-state');
+    var chips = document.getElementById('og-chips');
+
+    var sessionId = null;
+    var history = [];
+    var sending = false;
+    var mode = 'unknown'; // 'live' | 'fallback'
+
+    var RULES = FALLBACK.map(function (f) {
+      return { re: f.src ? new RegExp(f.src, f.flags) : null, reply: f.reply, urgent: f.urgent, handoff: f.handoff };
+    });
+
+    function localReply(msg) {
+      for (var i = 0; i < RULES.length; i++) {
+        if (RULES[i].re === null) return RULES[i];
+        if (RULES[i].re.test(msg)) return RULES[i];
+      }
+      return RULES[RULES.length - 1];
+    }
+
+    function setMode(m, label) {
+      mode = m;
+      dot.className = 'ogami-dot ' + m;
+      stateEl.textContent = label;
+      dot.title = label;
+    }
+
+    function bubble(who, text, cls) {
+      var row = document.createElement('div');
+      row.className = 'bubble-row ' + (who === 'me' ? 'me' : who === 'sys' ? 'sys' : 'ai');
+      var b = document.createElement('div');
+      b.className = 'bubble' + (cls ? ' ' + cls : '');
+      if (who === 'ai') {
+        var w = document.createElement('div');
+        w.className = 'who';
+        w.textContent = 'Ogami';
+        b.appendChild(w);
+      }
+      String(text).split('\n\n').forEach(function (para, i) {
+        var p = document.createElement('div');
+        if (i) p.style.marginTop = '9px';
+        p.textContent = para;
+        b.appendChild(p);
+      });
+      row.appendChild(b);
+      log.appendChild(row);
+      log.scrollTop = log.scrollHeight;
+      return row;
+    }
+
+    function typing() {
+      var row = document.createElement('div');
+      row.className = 'bubble-row ai';
+      row.innerHTML = '<div class="bubble typing"><span></span><span></span><span></span></div>';
+      log.appendChild(row);
+      log.scrollTop = log.scrollHeight;
+      return row;
+    }
+
+    async function ask(msg) {
+      if (sending || !msg.trim()) return;
+      sending = true;
+      send.disabled = true;
+      input.value = '';
+      chips.style.display = 'none';
+      bubble('me', msg);
+      history.push({ role: 'user', content: msg });
+      var t = typing();
+
+      var replied = false;
+      try {
+        var ctrl = new AbortController();
+        var timer = setTimeout(function () { ctrl.abort(); }, 20000);
+        var res = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            message: msg,
+            public_key: KEY,
+            session_id: sessionId || undefined,
+            history: history.slice(-12),
+          }),
+          signal: ctrl.signal,
+        });
+        clearTimeout(timer);
+        var data = await res.json();
+
+        // A degraded engine, a disabled widget or a cap hit are all real
+        // answers from OGAMI, but none of them is the assistant doing its job.
+        // Treat them as "use the local profile" rather than showing the user
+        // an apology that tells them nothing.
+        if (res.ok && data && data.reply && !data.degraded && !data.disabled) {
+          if (data.session_id) sessionId = data.session_id;
+          t.remove();
+          bubble('ai', data.reply);
+          history.push({ role: 'assistant', content: data.reply });
+          setMode('live', 'Live · OgaChat');
+          if (data.escalated) bubble('sys', 'Escalated to Ngozi Aluko, Study Coordinator · logged to the CRM against this contact');
+          if (data.cap_reached) bubble('sys', 'Free-tier conversation cap reached for this month');
+          replied = true;
+        }
+      } catch (e) {
+        /* falls through to the local profile below */
+      }
+
+      if (!replied) {
+        var r = localReply(msg);
+        t.remove();
+        bubble('ai', r.reply, r.urgent ? 'urgent' : null);
+        history.push({ role: 'assistant', content: r.reply });
+        setMode('fallback', 'Answering from the stored profile');
+        if (r.handoff) bubble('sys', 'Handed to N. Aluko, Study Coordinator · conversation attached to the record');
+        if (r.urgent) bubble('sys', 'Urgent-symptom path · clinical team alerted');
+      }
+
+      sending = false;
+      send.disabled = false;
+      input.focus();
+    }
+
+    form.addEventListener('submit', function (e) { e.preventDefault(); ask(input.value); });
+    Array.prototype.forEach.call(document.querySelectorAll('.og-chip'), function (c) {
+      c.addEventListener('click', function () { ask(c.dataset.q); });
+    });
+
+    setMode('unknown', 'Ready');
+  })();
+</script>

@@ -22,7 +22,9 @@ export const engagementStats = [
   { label: 'Reminder delivery', value: '98%', sub: 'SMS + WhatsApp, consent-aware' },
 ];
 
-export const ogamiThread = [
+// Superseded by the live OgaChat client (see src/data/ogami.mjs). Kept as the
+// reference transcript the profile was written from.
+const ogamiThreadReference = [
   { from: 'patient', name: 'Mrs. Adaeze Uche', text: 'Good morning. My mother is 78 and was diagnosed with dementia in 2024. Is she able to join the Atunse programme?' },
   { from: 'ogami', text: 'Good morning. Thank you for reaching out about your mother. The ADDSB programme is for adults with documented dementia or progressive cognitive decline, where a caregiver is available to support monitoring and follow-up, and where the supervising physician determines the regimen is clinically reasonable. Eligibility is decided by our physician after a screening assessment — I cannot decide it here, but I can book that assessment for you. Would you like me to?' },
   { from: 'patient', name: 'Mrs. Adaeze Uche', text: 'Yes please. What does the screening involve?' },
@@ -32,7 +34,9 @@ export const ogamiThread = [
   { from: 'system', text: 'Escalated to N. Aluko (Study Coordinator) · ENQ-0142 created · Screening appointment ATN-APP-0231 booked · Patient Information Sheet queued for send' },
 ];
 
-export const ogamiBoundaries = [
+// Superseded by ogami.mjs, which mirrors the boundaries stored on the OGAMI
+// client record rather than restating them locally.
+const ogamiBoundariesReference = [
   'Answers programme, eligibility-criteria and logistics questions from the approved Patient Information Sheet and protocol §5.1 — never from open-web content.',
   'Books, reschedules and cancels against real availability, and writes the appointment into the same schedule staff use.',
   'Escalates to a named human for anything involving clinical judgement, eligibility determination, fees, or a distressed caller.',

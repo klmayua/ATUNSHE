@@ -71,3 +71,89 @@ export function rolePages(roles) {
 export function sectionTitle(key) {
   return SECTION_BY_KEY[key] ? SECTION_BY_KEY[key].label : key;
 }
+
+// ---------------------------------------------------------------------------
+// MOBILE — bottom navigation.
+//
+// A phone gets five slots, not twenty-two. Four destinations chosen per role
+// (the ones that role actually opens during a shift) plus "More", which lifts
+// the full role-filtered nav in a sheet. The four are deliberately different
+// per role for the same reason the dashboards are.
+// ---------------------------------------------------------------------------
+
+export const MOBILE_PRIMARY = {
+  pi:            ['command', 'session', 'cohort', 'safety'],
+  attending:     ['command', 'session', 'cohort', 'safety'],
+  nurse:         ['command', 'session', 'cohort', 'safety'],
+  pharmacist:    ['product', 'session', 'device', 'command'],
+  operator:      ['device', 'session', 'cohort', 'command'],
+  coordinator:   ['command', 'consent', 'forms', 'cohort'],
+  administrator: ['command', 'people', 'billing', 'schedule'],
+  patient:       ['portal', 'myvisits', 'mysymptoms', 'myrecord'],
+  caregiver:     ['diary', 'portal', 'ogami'],
+};
+
+// Compact labels — a bottom-nav label has about ten characters before it wraps.
+export const MOBILE_LABEL = {
+  command: 'Today',
+  session: 'Treatment',
+  cohort: 'Patients',
+  safety: 'Safety',
+  product: 'Product',
+  device: 'Device',
+  consent: 'Consent',
+  forms: 'Forms',
+  people: 'People',
+  billing: 'Billing',
+  schedule: 'Schedule',
+  portal: 'My care',
+  myvisits: 'Visits',
+  mysymptoms: 'How I am',
+  myrecord: 'Record',
+  myconsent: 'Consent',
+  diary: 'Diary',
+  ogami: 'Ogami',
+  protocols: 'Protocol',
+  custody: 'Ledger',
+  audit: 'Audit',
+  crm: 'Enquiries',
+  learning: 'Learning',
+  analytics: 'Analytics',
+  mobile: 'Offline',
+  architecture: 'Platform',
+  delivery: 'Delivery',
+};
+
+// 24×24 stroke icons, drawn inline so the bar costs no extra request.
+export const ICONS = {
+  command: 'M3 12h4l3-8 4 16 3-8h4',
+  session: 'M12 3v18M5 8h14M7 13h10M9 18h6',
+  cohort: 'M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2 20a6 6 0 0 1 12 0M17 11a3 3 0 1 0 0-6M16 20a6 6 0 0 1 6-6',
+  safety: 'M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3ZM12 8v5M12 16h.01',
+  product: 'M4 7 12 3l8 4v10l-8 4-8-4V7ZM4 7l8 4 8-4M12 11v10',
+  device: 'M12 3c-3 0-5 2-5 5v4l-2 4h14l-2-4V8c0-3-2-5-5-5ZM9 20h6',
+  consent: 'M6 3h9l4 4v14H6V3ZM14 3v5h5M9 14l2 2 4-4',
+  forms: 'M6 3h12v18H6V3ZM9 8h6M9 12h6M9 16h3',
+  people: 'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3 20a6 6 0 0 1 12 0M17 6h4M19 4v4M15 20a6 6 0 0 1 3-5',
+  billing: 'M3 6h18v12H3V6ZM3 10h18M7 15h3',
+  schedule: 'M4 5h16v16H4V5ZM4 9h16M9 3v4M15 3v4M8 13h3M8 17h3',
+  portal: 'M4 11 12 4l8 7v9H4v-9ZM10 20v-6h4v6',
+  myvisits: 'M4 5h16v16H4V5ZM4 9h16M9 3v4M15 3v4M12 13v4M10 15h4',
+  mysymptoms: 'M12 20s-7-4.5-7-9.5A4 4 0 0 1 12 7a4 4 0 0 1 7 3.5C19 15.5 12 20 12 20Z',
+  myrecord: 'M6 3h9l4 4v14H6V3ZM14 3v5h5M9 13h6M9 17h4',
+  diary: 'M5 4h13a1 1 0 0 1 1 1v15H6a1 1 0 0 1-1-1V4ZM5 16h14M9 8h6',
+  ogami: 'M4 5h16v11H9l-5 4V5ZM9 10h.01M12 10h.01M15 10h.01',
+  more: 'M4 7h16M4 12h16M4 17h16',
+};
+
+/** The five bottom-nav entries for a role: four primary, then More. */
+export function mobileNavFor(role) {
+  if (!role) return [];
+  const keys = (MOBILE_PRIMARY[role.id] || []).filter((k) => role.allow.includes(k));
+  return keys.map((k) => ({
+    key: k,
+    label: MOBILE_LABEL[k] || SECTION_BY_KEY[k]?.label || k,
+    href: `/${role.id}/${k}/`,
+    icon: ICONS[k] || ICONS.more,
+  }));
+}

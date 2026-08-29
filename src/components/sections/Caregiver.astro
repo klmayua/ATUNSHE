@@ -6,6 +6,7 @@
 import { patientById } from '../../data/cohort.mjs';
 import { appendixById } from '../../data/appendices.mjs';
 import { followUpSchedule } from '../../data/protocol.mjs';
+import OgamiChat from '../OgamiChat.astro';
 const { role, view } = Astro.props;
 const R = `/${role.id}`;
 const p = patientById(role.scopedTo || 'ATN-0004');
@@ -170,25 +171,14 @@ const urgent = diaryForm.sections.find((s) => s.kind === 'urgent');
 {view === 'ogami' && (
   <div class="stack" style="max-width:760px">
     <div class="card">
-      <div class="card-head"><h3>Ask Ogami</h3><span class="chip">Answers from the approved information sheet only</span></div>
-      <div class="card-body">
-        <div class="chat">
-          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>Good morning. How can I help you today? I can answer questions about visits, what to expect, and the diary. Anything clinical I will pass to the team.</div></div>
-          <div class="bubble-row me"><div class="bubble">She was restless on Sunday evening. Should I be worried?</div></div>
-          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>Thank you for telling me — I have added a note against the record so the team sees it before today's session, and I can see you already recorded it in the diary for 23 August, which is exactly right.<br /><br />I am not able to say whether it is a concern; that is for the clinical team. Restlessness is listed in the information sheet as something to report rather than something urgent, but if it happens with any of the urgent signs — trouble breathing, swelling, sudden confusion, a persistent nosebleed, fever — call the clinic straight away on 0800 000 0000. Would you like me to ask a nurse to call you?</div></div>
-          <div class="bubble-row me"><div class="bubble">Yes please. And what time is the visit next week?</div></div>
-          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>Session 5 of 6 is Wednesday 2 September at 09:30, Chair 2. I have sent a reminder to this number and asked Nurse Bello to call you today about the restlessness.</div></div>
-          <div class="bubble-row sys"><div class="bubble">Callback task created for N. Bello · Note attached to ATN-0004 pre-session interval review · Reminder scheduled 01 Sep 18:00</div></div>
-        </div>
-        <div style="margin-top:16px;display:flex;gap:8px">
-          <input class="gate-form" style="flex:1;height:42px;padding:0 13px;border:1px solid var(--line);border-radius:var(--r-sm);font-size:14px" placeholder="Ask a question…" />
-          <button class="btn primary">Send</button>
-        </div>
-      </div>
+      <div class="card-head"><h3>Ask Ogami</h3><span class="chip">For Mrs. Folake Adewale</span></div>
+      <OgamiChat
+        suggestions={['She was restless last night', 'When is the next visit?', 'What should I watch for?', 'I need to speak to a nurse']}
+      />
       <div class="card-note">
         Ogami never gives clinical advice and never records a symptom as a clinical finding. It routes to
-        a named person and leaves a trace in the record — which is why the nurse sees the note at Gate B
-        this morning.
+        a named person and leaves a trace in the record — which is why the nurse sees your note at
+        check-in the next morning.
       </div>
     </div>
   </div>

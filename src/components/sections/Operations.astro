@@ -1,8 +1,10 @@
 ---
 // Schedule · CRM/Ogami · Billing · People · Mobile. The operational domains.
 import { chairSchedule, upcomingWeek, patients, funnel } from '../../data/cohort.mjs';
-import { enquiries, engagementStats, ogamiThread, ogamiBoundaries, serviceCatalogue, invoices, revenue, personnel, institutions, offlineScope, migration } from '../../data/ops.mjs';
+import { enquiries, engagementStats, serviceCatalogue, invoices, revenue, personnel, institutions, offlineScope, migration } from '../../data/ops.mjs';
 import { followUpSchedule } from '../../data/protocol.mjs';
+import { ogamiConfig, ogamiBoundaries as ogBounds } from '../../data/ogami.mjs';
+import OgamiChat from '../OgamiChat.astro';
 const { role, view } = Astro.props;
 const R = `/${role.id}`;
 const naira = (n) => '₦' + n.toLocaleString('en-NG');
@@ -110,24 +112,11 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
         </div>
 
         <div class="card">
-          <div class="card-head"><h3>Ogami — a real conversation</h3><span class="hint">WhatsApp · became ENQ-0142</span></div>
-          <div class="card-body">
-            <div class="chat">
-              {ogamiThread.map((m) => (
-                <div class={`bubble-row ${m.from === 'patient' ? 'me' : m.from === 'system' ? 'sys' : 'ai'}`}>
-                  <div class="bubble">
-                    {m.from === 'ogami' ? <div class="who">Ogami</div> : null}
-                    {m.text}
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div class="card-head">
+            <h3>Ogami — live</h3>
+            <span class="hint">{ogamiConfig.tier}</span>
           </div>
-          <div class="card-note">
-            Note what Ogami refuses to do: it will not decide eligibility, and it hands off the moment
-            fees come up. It booked a real slot in the real schedule and created the CRM record — the
-            appointment above is the same object the clinic sees.
-          </div>
+          <OgamiChat />
         </div>
       </div>
 
@@ -135,16 +124,38 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
         <div class="card">
           <div class="card-head"><h3>Ogami's boundaries</h3></div>
           <div class="card-body flush">
-            {ogamiBoundaries.map((b, i) => (
+            {ogBounds.map((b) => (
               <div class="check open" style="grid-template-columns:22px 1fr">
-                <span class="box" style={i < 2 ? 'background:var(--ok);border-color:var(--ok);color:#fff' : 'background:var(--stop);border-color:var(--stop);color:#fff'}>{i < 2 ? '✓' : '✕'}</span>
-                <span><span class="cl" style="font-weight:500;font-size:12.5px">{b}</span></span>
+                <span class="box" style={b.can ? 'background:var(--ok);border-color:var(--ok);color:#fff' : 'background:var(--stop);border-color:var(--stop);color:#fff'}>{b.can ? '✓' : '✕'}</span>
+                <span><span class="cl" style="font-weight:500;font-size:12.5px">{b.text}</span></span>
               </div>
             ))}
           </div>
           <div class="card-note">
-            An assistant in a clinical setting is defined by what it declines to do. These boundaries are
-            configuration, reviewable by the PI, not model behaviour to be hoped for.
+            An assistant in a clinical setting is defined by what it declines to do. These are not hopes
+            about model behaviour — they are stored on the Atunse client record at OGAMI, in the same
+            profile that answers on WhatsApp, and the Principal Investigator can review and change them.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Deployment</h3><span class="chip ok dot">Provisioned</span></div>
+          <div class="card-body">
+            <dl class="defs">
+              <div class="def"><dt>Client</dt><dd class="mono">{ogamiConfig.slug}</dd></div>
+              <div class="def"><dt>Public key</dt><dd class="mono">{ogamiConfig.publicKey}</dd></div>
+              <div class="def"><dt>Plan</dt><dd>{ogamiConfig.tier}</dd></div>
+              <div class="def"><dt>Provisioned</dt><dd>{ogamiConfig.provisioned}</dd></div>
+              <div class="def"><dt>Ownership</dt><dd>{ogamiConfig.state}</dd></div>
+            </dl>
+            <div class="note" style="margin-top:12px">
+              <span class="lbl">Web embed — one line</span>
+              <span class="mono" style="font-size:11px;word-break:break-all">&lt;script src="{ogamiConfig.widget}" data-key="{ogamiConfig.publicKey}"&gt;&lt;/script&gt;</span>
+            </div>
+          </div>
+          <div class="card-note">
+            That single line puts the same front office on Atunse's public website. The key is a public
+            identifier, not a secret — it is designed to sit in a script tag.
           </div>
         </div>
 

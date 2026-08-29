@@ -15,6 +15,7 @@
 import { patientById } from '../../data/cohort.mjs';
 import { followUpSchedule, protocolMeta } from '../../data/protocol.mjs';
 import { events } from '../../data/safety.mjs';
+import OgamiChat from '../OgamiChat.astro';
 
 const { role, view } = Astro.props;
 const R = `/${role.id}`;
@@ -471,28 +472,16 @@ const done = p.sessionsComplete;
 )}
 
 {view === 'ogami' && (
-  <div class="stack pf" style="max-width:740px">
+  <div class="stack pf" style="max-width:760px">
     <div class="card">
       <div class="card-head"><h3>Ask Ogami</h3><span class="chip">Answers from your approved information sheet</span></div>
-      <div class="card-body">
-        <div class="chat">
-          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>Good morning, Mrs. Eze. How can I help? I can answer questions about your visits, what to expect, and your appointments. Anything medical I will pass straight to your team.</div></div>
-          <div class="bubble-row me"><div class="bubble">Do I need to fast before Friday?</div></div>
-          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>No — you do not need to fast for a treatment session. Please eat and drink normally, and take your usual medicines unless your doctor has told you otherwise. Fasting is only needed before some of the blood tests, and none are booked for Friday.</div></div>
-          <div class="bubble-row me"><div class="bubble">My MMSE went from 22 to 23. Does that mean it is working?</div></div>
-          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>I am not able to tell you what your results mean — that is a conversation for Dr. Sola, and I do not want to give you a wrong impression either way.<br /><br />What I can tell you is what the study itself says: this is an early study of a treatment that has not been shown to work, there is no comparison group, and scores like the MMSE move by a point or two for ordinary reasons including how rested you were. Your doctor will go through your results properly with you.<br /><br />I have added your question to Friday's notes so Dr. Sola raises it with you. Would you like me to book a longer appointment so there is time to talk it through?</div></div>
-          <div class="bubble-row me"><div class="bubble">Yes please, that would help.</div></div>
-          <div class="bubble-row sys"><div class="bubble">Question attached to ATN-0008 pre-visit review · 15 minutes added to 28 Aug appointment · Dr. Sola notified</div></div>
-        </div>
-        <div style="margin-top:16px;display:flex;gap:8px">
-          <input style="flex:1;height:44px;padding:0 13px;border:1px solid var(--line);border-radius:var(--r-sm);font-size:14px" placeholder="Ask a question…" />
-          <button class="btn primary">Send</button>
-        </div>
-      </div>
+      <OgamiChat
+        suggestions={['Do I need to fast before Friday?', 'What time is my next visit?', 'What happens at a session?', 'I want to speak to someone']}
+      />
       <div class="card-note">
-        Ogami declined to interpret a clinical result and said why. For an investigational treatment in
-        a vulnerable group, an assistant that answers that question enthusiastically is a liability —
-        so it is configured not to, and the refusal is reviewable by the Principal Investigator.
+        Ogami will not interpret a result or a score for you — that is a conversation for Dr. Sola, and
+        it will offer to book you more time with her instead. For an investigational treatment, an
+        assistant that answers that question enthusiastically is a liability, so it is configured not to.
       </div>
     </div>
   </div>
