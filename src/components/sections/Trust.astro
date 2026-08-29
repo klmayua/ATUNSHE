@@ -1,0 +1,248 @@
+---
+// Consent register · Governance ledger · Audit & data governance.
+// One component, three views — they are three faces of the same trust layer.
+import { consentRegister, consentPurposes, custodyLedger, ledgerIntegrity, auditTrail, auditPrinciples, breakGlass, dataGovernance } from '../../data/trust.mjs';
+import { patients } from '../../data/cohort.mjs';
+const { role, view } = Astro.props;
+const R = `/${role.id}`;
+---
+
+{view === 'consent' && (
+  <div class="stack">
+    <div class="note">
+      <span class="lbl">Consent is a state, not a document</span>
+      Every row below is a live object with a version, a status, a giver, an expiry and a purpose set —
+      queried at the moment of care, not retrieved from a folder. <b>ATN-0005 is the proof:</b> a capacity
+      re-assessment changed the state automatically, and today's session stopped at Gate B as a direct
+      consequence. Nobody had to notice.
+    </div>
+
+    <div class="stats g4">
+      <div class="stat is-ok"><div class="k">In force</div><div class="v">{consentRegister.filter((c) => c.status.startsWith('In force')).length}</div><div class="n">Verified at each Gate B</div></div>
+      <div class="stat is-stop"><div class="k">Suspended</div><div class="v">{consentRegister.filter((c) => c.status === 'Suspended').length}</div><div class="n">Blocking treatment right now</div></div>
+      <div class="stat is-warn"><div class="k">LAR-held</div><div class="v">{consentRegister.filter((c) => c.lar).length}</div><div class="n">Capacity impaired or fluctuating</div></div>
+      <div class="stat"><div class="k">Withdrawals</div><div class="v">0</div><div class="n">Withdrawal is one click for the patient</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Consent register</h3><span class="hint">Verified at every Gate B</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Patient</th><th>Version</th><th>Status</th><th>Given by</th><th>Signed</th><th>Expires</th><th>Purposes</th><th>Last verified</th></tr></thead>
+          <tbody>
+            {consentRegister.map((c) => (
+              <tr class={c.status === 'Suspended' ? 'is-stop' : ''}>
+                <td><div class="t">{c.name}</div><div class="s mono">{c.patient}</div></td>
+                <td class="mono">{c.version}</td>
+                <td>
+                  <span class={`chip ${c.status.startsWith('In force') ? 'ok' : c.status === 'Suspended' ? 'stop' : 'held'}`}>{c.status}</span>
+                  {c.lar ? <div style="margin-top:4px"><span class="chip warn">LAR</span></div> : null}
+                </td>
+                <td class="s">{c.signedBy}{c.lar ? <div class="tiny muted">{c.lar}</div> : null}</td>
+                <td class="n mono">{c.signed}</td>
+                <td class="n mono">{c.expires}</td>
+                <td class="n">{c.purposes}</td>
+                <td class="s">{c.lastVerified}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><h3>ATN-0005 — consent history</h3><span class="chip stop">Suspended</span></div>
+        <div class="card-body">
+          <div class="tl">
+            {patients.find((p) => p.id === 'ATN-0005').consent.history.map((h, i, arr) => (
+              <div class={`tl-item ${i === arr.length - 1 ? 'warn' : h.event.includes('suspend') || h.event.includes('not retained') ? 'stop' : 'ok'}`}>
+                <div class="tl-when">{h.when} · {h.by}</div>
+                <div class="tl-what">{h.event}</div>
+                {h.v !== '—' ? <div class="tl-detail mono tiny">{h.v}</div> : null}
+              </div>
+            ))}
+          </div>
+          <div class="note stop" style="margin-top:14px">
+            <b>Nothing was overwritten.</b> The original consent still stands in the record with its
+            original signature; a superseding status entry sits above it. That is ALCOA+ — a correction
+            is a new record, never an edit — and it is why an auditor can reconstruct what was true on
+            any given day.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Granular, purpose-bound consent</h3></div>
+        <div class="card-body flush">
+          {consentPurposes.map((p) => (
+            <div class="check open" style="grid-template-columns:22px 1fr auto">
+              <span class="box" style={p.required ? 'background:var(--navy-700);border-color:var(--navy-700);color:#fff' : ''}>{p.required ? '✓' : ''}</span>
+              <span>
+                <span class="cl">{p.label}</span>
+                <span class="cm" style="display:block">{p.note}</span>
+              </span>
+              <span class={`chip ${p.required ? 'stop' : 'held'}`}>{p.required ? 'Required' : 'Optional'}</span>
+            </div>
+          ))}
+        </div>
+        <div class="card-note">
+          A patient can withdraw research-data sharing without withdrawing from treatment. Bundled
+          consent cannot express that; purpose-bound consent can, and the Nigeria Data Protection Act
+          expects it.
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'custody' && (
+  <div class="stack">
+    <div class="note">
+      <span class="lbl">Figure 6 of the proposal, rendered literally</span>
+      <span class="mono" style="font-size:12px">WHO → DID WHAT → WHEN → AUTHORITY → TO WHAT → WHAT NEXT</span>.
+      Those are the columns below, because that is the shape the proposal specifies. Each entry carries
+      the hash of the entry before it, so removing or altering a row breaks the chain and is detectable
+      without having to trust the database.
+    </div>
+
+    <div class="stats g4">
+      <div class="stat is-ok"><div class="k">Chain status</div><div class="v small">{ledgerIntegrity.status}</div><div class="n">{ledgerIntegrity.breaks} breaks detected</div></div>
+      <div class="stat"><div class="k">Entries</div><div class="v">{ledgerIntegrity.entries}</div><div class="n">Verified to #{ledgerIntegrity.verifiedTo}</div></div>
+      <div class="stat"><div class="k">Last verification</div><div class="v small mono" style="font-size:14px">{ledgerIntegrity.lastVerification}</div><div class="n">Independent anchor</div></div>
+      <div class="stat"><div class="k">Method</div><div class="v small" style="font-size:14px">Hash-chained</div><div class="n">Append-only, no update path</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Chain of custody & governance events</h3><span class="hint">Most recent first</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead>
+            <tr><th>#</th><th>Who</th><th>Did what</th><th>When</th><th>Under what authority</th><th>To what</th><th>What next</th><th>Hash</th></tr>
+          </thead>
+          <tbody>
+            {custodyLedger.map((e) => (
+              <tr>
+                <td class="mono n">{e.seq}</td>
+                <td><div class="t">{e.who}</div><div class="s">{e.whoRole}</div></td>
+                <td class="s">{e.did}</td>
+                <td class="mono n" style="font-size:11.5px">{e.when}</td>
+                <td class="s">{e.authority}</td>
+                <td class="s" style="max-width:260px">{e.toWhat}</td>
+                <td class="s">{e.next}</td>
+                <td class="mono" style="font-size:11px">
+                  {e.hash}
+                  <div class="tiny muted">prev {e.prev}</div>
+                  {e.verified ? <span class="chip ok" style="margin-top:3px">✓</span> : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">{ledgerIntegrity.anchor}</div>
+    </div>
+
+    <div class="note warn">
+      <span class="lbl">On the blockchain question</span>
+      The proposal is precise about this and so is the platform: a permissioned chain anchors
+      <b> governance-event digests</b> so tampering is detectable. <b>Patient records are never written
+      to a chain</b> — they stay in the secure, in-region data layer where they can be corrected,
+      access-controlled and, where the law requires, erased. Anything else would be a data-protection
+      liability dressed up as a feature.
+    </div>
+  </div>
+)}
+
+{view === 'audit' && (
+  <div class="stack">
+    <div class="card">
+      <div class="card-head"><h3>ALCOA+ — how each principle is implemented</h3><span class="hint">Data integrity</span></div>
+      <div class="card-body flush">
+        {auditPrinciples.map((p) => (
+          <div class="check open" style="grid-template-columns:34px 1fr">
+            <span class="box" style="width:28px;height:28px;border-radius:7px;background:var(--navy-800);border-color:var(--navy-800);color:#fff;font-size:13px">{p.letter}</span>
+            <span>
+              <span class="cl">{p.name}</span>
+              <span class="cm" style="display:block;line-height:1.6">{p.how}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Audit trail</h3><span class="hint">Every act, including the refused ones</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Object</th><th>Outcome</th><th>Origin</th></tr></thead>
+          <tbody>
+            {auditTrail.map((a) => (
+              <tr class={a.action === 'BREAK_GLASS' ? 'is-warn' : a.action.startsWith('SUSPEND') || a.action === 'QUARANTINE' || a.action === 'STOP_COURSE' || a.action === 'RAISE_EXCURSION' ? 'is-stop' : ''}>
+                <td class="mono n">{a.when}</td>
+                <td class="t">{a.actor}</td>
+                <td><span class="chip mono" style="font-size:10px">{a.action}</span></td>
+                <td class="s">{a.object}</td>
+                <td class="s">{a.outcome}</td>
+                <td class="s mono tiny">{a.device}{a.ip !== '—' ? ` · ${a.ip}` : ''}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        Note the <span class="mono">AMEND</span> entry at 08:02. A correction to a clinical note did not
+        change the note — it created a new version and left the original visible. And the
+        <span class="mono"> BREAK_GLASS</span> entry announced itself to two people the moment it happened.
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><h3>Break-glass access</h3><span class="chip warn">1 use in 90 days</span></div>
+        <div class="card-body">
+          <p class="tiny" style="margin:0 0 12px;color:var(--ink-2);line-height:1.6">{breakGlass.policy}</p>
+          <div class="stack-sm">
+            {breakGlass.requires.map((r) => (
+              <div class="tiny" style="display:flex;gap:8px"><span style="color:var(--ok);font-weight:700">✓</span><span>{r}</span></div>
+            ))}
+          </div>
+          <hr class="hr" />
+          <div class="note warn">
+            <span class="lbl">Last use</span>
+            <b>{breakGlass.lastUse.when} · {breakGlass.lastUse.who}</b><br />
+            {breakGlass.lastUse.what}<br />
+            <span class="muted">Reason: {breakGlass.lastUse.reason}</span><br />
+            <span class="muted">{breakGlass.lastUse.review}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Data governance & sovereignty</h3><span class="hint">NDPA 2023</span></div>
+        <div class="card-body">
+          <dl class="defs">
+            <div class="def"><dt>Residency</dt><dd>{dataGovernance.residency}</dd></div>
+            <div class="def"><dt>Lawful basis</dt><dd>{dataGovernance.lawfulBasis}</dd></div>
+            <div class="def"><dt>Internal separation</dt><dd>{dataGovernance.separation}</dd></div>
+            <div class="def"><dt>Retention</dt><dd>{dataGovernance.retention}</dd></div>
+          </dl>
+          <hr class="hr" />
+          <div class="sec-title" style="margin-top:0">Sponsor export</div>
+          <dl class="defs">
+            <div class="def"><dt>Contains</dt><dd>{dataGovernance.sponsorExport.what}</dd></div>
+            <div class="def"><dt>Cadence</dt><dd>{dataGovernance.sponsorExport.cadence} → {dataGovernance.sponsorExport.to}</dd></div>
+            <div class="def"><dt>Last run</dt><dd class="mono">{dataGovernance.sponsorExport.lastRun}</dd></div>
+            <div class="def"><dt>Basis</dt><dd>{dataGovernance.sponsorExport.basis}</dd></div>
+          </dl>
+          <div class="note warn" style="margin-top:12px">
+            <b>{dataGovernance.sponsorExport.status}.</b> The Background Brief lists this as one of the
+            points that is properly Atunse's to decide with KweHealth, not ours to assume. The demo runs
+            on an assumed parameter set so the mechanism is visible; the real parameters are a decision
+            for the working session.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}

@@ -1,0 +1,308 @@
+---
+import Shell from '../../../components/Shell.astro';
+import { ROLES } from '../../../data/roles.mjs';
+import { patients, patientById } from '../../../data/cohort.mjs';
+import { events, deviations } from '../../../data/safety.mjs';
+import { followUpSchedule, gates, protocolMeta } from '../../../data/protocol.mjs';
+
+export function getStaticPaths() {
+  const out = [];
+  for (const role of ROLES) {
+    if (!role.allow.includes('patient')) continue;
+    for (const p of patients) {
+      out.push({ params: { role: role.id, id: p.id }, props: { role, p } });
+    }
+  }
+  return out;
+}
+
+const { role, p } = Astro.props;
+const R = `/${role.id}`;
+
+const myEvents = events.filter((e) => e.patient === p.id);
+const myDeviations = deviations.filter((d) => d.patient === p.id);
+const pips = {};
+
+const tone = p.status === 'live' ? 'live' : ['blocked', 'halted'].includes(p.status) ? 'stop' : p.status === 'ok' ? 'ok' : p.status === 'screening' ? 'warn' : 'held';
+
+// Build one longitudinal timeline from every source that writes to this record.
+const timeline = [];
+p.sessions.forEach((s) => {
+  if (s.date === '—') return;
+  timeline.push({
+    when: s.date,
+    what: `Session ${s.n} of 6 — ${s.status}`,
+    detail: s.notes || `IV ${s.ivLot || '—'} · IN ${s.inLot || '—'}${s.ivDuration ? ` · push ${s.ivDuration}` : ''}`,
+    tone: s.status === 'Complete' ? 'ok' : s.status === 'In progress' ? 'live' : s.status === 'Stopped' || s.status === 'Held' ? 'stop' : '',
+    dev: s.deviation,
+  });
+});
+myEvents.forEach((e) => timeline.push({ when: e.onset.split(' · ')[0], what: `${e.id} — ${e.title}`, detail: e.outcomeNote, tone: e.serious ? 'stop' : 'warn' }));
+(p.consent.history || []).forEach((h) => timeline.push({ when: h.when, what: `Consent — ${h.event}`, detail: `${h.v} · ${h.by}`, tone: h.event.toLowerCase().includes('suspend') ? 'stop' : '' }));
+(p.followUps || []).forEach((f) => timeline.push({ when: f.when, what: `Follow-up — ${f.status}`, detail: f.result, tone: f.status === 'Complete' ? 'ok' : f.status === 'Due' ? 'warn' : '' }));
+---
+
+<Shell
+  role={role}
+  section="cohort"
+  title={p.name}
+  sub={`${p.id} · ${p.age} · ${p.sex} · ${p.diagnosis}. One longitudinal record carrying every session, observation, result, event, deviation, consent version and caregiver entry.`}
+  refs={[protocolMeta.id, `Enrolled ${p.enrolled}`]}
+  pips={pips}
+>
+  <div class="stack">
+    <div class="card">
+      <div class="card-body" style="padding:16px">
+        <div class="row-between" style="align-items:flex-start">
+          <div>
+            <div class="chip-row">
+              <span class={`chip ${tone}`}>{p.stage}</span>
+              <span class="chip">{p.stageDetail}</span>
+              <span class={`chip ${p.consent.status.startsWith('In force') ? 'ok' : p.consent.status === 'Suspended' ? 'stop' : 'held'}`}>Consent {p.consent.status}</span>
+              {p.lar ? <span class="chip warn">LAR: {p.lar}</span> : null}
+              {p.hormoneWorksheet ? <span class="chip">Appendix G in use</span> : null}
+            </div>
+            <div class="tiny muted" style="margin-top:8px">
+              DOB {p.dob} · {p.phone} · caregiver {p.caregiver.name} ({p.caregiver.relationship}, {p.caregiver.phone})
+            </div>
+            <div class="tiny muted" style="margin-top:3px">Capacity: {p.capacity}</div>
+            <div class="tiny muted" style="margin-top:3px">Next: <b>{p.nextVisit}</b></div>
+          </div>
+          {p.sessions.length ? (
+            <div style="text-align:right">
+              <div class="tiny muted">Course progress</div>
+              <div class="dots" style="justify-content:flex-end;margin-top:5px">
+                {p.sessions.map((s) => (
+                  <span class={`dot ${s.status === 'Complete' ? 'done' : s.status === 'In progress' ? 'now' : s.status === 'Held' ? 'held' : s.status === 'Stopped' ? 'stopped' : ''}`} title={`Session ${s.n} · ${s.status} · ${s.date}`} style="width:32px;height:26px">{s.n}</span>
+                ))}
+              </div>
+              <div class="tiny muted" style="margin-top:5px">{p.sessionsComplete} of 6 complete</div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+
+    {p.blockReason ? (
+      <div class="note stop">
+        <span class="lbl">{p.status === 'halted' ? 'Course halted' : p.status === 'excluded' ? 'Not eligible' : 'Held'}</span>
+        {p.blockReason}
+        <div style="margin-top:8px"><span class="chip ref">{p.blockRef}</span></div>
+      </div>
+    ) : null}
+
+    <div class="grid g-2-1">
+      <div class="stack">
+        {p.sessions.length ? (
+          <div class="card">
+            <div class="card-head"><h3>Treatment course</h3><span class="hint">Fixed dose, six weekly sessions</span></div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead><tr><th>#</th><th>Date</th><th>Status</th><th>IV lot</th><th>IN lot</th><th>Push</th><th>Notes</th></tr></thead>
+                <tbody>
+                  {p.sessions.map((s) => (
+                    <tr class={s.status === 'Stopped' || s.status === 'Held' ? 'is-stop' : s.status === 'In progress' ? 'is-live' : s.deviation ? 'is-warn' : ''}>
+                      <td class="n" style="font-weight:700">{s.n}</td>
+                      <td class="n mono">{s.date}</td>
+                      <td>
+                        <span class={`chip ${s.status === 'Complete' ? 'ok' : s.status === 'In progress' ? 'live' : s.status === 'Held' || s.status === 'Stopped' ? 'stop' : 'held'}`}>{s.status}</span>
+                        {s.tolerated === false ? <div style="margin-top:4px"><span class="chip stop">Not tolerated</span></div> : null}
+                      </td>
+                      <td class="mono tiny">{s.ivLot || '—'}</td>
+                      <td class="mono tiny">{s.inLot || '—'}</td>
+                      <td class="n mono">{s.ivDuration || '—'}</td>
+                      <td class="s" style="max-width:300px">
+                        {s.notes || '—'}
+                        {s.deviation ? <div class="note warn" style="margin-top:6px;padding:7px 9px;font-size:11.5px">{s.deviation}</div> : null}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {p.live ? (
+              <div class="card-note">
+                <a href={`${R}/session/`} style="color:var(--navy-600);font-weight:600">Open the live treatment-day runner for this patient →</a>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
+        {p.followUps ? (
+          <div class="card">
+            <div class="card-head"><h3>Post-course follow-up</h3><span class="hint">§5.3 Table 6</span></div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead><tr><th>Visit</th><th>Status</th><th>Result</th></tr></thead>
+                <tbody>
+                  {p.followUps.map((f) => (
+                    <tr class={f.status === 'Due' ? 'is-warn' : ''}>
+                      <td class="t nowrap">{f.when}</td>
+                      <td><span class={`chip ${f.status === 'Complete' ? 'ok' : f.status === 'Due' ? 'warn' : 'held'}`}>{f.status}</span></td>
+                      <td class="s">{f.result}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : null}
+
+        <div class="card">
+          <div class="card-head"><h3>Longitudinal record</h3><span class="hint">Every source writes to one timeline</span></div>
+          <div class="card-body">
+            <div class="tl">
+              {timeline.map((t) => (
+                <div class={`tl-item ${t.tone}`}>
+                  <div class="tl-when">{t.when}</div>
+                  <div class="tl-what">{t.what}</div>
+                  <div class="tl-detail">{t.detail}</div>
+                  {t.dev ? <div class="note warn" style="margin-top:6px;padding:7px 9px;font-size:11.5px">{t.dev}</div> : null}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {myEvents.length ? (
+          <div class="card">
+            <div class="card-head"><h3>Safety events</h3><span class={`chip ${myEvents.some((e) => e.serious) ? 'stop' : 'warn'}`}>{myEvents.length}</span></div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead><tr><th>Ref</th><th>Event</th><th>Severity</th><th>Relatedness</th><th>Reported</th><th>Status</th></tr></thead>
+                <tbody>
+                  {myEvents.map((e) => (
+                    <tr class={e.serious ? 'is-stop' : ''}>
+                      <td class="mono">{e.id}</td>
+                      <td><div class="t">{e.title}</div><div class="s">{e.outcomeNote}</div></td>
+                      <td><span class={`chip ${e.severity === 'Severe' ? 'stop' : e.severity === 'Moderate' ? 'warn' : 'held'}`}>{e.severity}</span></td>
+                      <td class="s">{e.relatedness}<div class="tiny muted">{e.expectedness}</div></td>
+                      <td class="mono tiny">{e.reported}<div class="tiny" style="color:var(--ok)">{e.clockNote.includes('within') ? 'In window' : ''}</div></td>
+                      <td><span class={`chip ${e.status === 'Closed' ? 'ok' : 'warn'}`}>{e.status}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <div class="card-head"><h3>Latest observations</h3><span class="hint">Appendix C</span></div>
+          <div class="card-body">
+            <div class="stats g2" style="border-radius:var(--r)">
+              <div class="stat"><div class="k">BP</div><div class="v small mono">{p.vitalsPre.bp}</div></div>
+              <div class="stat"><div class="k">HR</div><div class="v small mono">{p.vitalsPre.hr}</div></div>
+              <div class="stat"><div class="k">RR</div><div class="v small mono">{p.vitalsPre.rr}</div></div>
+              <div class="stat"><div class="k">SpO₂</div><div class="v small mono">{p.vitalsPre.spo2}</div></div>
+            </div>
+            <div class="tiny muted" style="margin-top:10px">Temp {p.vitalsPre.temp} · {p.vitalsPre.neuro}</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Cognitive & functional</h3></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Measure</th><th>Baseline</th><th>Latest</th></tr></thead>
+              <tbody>
+                {['mmse', 'moca', 'cdrsb', 'adcsadl', 'npiq'].map((k) => {
+                  const labels = { mmse: 'MMSE', moca: 'MoCA', cdrsb: 'CDR-SB', adcsadl: 'ADCS-ADL', npiq: 'NPI-Q' };
+                  const b = p.baseline[k];
+                  const l = p.latest ? p.latest[k] : null;
+                  return (
+                    <tr>
+                      <td class="t">{labels[k]}</td>
+                      <td class="n mono">{b}</td>
+                      <td class="n mono" style="font-weight:600">{l != null ? l : '—'}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div class="card-note">{p.latest ? `Latest: ${p.latest.at}` : 'No post-baseline assessment yet.'} Exploratory only — open-label, no control arm.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Laboratory & biomarkers</h3></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Test</th><th>Result</th><th>Reference</th><th>When</th></tr></thead>
+              <tbody>
+                {p.labs.map((l) => (
+                  <tr class={l.flag === 'high' || l.flag === 'low' ? 'is-warn' : ''}>
+                    <td class="t">{l.name}</td>
+                    <td class="mono n" style={l.flag !== 'ok' ? 'color:var(--warn);font-weight:700' : ''}>{l.value}</td>
+                    <td class="s mono tiny">{l.ref}</td>
+                    <td class="n tiny">{l.at}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="card-note">Results arrive over HL7 FHIR from the reference laboratory, not by re-keying.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Consent</h3><span class={`chip ${p.consent.status.startsWith('In force') ? 'ok' : p.consent.status === 'Suspended' ? 'stop' : 'held'}`}>{p.consent.status}</span></div>
+          <div class="card-body">
+            <dl class="defs">
+              <div class="def"><dt>Version</dt><dd class="mono">{p.consent.version}</dd></div>
+              <div class="def"><dt>Given by</dt><dd>{p.consent.signedBy}</dd></div>
+              <div class="def"><dt>Signed / expires</dt><dd class="mono">{p.consent.signed} → {p.consent.expires}</dd></div>
+              {p.consent.lar ? <div class="def"><dt>LAR</dt><dd>{p.consent.lar}</dd></div> : null}
+            </dl>
+            {p.consent.purposes.length ? (
+              <div class="chip-row" style="margin-top:10px">{p.consent.purposes.map((x) => <span class="chip">{x}</span>)}</div>
+            ) : null}
+            {p.consent.note ? <div class="note warn" style="margin-top:12px">{p.consent.note}</div> : null}
+          </div>
+        </div>
+
+        {p.diary.length ? (
+          <div class="card">
+            <div class="card-head"><h3>Caregiver diary</h3><span class="chip ok">{p.caregiver.diaryCompliance}</span></div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead><tr><th>Date</th><th>Slp</th><th>App</th><th>Mood</th><th>Alert</th><th>Symptom</th></tr></thead>
+                <tbody>
+                  {p.diary.map((d) => (
+                    <tr>
+                      <td class="nowrap">{d.date}</td>
+                      <td class="mono n">{d.sleep}</td>
+                      <td class="mono n">{d.appetite}</td>
+                      <td class="mono n">{d.mood}</td>
+                      <td class="mono n">{d.alertness}</td>
+                      <td class="s">{d.symptom}{d.notes ? <div class="tiny muted">{d.notes}</div> : null}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div class="card-note">Appendix I entries feed the pre-session interval review at Gate B.</div>
+          </div>
+        ) : null}
+
+        {myDeviations.length ? (
+          <div class="card">
+            <div class="card-head"><h3>Deviations</h3><span class="chip warn">{myDeviations.length}</span></div>
+            <div class="card-body flush">
+              {myDeviations.map((d) => (
+                <div class="check open" style="grid-template-columns:1fr">
+                  <span>
+                    <span class="cl">{d.id} — {d.what}</span>
+                    <span class="cm" style="display:block">{d.reasonLabel} · {d.clinicalImpact}</span>
+                    <span class="cm" style="display:block">{d.correctiveAction}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  </div>
+</Shell>

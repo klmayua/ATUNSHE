@@ -1,5 +1,5 @@
 {
-  "name": "atunse-health-demo",
+  "name": "atunse-protocol-platform",
   "type": "module",
   "version": "1.0.0",
   "private": true,
@@ -7,8 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "verify": "node scripts/verify-per-persona.mjs",
-    "pull": "node scripts/pull.mjs"
+    "verify": "node scripts/verify.mjs",
+    "check": "astro build && node scripts/verify.mjs"
   },
   "dependencies": {
     "astro": "^5.6.1"

@@ -1,0 +1,181 @@
+---
+import { events, deviations, deviationReasonCodes } from '../../data/safety.mjs';
+import { stoppingRules, additionalStopTriggers, reportingClocks } from '../../data/protocol.mjs';
+const { role } = Astro.props;
+const R = `/${role.id}`;
+
+function clockPct(e) {
+  return Math.min(100, Math.round((e.elapsedHours / e.windowHours) * 100));
+}
+function fmtElapsed(h) {
+  if (h < 1) return `${Math.round(h * 60)} min`;
+  const hh = Math.floor(h);
+  const mm = Math.round((h - hh) * 60);
+  return `${hh} h ${mm} min`;
+}
+---
+
+<div class="stack">
+  <div class="stats g4">
+    <div class="stat is-stop"><div class="k">Serious adverse events</div><div class="v">{events.filter((e) => e.serious).length}</div><div class="n">All reported inside the 24 h window</div></div>
+    <div class="stat"><div class="k">Adverse events</div><div class="v">{events.filter((e) => !e.serious && e.id.startsWith('AE')).length}</div><div class="n">Median onset → record: 13 min</div></div>
+    <div class="stat is-warn"><div class="k">Deviations</div><div class="v">{deviations.length}</div><div class="n">All PI-reviewed; 2 with corrective action</div></div>
+    <div class="stat is-ok"><div class="k">Late reports</div><div class="v">0</div><div class="n">Of {events.length} reportable events</div></div>
+  </div>
+
+  <div class="note">
+    <span class="lbl">Why the clock matters</span>
+    A reporting window that starts when someone opens a form is not a control. Every clock here
+    starts at <b>recorded event onset</b> and keeps running until transmission is acknowledged, so
+    a late entry makes lateness <em>more</em> visible rather than less. That is the pharmacovigilance
+    requirement (ICH E2A) implemented as behaviour rather than as a policy document.
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Event register with reporting clocks</h3><span class="hint">Appendix D · §6.3</span></div>
+    <div class="card-body flush">
+      {events.map((e) => (
+        <div style="padding:16px;border-bottom:1px solid var(--line)">
+          <div class="row-between" style="align-items:flex-start">
+            <div style="min-width:0;flex:1">
+              <div class="chip-row" style="margin-bottom:7px">
+                <span class={`chip ${e.serious ? 'stop' : e.id.startsWith('PQC') ? 'warn' : 'held'}`}>{e.id}</span>
+                <span class="chip">{e.severity}</span>
+                <span class="chip">{e.relatedness}</span>
+                <span class="chip">{e.expectedness}</span>
+                {e.stoppingRule ? <span class="chip stop">Stopping rule fired</span> : null}
+                <span class={`chip ${e.status === 'Closed' ? 'ok' : 'warn'}`}>{e.status}</span>
+              </div>
+              <div style="font-size:14.5px;font-weight:640;letter-spacing:-0.012em">{e.title}</div>
+              <div class="tiny muted" style="margin-top:3px">
+                {e.patientName}{e.session ? ` · Session ${e.session}` : ''} · attributed to {e.attributedTo} · reported by {e.reportedBy}, signed {e.signedBy}
+              </div>
+              <p class="tiny" style="margin:9px 0 0;color:var(--ink-2);line-height:1.6;max-width:92ch">{e.description}</p>
+              <p class="tiny" style="margin:8px 0 0;color:var(--ink-2);line-height:1.6;max-width:92ch"><b>Outcome — {e.outcome}.</b> {e.outcomeNote}</p>
+              <div class="chip-row" style="margin-top:9px">
+                {e.actions.map((a) => <span class="chip">{a}</span>)}
+              </div>
+              {e.receipts.length ? (
+                <div class="tbl-wrap" style="margin-top:11px;border:1px solid var(--line);border-radius:var(--r-sm)">
+                  <table class="tbl">
+                    <thead><tr><th>Reported to</th><th>Reference</th><th>Transmitted</th><th>Acknowledged</th></tr></thead>
+                    <tbody>
+                      {e.receipts.map((r) => (
+                        <tr><td>{r.to}</td><td class="mono">{r.ref}</td><td class="mono n">{r.when}</td><td class="mono n">{r.ack}</td></tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
+            </div>
+            <div style="width:210px;flex:none;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);padding:12px">
+              <div class="tiny muted" style="font-weight:650;letter-spacing:0.06em;text-transform:uppercase;font-size:10px">Reporting clock</div>
+              <div class="clock" style="margin-top:5px">
+                <span class="big" style={`color:${clockPct(e) < 60 ? 'var(--ok)' : 'var(--warn)'}`}>{fmtElapsed(e.elapsedHours)}</span>
+              </div>
+              <div class="tiny muted">of {e.windowHours} h window</div>
+              <div class="meter" style="margin-top:7px"><i style={`width:${Math.max(4, clockPct(e))}%;background:${clockPct(e) < 60 ? 'var(--ok)' : 'var(--gold-500)'}`}></i></div>
+              <div class="tiny" style="margin-top:8px;line-height:1.5;color:var(--ink-2)">{e.clockNote}</div>
+              <div class="tiny mono muted" style="margin-top:8px">Onset {e.onset}</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-head"><h3>Stopping rules — §6.3 Table 7</h3></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Complication</th><th>Signs</th><th>Effect</th></tr></thead>
+          <tbody>
+            {stoppingRules.map((r) => (
+              <tr class={r.sae ? 'is-stop' : ''}>
+                <td>
+                  <div class="t">{r.complication}</div>
+                  <div class="s">{r.intervention}</div>
+                </td>
+                <td class="s">{r.signs}</td>
+                <td>
+                  <span class={`chip ${r.sae ? 'stop' : 'warn'}`}>Halts {r.halts}</span>
+                  {r.sae ? <div style="margin-top:4px"><span class="chip stop">SAE · 24 h</span></div> : null}
+                  {!r.rechallenge ? <div style="margin-top:4px"><span class="chip held">No re-administration</span></div> : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        <b>Additional stop triggers:</b> {additionalStopTriggers.join(' · ')}.
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><h3>Reporting windows</h3></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Event class</th><th>Window</th><th>To</th><th>Clock starts</th></tr></thead>
+            <tbody>
+              {reportingClocks.map((c) => (
+                <tr>
+                  <td class="t">{c.label}</td>
+                  <td class="n mono">{c.window} {c.unit}</td>
+                  <td class="s">{c.to}</td>
+                  <td class="s">{c.startsAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Deviation reason codes</h3><span class="hint">§4 — structured exception capture</span></div>
+        <div class="card-body flush">
+          {deviationReasonCodes.map((c) => (
+            <div class="check open" style="grid-template-columns:1fr auto">
+              <span>
+                <span class="cl mono" style="font-size:12px">{c.code}</span>
+                <span class="cm" style="display:block">{c.label}{c.note ? ` — ${c.note}` : ''}</span>
+              </span>
+              <span class={`chip ${c.count ? 'warn' : 'ok'}`}>{c.count}</span>
+            </div>
+          ))}
+        </div>
+        <div class="card-note">
+          Reason codes are the reason deviation data is analysable at all. Free text would have told
+          us three sessions ran late; codes told us <em>why</em>, and produced a roster change.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Protocol deviations</h3>
+      {role.allow.includes('analytics') ? <a class="btn sm" href={`${R}/analytics/`}>Deviation analytics</a> : null}
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Ref</th><th>Patient</th><th>Gate</th><th>What happened</th><th>Reason code</th><th>Impact & action</th><th>Status</th></tr></thead>
+        <tbody>
+          {deviations.map((d) => (
+            <tr>
+              <td class="mono">{d.id}<div class="s">{d.date}</div></td>
+              <td><div class="t">{d.patientName}</div><div class="s mono">{d.patient} · S{d.session}</div></td>
+              <td><span class="chip">Gate {d.gate}</span></td>
+              <td class="s" style="max-width:280px">{d.what}<div style="margin-top:4px" class="tiny muted">Detected by {d.detectedBy}</div></td>
+              <td><span class="chip warn mono" style="font-size:10px">{d.reasonCode}</span><div class="s" style="margin-top:3px">{d.reasonLabel}</div></td>
+              <td class="s" style="max-width:280px"><b>{d.clinicalImpact}</b><div style="margin-top:4px">{d.correctiveAction}</div><div class="tiny muted" style="margin-top:4px">{d.piReview}</div></td>
+              <td><span class="chip ok">{d.status}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

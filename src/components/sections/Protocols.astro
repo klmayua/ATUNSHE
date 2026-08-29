@@ -1,0 +1,292 @@
+---
+import {
+  protocolMeta, gates, course, followUpSchedule, protocolVersions, relatedProtocols,
+  inclusionCriteria, exclusionCriteria, baselinePanels, products, qualityMetrics,
+  totalGateChecks, totalSignatures, blockingChecks, standards,
+} from '../../data/protocol.mjs';
+import { appendices } from '../../data/appendices.mjs';
+import { ROLES } from '../../data/roles.mjs';
+const { role } = Astro.props;
+const R = `/${role.id}`;
+---
+
+<div class="stack">
+  <div class="grid g-2-1">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h3>{protocolMeta.short}</h3>
+          <div class="tiny muted mono" style="margin-top:3px">{protocolMeta.id}</div>
+        </div>
+        <span class="chip ok dot">v{protocolMeta.version} · {protocolMeta.status}</span>
+      </div>
+      <div class="card-body">
+        <p class="tiny" style="margin:0 0 14px;color:var(--ink-2);line-height:1.6">{protocolMeta.title}</p>
+        <dl class="defs">
+          <div class="def"><dt>Design</dt><dd>{protocolMeta.design}</dd></div>
+          <div class="def"><dt>Indication</dt><dd>{protocolMeta.indication}</dd></div>
+          <div class="def"><dt>Regimen</dt><dd>{protocolMeta.regimen}</dd></div>
+          <div class="def"><dt>Course total per patient</dt><dd>{protocolMeta.courseTotal}</dd></div>
+          <div class="def"><dt>Sponsor</dt><dd>{protocolMeta.sponsor}</dd></div>
+          <div class="def"><dt>Site / PI</dt><dd>{protocolMeta.site} · {protocolMeta.pi}</dd></div>
+          <div class="def"><dt>Effective / review</dt><dd class="mono">{protocolMeta.effective} → {protocolMeta.review}</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="stats" style="grid-template-columns:1fr 1fr">
+        <div class="stat"><div class="k">Gates</div><div class="v">{gates.length}</div></div>
+        <div class="stat"><div class="k">Blocking checks</div><div class="v">{totalGateChecks}</div></div>
+        <div class="stat"><div class="k">Signatures / day</div><div class="v">{totalSignatures}</div></div>
+        <div class="stat"><div class="k">Bound forms</div><div class="v">9</div></div>
+      </div>
+      <div class="note">
+        <span class="lbl">What "executable" means here</span>
+        The protocol document is 11 sections and 11 tables. The engine holds it as
+        <b> {gates.length} gates, {totalGateChecks} blocking checks, {totalSignatures} required signatures,
+        7 stopping rules and 4 reporting clocks</b>, each carrying the clause it enforces. Change the
+        document and you change the machine — they cannot drift apart, because there is only one of them.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title">Executable definition — the treatment day</div>
+  <div class="card">
+    <div class="card-body flush">
+      {gates.map((g, i) => {
+        const owner = ROLES.find((r) => r.id === g.owner);
+        return (
+          <div style={`padding:16px;${i ? 'border-top:1px solid var(--line)' : ''}`}>
+            <div class="row-between" style="align-items:flex-start">
+              <div style="display:flex;gap:13px;align-items:flex-start;min-width:0">
+                <div class="gk" style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;background:var(--navy-800);color:#fff;flex:none">{g.key}</div>
+                <div style="min-width:0">
+                  <div style="font-size:14.5px;font-weight:640;letter-spacing:-0.012em">{g.name}</div>
+                  <div class="chip-row" style="margin-top:5px">
+                    <span class="chip ref">{g.ref}</span>
+                    <span class="chip">Owner: {owner ? owner.role : g.owner}</span>
+                    <span class="chip">Writes Appendix {g.appendix}</span>
+                    <span class="chip">{blockingChecks(g).length} blocking</span>
+                    {g.signatures.length ? <span class="chip warn">{g.signatures.length} signature{g.signatures.length > 1 ? 's' : ''}</span> : null}
+                    {g.twoPerson ? <span class="chip stop">Two-person</span> : null}
+                  </div>
+                  <p class="tiny" style="margin:8px 0 0;color:var(--ink-2);line-height:1.6;max-width:96ch">{g.summary}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+    <div class="card-note">
+      <a href={`${R}/session/`} style="color:var(--navy-600);font-weight:600">Watch this definition executing on a live patient →</a>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-head"><h3>Course structure</h3><span class="hint">§5.2 Table 5</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Session</th><th>Week</th><th>Intravenous</th><th>Intranasal</th></tr></thead>
+          <tbody>
+            {course.map((c) => (
+              <tr><td class="n">{c.session}</td><td class="n">{c.week}</td><td class="s">{c.iv}</td><td class="s">{c.intranasal}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">Fixed dose at every session. No escalation across the course — the engine has no dose-escalation path to take.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Follow-up schedule</h3><span class="hint">§5.3 Table 6</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>When</th><th>Clinic actions</th></tr></thead>
+          <tbody>
+            {followUpSchedule.map((f) => (
+              <tr><td class="t nowrap">{f.when}</td><td class="s">{f.actions}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title">Version control & approval</div>
+  <div class="card">
+    <div class="card-body flush">
+      {protocolVersions.map((v) => (
+        <div style="padding:16px;border-bottom:1px solid var(--line)">
+          <div class="row-between" style="align-items:flex-start">
+            <div>
+              <div class="chip-row">
+                <span class="chip mono" style="font-weight:700">v{v.version}</span>
+                <span class={`chip ${v.state === 'Effective' ? 'ok' : 'warn'}`}>{v.state}</span>
+                <span class="chip">Effective: {v.effective}</span>
+                <span class="chip ref">{v.date} · {v.author}</span>
+              </div>
+              <p class="tiny" style="margin:9px 0 0;color:var(--ink-2);line-height:1.6;max-width:96ch">{v.note}</p>
+              <div class="chip-row" style="margin-top:9px">
+                {v.approvals.map((a) => (
+                  <span class={`chip ${a.includes('✓') ? 'ok' : a.includes('pending') ? 'warn' : ''}`}>{a}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="card-note">
+      <b>v1.1 is in review and is not running.</b> Draft → review → approval → effective dating → rollback
+      is the lifecycle, and the platform will not execute a version that has not cleared it. That is
+      the difference between a protocol engine and a wiki.
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-head"><h3>Eligibility — §5.1 / Appendix A</h3></div>
+      <div class="card-body">
+        <div class="tiny" style="font-weight:700;color:var(--ok);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:7px">Inclusion — all must be met</div>
+        <div class="stack-sm">
+          {inclusionCriteria.map((c) => <div class="tiny" style="display:flex;gap:8px"><span style="color:var(--ok);font-weight:700">✓</span><span>{c}</span></div>)}
+        </div>
+        <hr class="hr" />
+        <div class="tiny" style="font-weight:700;color:var(--stop);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:7px">Exclusion — any one excludes</div>
+        <div class="stack-sm">
+          {exclusionCriteria.map((c) => <div class="tiny" style="display:flex;gap:8px"><span style="color:var(--stop);font-weight:700">✕</span><span>{c}</span></div>)}
+        </div>
+      </div>
+      <div class="card-note">
+        Two patients in the cohort sit against these lists right now: ATN-0007 excluded on uncontrolled
+        hypertension, ATN-0006 held pending ENT review of nasal anatomy.
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><h3>Baseline panels</h3><span class="hint">§5.1</span></div>
+        <div class="card-body stack-sm">
+          {baselinePanels.map((b) => (
+            <div>
+              <div class="tiny" style="font-weight:650;color:var(--ink-2);margin-bottom:4px">{b.group}</div>
+              <div class="chip-row">{b.items.map((i) => <span class="chip">{i}</span>)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Products under protocol control</h3><span class="hint">§4</span></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Product</th><th>Route</th><th>Strength</th><th>Storage / window</th></tr></thead>
+            <tbody>
+              {products.map((p) => (
+                <tr>
+                  <td><div class="t">{p.name}</div><div class="s">{p.presentation}{p.device ? ` · ${p.device}` : ''}</div></td>
+                  <td class="s">{p.route}</td>
+                  <td class="s">{p.strength}</td>
+                  <td class="s">{p.storage}<div class="tiny muted">{p.thawWindow}</div></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title">Bound working forms</div>
+  <div class="card">
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Appendix</th><th>Form</th><th>Owner</th><th>Bound to</th><th></th></tr></thead>
+        <tbody>
+          {appendices.map((a) => {
+            const owner = ROLES.find((r) => r.id === a.owner);
+            return (
+              <tr>
+                <td class="mono" style="font-weight:700">{a.id}</td>
+                <td><div class="t">{a.title}</div><div class="s">{a.purpose}</div></td>
+                <td class="s">{owner ? owner.role : a.owner}</td>
+                <td class="s">{a.boundTo}<div><span class="chip ref" style="margin-top:4px">{a.ref}</span></div></td>
+                <td><a class="btn sm" href={`${R}/form/${a.id}/`}>Open</a></td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec-title">Registry — other protocols</div>
+  <div class="card">
+    <div class="card-body flush">
+      {relatedProtocols.map((p) => (
+        <div style="padding:16px">
+          <div class="row-between" style="align-items:flex-start">
+            <div>
+              <div class="chip-row">
+                <span class="chip ref">{p.id}</span>
+                <span class="chip warn">{p.status}</span>
+                <span class="chip">{p.version}</span>
+                <span class="chip held">{p.enrolled} enrolled</span>
+              </div>
+              <div style="font-size:14px;font-weight:640;margin-top:7px">{p.short}</div>
+              <div class="tiny muted" style="margin-top:3px">{p.indication} · {p.design}</div>
+              <p class="tiny" style="margin:8px 0 0;color:var(--ink-2);line-height:1.6;max-width:96ch">{p.note}</p>
+            </div>
+            <span class="chip held">Not executable</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sec-title">Standards enforced as workflow</div>
+  <div class="card">
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Standard</th><th>What it governs</th><th>How this platform enforces it</th><th>Where</th></tr></thead>
+        <tbody>
+          {standards.map((s) => (
+            <tr>
+              <td><div class="t">{s.code}</div><div class="s">{s.name}{s.adopted !== '—' ? ` · ${s.adopted}` : ''}</div></td>
+              <td class="s">{s.governs}</td>
+              <td class="s">{s.enforced}</td>
+              <td>{role.allow.includes(s.where) ? <a class="btn sm" href={`${R}/${s.where}/`}>See it</a> : <span class="chip held">—</span>}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <div class="card-note">
+      From the Background Brief: "The protocol you have written already embodies most of these.
+      The platform's job is to make each one enforceable in daily operation."
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Quality metrics</h3><span class="hint">§7 Table 8</span></div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Metric</th><th>Target</th><th>Measured by</th><th>Frequency</th><th>Actual</th></tr></thead>
+        <tbody>
+          {qualityMetrics.map((q) => (
+            <tr>
+              <td class="t">{q.metric}</td>
+              <td class="s">{q.target}</td>
+              <td class="s">{q.measure}</td>
+              <td class="s">{q.frequency}</td>
+              <td><span class={`chip ${q.status === 'ok' ? 'ok' : 'warn'}`}>{q.actual}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

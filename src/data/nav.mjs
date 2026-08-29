@@ -1,77 +1,69 @@
-// Shared, RBAC-aware navigation model used by BOTH the dashboard ([persona].astro)
-// and the screen shell ([screen].astro) so the left panel never diverges.
-// Each nav entry is a real, reachable screen (not just the first of a group).
+// ---------------------------------------------------------------------------
+// NAVIGATION — role-filtered, server-rendered.
+//
+// Routes are /{roleId}/{section}. Because every page is generated per role,
+// access control is resolved at build time rather than hidden client-side:
+// a section a role may not see is not rendered, not linked, and has no page.
+// ---------------------------------------------------------------------------
 
-import { screens } from './screens.mjs';
+export const SECTIONS = [
+  { key: 'command', label: 'Command centre', group: 'Today', blurb: 'What is running, what is held, what needs a decision' },
+  { key: 'schedule', label: 'Chairs & schedule', group: 'Today', blurb: 'Today’s sessions and the week ahead' },
 
-// Group label -> group id (matches personas.mjs allow/deny groups)
-export const GROUP_LABELS = [
-  ['Overview', 'Dashboards'],
-  ['Patients', 'Patient'],
-  ['Appointments', 'Scheduling'],
-  ['Clinical', 'Clinical'],
-  ['Protocols', 'Protocols'],
-  ['Trust & Governance', 'Compliance & Ledgers'],
-  ['Billing', 'Billing & Finance'],
-  ['Ogami', 'AI Assistant'],
-  ['Reports', 'Operations & Intelligence'],
-  ['Administration', 'Administration'],
-  ['Mobile', 'Mobile'],
+  { key: 'cohort', label: 'Cohort', group: 'Clinical', blurb: 'All eight patients and where each sits in the protocol' },
+  { key: 'session', label: 'Treatment day', group: 'Clinical', blurb: 'The live protocol runner' },
+  { key: 'safety', label: 'Safety & events', group: 'Clinical', blurb: 'AE/SAE register with reporting clocks, deviations, stopping rules' },
+
+  { key: 'protocols', label: 'Protocol registry', group: 'Protocol', blurb: 'Versions, approval state, executable definition' },
+  { key: 'forms', label: 'Working forms', group: 'Protocol', blurb: 'Appendices A–I bound to gates' },
+  { key: 'learning', label: 'Learning loop', group: 'Protocol', blurb: 'Protocol → execution → data → AI → human review → improvement' },
+  { key: 'analytics', label: 'Protocol analytics', group: 'Protocol', blurb: 'Adherence by gate, drift, deviation reason codes' },
+
+  { key: 'product', label: 'Product & cold chain', group: 'Custody', blurb: 'Lots, CoA, temperature, thaw windows, reconciliation' },
+  { key: 'device', label: 'ViaNase™ device', group: 'Custody', blurb: 'Performance checks, use record, cleaning, malfunction' },
+
+  { key: 'consent', label: 'Consent register', group: 'Trust', blurb: 'Consent as live state, versions, LAR, withdrawal' },
+  { key: 'custody', label: 'Governance ledger', group: 'Trust', blurb: 'Hash-chained chain of custody' },
+  { key: 'audit', label: 'Audit & data governance', group: 'Trust', blurb: 'ALCOA+ trail, break-glass, residency, sponsor export' },
+
+  { key: 'crm', label: 'Enquiries & Ogami', group: 'Operations', blurb: 'Funnel, conversations, engagement' },
+  { key: 'billing', label: 'Billing & revenue', group: 'Operations', blurb: 'Charge capture bound to delivered care' },
+  { key: 'people', label: 'People & institutions', group: 'Operations', blurb: 'Credentials, training, partners' },
+  { key: 'mobile', label: 'Mobile & offline', group: 'Operations', blurb: 'What may go offline, and what may not' },
+
+  { key: 'architecture', label: 'Platform architecture', group: 'Programme', blurb: 'Layers, domains, lifecycle, tenancy' },
+  { key: 'delivery', label: 'Delivery plan', group: 'Programme', blurb: '6-week build, 6-week bedding-down, open decisions' },
+
+  { key: 'diary', label: 'Daily diary', group: 'My care', blurb: 'Record how the day went' },
+  { key: 'portal', label: 'Our care plan', group: 'My care', blurb: 'Visits, what to expect, who to call' },
+  { key: 'ogami', label: 'Ask Ogami', group: 'My care', blurb: 'Questions, appointments, guidance' },
 ];
 
-// Mobile is a companion app — one nav entry (home), not 16 workflow links in the staff nav.
-const MOBILE_HOME = '484bcbff1a75426cb9f6c1ee990f2e06';
+export const SECTION_BY_KEY = Object.fromEntries(SECTIONS.map((s) => [s.key, s]));
 
-// Screens we surface in the left panel per group. A clinician's "Patients" view
-// should show the clinical record (Directory/Profile/Timeline), NOT the patient portal.
-const PATIENT_CLINICAL = ['fe22f6b0e70e44e69c62b4c69019163d', 'e1c47f5b53fb4efeb13cd44e5e82cbfa', 'eaeb377d6e70427195a93f5f7fae47f5'];
+const GROUP_ORDER = ['Today', 'Clinical', 'Protocol', 'Custody', 'Trust', 'Operations', 'Programme', 'My care'];
 
-export function screensForGroup(group) {
-  // Non-asset screens in this group, stable order from screens.mjs
-  return screens.filter((s) => !s.asset && s.group === group);
+/** Sections this role may reach, grouped for the sidebar. */
+export function navFor(role) {
+  if (!role) return [];
+  const allowed = SECTIONS.filter((s) => role.allow.includes(s.key));
+  return GROUP_ORDER.map((g) => ({
+    group: g,
+    items: allowed.filter((s) => s.group === g).map((s) => ({ ...s, href: `/${role.id}/${s.key}/` })),
+  })).filter((g) => g.items.length);
 }
 
-export function canView(persona, group) {
-  if (!persona) return false;
-  if (persona.deny && persona.deny.includes(group)) return false;
-  return persona.allow.includes(group);
-}
-
-// Build the full nav tree for a persona.
-// Returns: [{ label, group, items: [{ title, href, id }] }]
-export function navFor(persona) {
-  if (!persona) return [];
-  const tree = [];
-  for (const [label, group] of GROUP_LABELS) {
-    if (!canView(persona, group)) continue;
-    let items;
-    if (group === 'Dashboards') {
-      items = [{ title: 'My dashboard', href: `/app/dashboard/${persona.id}/`, id: '__dash' }];
-    } else if (group === 'Patient' && persona.id !== 'patient') {
-      // Clinician/attending/mobile see the clinical record views, not the portal home
-      items = screens
-        .filter((s) => !s.asset && s.group === 'Patient' && PATIENT_CLINICAL.includes(s.id))
-        .map((s) => ({ title: s.title, href: `/app/${s.id}/`, id: s.id }));
-    } else if (group === 'Mobile') {
-      // Companion app: single entry, not 16 links
-      const m = screens.find((s) => !s.asset && s.id === MOBILE_HOME);
-      items = m ? [{ title: 'Mobile companion', href: `/app/${m.id}/`, id: m.id }] : [];
-    } else {
-      items = screensForGroup(group).map((s) => ({ title: s.title, href: `/app/${s.id}/`, id: s.id }));
+/** Flat list of buildable {role, section} pairs for getStaticPaths. */
+export function rolePages(roles) {
+  const out = [];
+  for (const r of roles) {
+    for (const s of SECTIONS) {
+      if (r.allow.includes(s.key)) out.push({ role: r, section: s });
     }
-    if (items.length) tree.push({ label, group, items });
   }
-  return tree;
+  return out;
 }
 
-// Flat list of {title, href, id} for a persona (used by client search / deep-link guard).
-export function navLinks(persona) {
-  return navFor(persona).flatMap((g) => g.items);
-}
-
-// Resolve a "semantic" action to a concrete href for this persona.
-// e.g. startEncounter -> first Clinical screen; openRecord(ATN-xxx) -> that patient's profile.
-export function hrefForGroup(persona, group) {
-  const g = navFor(persona).find((n) => n.group === group);
-  return g && g.items[0] ? g.items[0].href : `/app/dashboard/${persona.id}/`;
+export function sectionTitle(key) {
+  return SECTION_BY_KEY[key] ? SECTION_BY_KEY[key].label : key;
 }

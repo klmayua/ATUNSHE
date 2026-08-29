@@ -1,0 +1,351 @@
+---
+import Shell from '../../../components/Shell.astro';
+import { ROLES } from '../../../data/roles.mjs';
+import { appendices } from '../../../data/appendices.mjs';
+import { inclusionCriteria, exclusionCriteria, gates, monitoringTimepoints, vitalFields, reactionWatch, gateByKey } from '../../../data/protocol.mjs';
+import { tempLog, thawLog, reconciliation, deviceUseLog } from '../../../data/inventory.mjs';
+import { patientById } from '../../../data/cohort.mjs';
+
+export function getStaticPaths() {
+  const out = [];
+  for (const role of ROLES) {
+    if (!role.allow.includes('form')) continue;
+    for (const a of appendices) {
+      out.push({ params: { role: role.id, appendix: a.id }, props: { role, a } });
+    }
+  }
+  return out;
+}
+
+const { role, a } = Astro.props;
+const R = `/${role.id}`;
+const owner = ROLES.find((r) => r.id === a.owner);
+const demo = patientById('ATN-0004');
+---
+
+<Shell
+  role={role}
+  section="forms"
+  title={`Appendix ${a.id} — ${a.title}`}
+  sub={a.purpose}
+  refs={[a.ref, `Owner: ${owner ? owner.role : a.owner}`, a.boundTo]}
+  pips={{}}
+>
+  <div class="stack">
+    <div class="note live">
+      <span class="lbl">Bound to the protocol, not stored beside it</span>
+      This form is written by <b>{a.boundTo}</b>. The fields the engine can assert — consent state, lot
+      identity, cold-chain status, thaw window, timestamps, signatures — are filled from the record of
+      execution. The fields a clinician must judge stay blank until a clinician judges them.
+    </div>
+
+    <div class="form-sheet">
+      <div class="form-hd">
+        <div class="fk">Clinical protocol — working form · Appendix {a.id}</div>
+        <h2>{a.title}</h2>
+        <div class="fp">{a.purpose}</div>
+      </div>
+
+      <div class="form-meta">
+        {a.header.map((h) => (
+          <div><div class="k">{h.label}</div><div class="v">{h.value}</div></div>
+        ))}
+        <div><div class="k">Patient ID</div><div class="v">{demo.id}</div></div>
+        <div><div class="k">Visit / date</div><div class="v">26 Aug 2026</div></div>
+        <div><div class="k">Initials</div><div class="v">FA</div></div>
+      </div>
+
+      {a.sections.map((s) => (
+        <div class="form-sec">
+          <div class="form-sec-hd">{s.title}</div>
+
+          {s.kind === 'criteria' && (
+            <div class="form-sec-body flush">
+              {(s.source === 'inclusion' ? inclusionCriteria : s.source === 'exclusion' ? exclusionCriteria : s.items).map((c) => (
+                <div class="crit">
+                  <span class={`bx ${s.polarity === 'yes' ? 'y' : 'n'}`}>{s.polarity === 'yes' ? 'Y' : 'N'}</span>
+                  <span>{c}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {s.kind === 'checklist' && (
+            <div class="form-sec-body flush">
+              {s.items.map((i) => (
+                <div class="crit"><span class="bx"></span><span>{i}</span></div>
+              ))}
+            </div>
+          )}
+
+          {s.kind === 'gate' && (() => {
+            const g = gateByKey(s.gate);
+            return (
+              <div class="form-sec-body flush">
+                {g.checks.map((c) => (
+                  <div class="crit">
+                    <span class={`bx ${c.source === 'system' ? 'y' : ''}`}>{c.source === 'system' ? '✓' : ''}</span>
+                    <span>
+                      {c.label}
+                      <div class="tiny muted" style="margin-top:2px">
+                        <span class={`src ${c.source}`}>{c.source === 'system' ? 'SYSTEM-ASSERTED' : 'OPERATOR'}</span>
+                        <span style="margin-left:6px">{c.ref}</span>
+                      </div>
+                    </span>
+                  </div>
+                ))}
+                {g.signatures.length ? (
+                  <div class="form-sec-body">
+                    <div class="sig-grid">
+                      {g.signatures.map((sg) => (
+                        <div class="sig-slot">
+                          <div class="sk">{sg.label}</div>
+                          <div class="sl2"></div>
+                          <div class="sd">{sg.mustDifferFrom ? 'Must differ from verifier' : sg.requires === 'canAuthorise' ? 'Physician authorisation' : 'Name / date'}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            );
+          })()}
+
+          {s.kind === 'table' && (
+            <div class="form-sec-body flush">
+              <div class="tbl-wrap">
+                <table class="tbl">
+                  <thead><tr>{s.columns.map((c) => <th>{c}</th>)}</tr></thead>
+                  <tbody>
+                    {s.rows.map((r) => (
+                      <tr>{r.map((cell, i) => <td class={i === 0 ? 't' : 's'}>{cell || '—'}</td>)}</tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {s.kind === 'fields' && (
+            <div class="form-sec-body">
+              <dl class="defs">
+                {s.rows.map((r) => (
+                  <div class="def"><dt>{r.label}</dt><dd>{r.value}</dd></div>
+                ))}
+              </dl>
+            </div>
+          )}
+
+          {s.kind === 'monitoring' && (
+            <div class="form-sec-body flush">
+              <div class="tbl-wrap">
+                <table class="tbl">
+                  <thead><tr><th>Timepoint</th><th>Time</th>{vitalFields.map((f) => <th>{f}</th>)}<th>Init.</th></tr></thead>
+                  <tbody>
+                    {monitoringTimepoints.map((t) => (
+                      <tr>
+                        <td class="t">{t.label}</td>
+                        <td class="mono muted">{t.key === 'pre' ? '09:24' : '—'}</td>
+                        {t.key === 'pre' ? (
+                          <>
+                            <td class="mono">{demo.vitalsPre.bp}</td>
+                            <td class="mono">{demo.vitalsPre.hr}</td>
+                            <td class="mono">{demo.vitalsPre.rr}</td>
+                            <td class="mono">{demo.vitalsPre.spo2}</td>
+                            <td class="mono">{demo.vitalsPre.temp}</td>
+                            <td class="s">{demo.vitalsPre.neuro}</td>
+                            <td class="mono">AB</td>
+                          </>
+                        ) : (
+                          <>{vitalFields.map(() => <td class="muted">—</td>)}<td class="muted">—</td></>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {s.kind === 'watch' && (
+            <div class="form-sec-body flush">
+              {reactionWatch.map((w) => (
+                <div class="crit"><span class="bx"></span><span>{w}</span></div>
+              ))}
+            </div>
+          )}
+
+          {s.kind === 'coldchain' && (
+            <div class="form-sec-body flush">
+              <div class="tbl-wrap">
+                <table class="tbl">
+                  <thead><tr><th>Date</th><th>Time</th><th>Unit</th><th>Temp (°C)</th><th>In range?</th><th>Initials</th></tr></thead>
+                  <tbody>
+                    {tempLog.map((t) => (
+                      <tr class={t.inRange ? '' : 'is-stop'}>
+                        <td class="n">{t.date}</td>
+                        <td class="mono n">{t.time}</td>
+                        <td>{t.freezer}</td>
+                        <td class="mono n" style={t.inRange ? '' : 'color:var(--stop);font-weight:700'}>{t.temp}</td>
+                        <td><span class={`chip ${t.inRange ? 'ok' : 'stop'}`}>{t.inRange ? 'Y' : 'N'}</span></td>
+                        <td class="s">{t.by}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {s.kind === 'thaw' && (
+            <div class="form-sec-body flush">
+              <div class="tbl-wrap">
+                <table class="tbl">
+                  <thead><tr><th>Product / lot</th><th>Thaw time</th><th>Window</th><th>Used by (within window)</th><th>Operator</th></tr></thead>
+                  <tbody>
+                    {thawLog.map((t) => (
+                      <tr class={t.status === 'open' ? 'is-live' : ''}>
+                        <td><div class="t">{t.product}</div><div class="s mono">{t.lot}</div></td>
+                        <td class="mono n">{t.thawed}</td>
+                        <td class="n">{t.window}</td>
+                        <td class="s">{t.usedBy}</td>
+                        <td>{t.operator}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {s.kind === 'reconciliation' && (
+            <div class="form-sec-body flush">
+              <div class="tbl-wrap">
+                <table class="tbl">
+                  <thead><tr><th>Field</th><th>ExoPure™ 140B</th><th>Rejuvenate Serum™</th></tr></thead>
+                  <tbody>
+                    {['received', 'administered', 'wasted', 'quarantined', 'returned', 'balance'].map((k) => (
+                      <tr>
+                        <td class="t" style="text-transform:capitalize">{k}</td>
+                        <td class="n mono">{reconciliation.rows[0][k]}</td>
+                        <td class="n mono">{reconciliation.rows[1][k]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-note">Course total per patient: {reconciliation.perPatientCourse}. Last reconciled {reconciliation.lastReconciled}. Discrepancies: {reconciliation.discrepancies}.</div>
+            </div>
+          )}
+
+          {s.kind === 'devicelog' && (
+            <div class="form-sec-body flush">
+              <div class="tbl-wrap">
+                <table class="tbl">
+                  <thead><tr><th>Date</th><th>Patient ID</th><th>Product / lot</th><th>Delivered</th><th>Operator</th></tr></thead>
+                  <tbody>
+                    {deviceUseLog.map((u) => (
+                      <tr class={u.delivered.startsWith('NOT') ? 'is-stop' : ''}>
+                        <td class="n">{u.date}</td>
+                        <td class="mono">{u.patient}</td>
+                        <td class="mono">{u.lot}</td>
+                        <td class="s">{u.delivered}</td>
+                        <td>{u.operator}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {s.kind === 'diary' && (
+            <div class="form-sec-body flush">
+              <div class="tbl-wrap">
+                <table class="tbl">
+                  <thead><tr><th>Date</th><th>Sleep</th><th>Appetite</th><th>Mood / behaviour</th><th>Alertness / memory</th><th>Any new symptom?</th><th>Notes</th></tr></thead>
+                  <tbody>
+                    {demo.diary.map((d) => (
+                      <tr>
+                        <td class="nowrap">{d.date}</td>
+                        <td class="mono n" style="font-size:15px;font-weight:700">{d.sleep}</td>
+                        <td class="mono n" style="font-size:15px;font-weight:700">{d.appetite}</td>
+                        <td class="mono n" style="font-size:15px;font-weight:700">{d.mood}</td>
+                        <td class="mono n" style="font-size:15px;font-weight:700">{d.alertness}</td>
+                        <td class="s">{d.symptom}</td>
+                        <td class="s">{d.notes || '—'}</td>
+                      </tr>
+                    ))}
+                    {[1, 2, 3].map(() => (
+                      <tr><td class="muted">—</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {s.kind === 'urgent' && (
+            <div class="form-sec-body">
+              <div class="grid g2" style="gap:8px">
+                {s.items.map((i) => <div class="note stop" style="margin:0">{i}</div>)}
+              </div>
+            </div>
+          )}
+
+          {s.kind === 'note' && (
+            <div class="form-sec-body"><p class="tiny" style="margin:0;color:var(--ink-2);line-height:1.6">{s.body}</p></div>
+          )}
+
+          {s.kind === 'decision' && (
+            <div class="form-sec-body">
+              <div class="btn-row">
+                {s.options.map((o) => <span class="btn">{o}</span>)}
+              </div>
+            </div>
+          )}
+
+          {s.kind === 'freetext' && (
+            <div class="form-sec-body"><div class="blank-box"></div></div>
+          )}
+        </div>
+      ))}
+
+      {a.signatures.length ? (
+        <div class="form-sec">
+          <div class="form-sec-hd">Signatures</div>
+          <div class="form-sec-body">
+            <div class="sig-grid">
+              {a.signatures.map((s) => (
+                <div class="sig-slot">
+                  <div class="sk">{s}</div>
+                  <div class="sl2"></div>
+                  <div class="sd">Name / signature · date</div>
+                </div>
+              ))}
+            </div>
+            <div class="note" style="margin-top:14px">
+              <b>Electronic signature, not a typed name.</b> A signature here binds the authenticated
+              identity, the role held at that moment, the exact record version and a server timestamp,
+              and appends to the governance ledger. It cannot be applied retrospectively or by another
+              user — which is what 21 CFR Part 11 principles and ALCOA+ attributability actually require.
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Other forms in the suite</h3></div>
+      <div class="card-body">
+        <div class="chip-row">
+          {appendices.map((x) => (
+            <a class={`chip ${x.id === a.id ? 'live' : ''}`} href={`${R}/form/${x.id}/`} style="padding:6px 11px;font-size:12px">
+              {x.id} — {x.title}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</Shell>

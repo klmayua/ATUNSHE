@@ -1,0 +1,195 @@
+---
+// Caregiver views — deliberately the smallest surface in the platform.
+// Appendix I is a paper diary for a family member. Rendering it as a clinical
+// console would be a design failure, so this is plain language, large targets
+// and one urgent path.
+import { patientById } from '../../data/cohort.mjs';
+import { appendixById } from '../../data/appendices.mjs';
+import { followUpSchedule } from '../../data/protocol.mjs';
+const { role, view } = Astro.props;
+const R = `/${role.id}`;
+const p = patientById(role.scopedTo || 'ATN-0004');
+const diaryForm = appendixById['I'];
+const urgent = diaryForm.sections.find((s) => s.kind === 'urgent');
+---
+
+{view === 'diary' && (
+  <div class="stack" style="max-width:860px">
+    <div class="note ok">
+      <span class="lbl">Thank you for keeping this diary</span>
+      Your notes are read by the clinic before every session. Mrs. Adewale's team looked at your entry
+      for 23 August at her last visit. It takes about a minute — there are no wrong answers.
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>How was today?</h3><span class="hint">Wednesday 26 August</span></div>
+      <div class="card-body">
+        <p class="tiny muted" style="margin:0 0 16px">
+          For sleep, appetite, mood and alertness you can use: <b>+</b> better than usual ·
+          <b> =</b> the same · <b>−</b> worse than usual.
+        </p>
+        <div class="grid g4" style="gap:12px">
+          {['Sleep', 'Appetite', 'Mood / behaviour', 'Alertness / memory'].map((f) => (
+            <div>
+              <div class="tiny" style="font-weight:640;margin-bottom:7px">{f}</div>
+              <div style="display:flex;gap:6px">
+                {['+', '=', '−'].map((v) => (
+                  <button class="btn" style="flex:1;font-size:17px;font-weight:700;padding:11px 0">{v}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style="margin-top:18px">
+          <div class="tiny" style="font-weight:640;margin-bottom:7px">Any new symptom?</div>
+          <div class="blank-box" style="min-height:54px"></div>
+        </div>
+        <div style="margin-top:14px">
+          <div class="tiny" style="font-weight:640;margin-bottom:7px">Anything else you noticed</div>
+          <div class="blank-box" style="min-height:70px"></div>
+        </div>
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn primary">Save today's entry</button>
+          <span class="chip ok dot">Works without internet — it will send when you are back online</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="border-color:var(--stop-line)">
+      <div class="card-head" style="background:var(--stop-bg);border-color:var(--stop-line)">
+        <h3 style="color:var(--stop)">Call the clinic right away if you notice</h3>
+      </div>
+      <div class="card-body">
+        <div class="grid g2" style="gap:10px">
+          {urgent.items.map((i) => (
+            <div class="note stop" style="margin:0">{i}</div>
+          ))}
+        </div>
+        <div class="btn-row" style="margin-top:16px">
+          <a class="btn danger" href="tel:+2348000000000">Call the clinic — 0800 000 0000</a>
+          <a class="btn" href="tel:+2348000000001">Emergency — 0800 000 0001</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Your recent entries</h3><span class="chip ok">{p.caregiver.diaryCompliance}</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Date</th><th>Sleep</th><th>Appetite</th><th>Mood</th><th>Alertness</th><th>New symptom</th><th>Notes</th></tr></thead>
+          <tbody>
+            {p.diary.map((d) => (
+              <tr>
+                <td class="t nowrap">{d.date}</td>
+                <td class="n mono" style="font-size:15px;font-weight:700">{d.sleep}</td>
+                <td class="n mono" style="font-size:15px;font-weight:700">{d.appetite}</td>
+                <td class="n mono" style="font-size:15px;font-weight:700">{d.mood}</td>
+                <td class="n mono" style="font-size:15px;font-weight:700">{d.alertness}</td>
+                <td class="s">{d.symptom}</td>
+                <td class="s">{d.notes || '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'portal' && (
+  <div class="stack" style="max-width:860px">
+    <div class="card">
+      <div class="card-head"><h3>{p.name}</h3><span class="chip live">Session {p.sessionNo} of 6</span></div>
+      <div class="card-body">
+        <div class="dots" style="margin-bottom:14px">
+          {p.sessions.map((s) => (
+            <span class={`dot ${s.status === 'Complete' ? 'done' : s.status === 'In progress' ? 'now' : ''}`} style="width:38px;height:32px;font-size:12px">{s.n}</span>
+          ))}
+        </div>
+        <dl class="defs">
+          <div class="def"><dt>Today</dt><dd>Session 4 of 6, at the clinic now. You are here with her.</dd></div>
+          <div class="def"><dt>Next visit</dt><dd>Wednesday 2 September, 09:30 — Session 5 of 6</dd></div>
+          <div class="def"><dt>Course finishes</dt><dd>Wednesday 9 September — Session 6 of 6</dd></div>
+          <div class="def"><dt>Your role</dt><dd>Daily diary, and coming to each visit. That is genuinely it.</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>What happens at each visit</h3></div>
+      <div class="card-body">
+        <div class="tl">
+          <div class="tl-item ok"><div class="tl-what">Before you arrive</div><div class="tl-detail">The pharmacist checks the medicine and the team checks the equipment. If anything is not right, the visit is postponed — this has happened to another family this week, and it is the system working as it should.</div></div>
+          <div class="tl-item ok"><div class="tl-what">Check-in — about 20 minutes</div><div class="tl-detail">Identity confirmed, consent confirmed, your diary reviewed, and her blood pressure, pulse, breathing, oxygen and temperature recorded. The doctor examines her and confirms it is safe to go ahead.</div></div>
+          <div class="tl-item ok"><div class="tl-what">Safety check — about 5 minutes</div><div class="tl-detail">Two staff members independently confirm the right person, right medicine, right dose and right equipment, and the doctor signs. One person cannot do this alone.</div></div>
+          <div class="tl-item live"><div class="tl-what">The drip — 10 to 15 minutes</div><div class="tl-detail">Given slowly, in small amounts, with pauses. A nurse stays with her throughout.</div></div>
+          <div class="tl-item"><div class="tl-what">The nasal spray — a few minutes</div><div class="tl-detail">Given with a special device after her nose is checked.</div></div>
+          <div class="tl-item"><div class="tl-what">Watching afterwards — 2 hours</div><div class="tl-detail">Checks at 15, 30, 60 and 120 minutes. You can sit with her. The doctor confirms she is ready before you go home.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>After the course finishes</h3></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>When</th><th>What happens</th></tr></thead>
+          <tbody>
+            {followUpSchedule.filter((f) => f.key !== 'weekly').map((f) => (
+              <tr><td class="t nowrap">{f.when}</td><td class="s">{f.actions}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">These appointments are already in the system. The clinic will contact you before each one.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Consent — and how to change your mind</h3></div>
+      <div class="card-body">
+        <dl class="defs">
+          <div class="def"><dt>Signed</dt><dd>{p.consent.signed} by {p.consent.signedBy}</dd></div>
+          <div class="def"><dt>Status</dt><dd><span class="chip ok">{p.consent.status}</span></dd></div>
+          <div class="def"><dt>You agreed to</dt><dd>{p.consent.purposes.join(' · ')}</dd></div>
+        </dl>
+        <div class="note" style="margin-top:14px">
+          You can withdraw from any part of this at any time, without giving a reason and without
+          affecting her ordinary care. You can also withdraw from just one part — for example, stop the
+          research data sharing while continuing treatment. Tell any member of the team, or use the
+          button below.
+        </div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn">Change what I agreed to</button>
+          <button class="btn">Withdraw from the study</button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'ogami' && (
+  <div class="stack" style="max-width:760px">
+    <div class="card">
+      <div class="card-head"><h3>Ask Ogami</h3><span class="chip">Answers from the approved information sheet only</span></div>
+      <div class="card-body">
+        <div class="chat">
+          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>Good morning. How can I help you today? I can answer questions about visits, what to expect, and the diary. Anything clinical I will pass to the team.</div></div>
+          <div class="bubble-row me"><div class="bubble">She was restless on Sunday evening. Should I be worried?</div></div>
+          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>Thank you for telling me — I have added a note against the record so the team sees it before today's session, and I can see you already recorded it in the diary for 23 August, which is exactly right.<br /><br />I am not able to say whether it is a concern; that is for the clinical team. Restlessness is listed in the information sheet as something to report rather than something urgent, but if it happens with any of the urgent signs — trouble breathing, swelling, sudden confusion, a persistent nosebleed, fever — call the clinic straight away on 0800 000 0000. Would you like me to ask a nurse to call you?</div></div>
+          <div class="bubble-row me"><div class="bubble">Yes please. And what time is the visit next week?</div></div>
+          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>Session 5 of 6 is Wednesday 2 September at 09:30, Chair 2. I have sent a reminder to this number and asked Nurse Bello to call you today about the restlessness.</div></div>
+          <div class="bubble-row sys"><div class="bubble">Callback task created for N. Bello · Note attached to ATN-0004 pre-session interval review · Reminder scheduled 01 Sep 18:00</div></div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <input class="gate-form" style="flex:1;height:42px;padding:0 13px;border:1px solid var(--line);border-radius:var(--r-sm);font-size:14px" placeholder="Ask a question…" />
+          <button class="btn primary">Send</button>
+        </div>
+      </div>
+      <div class="card-note">
+        Ogami never gives clinical advice and never records a symptom as a clinical finding. It routes to
+        a named person and leaves a trace in the record — which is why the nurse sees the note at Gate B
+        this morning.
+      </div>
+    </div>
+  </div>
+)}

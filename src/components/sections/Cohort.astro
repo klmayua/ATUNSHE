@@ -1,0 +1,103 @@
+---
+import { patients, funnel } from '../../data/cohort.mjs';
+const { role } = Astro.props;
+const R = `/${role.id}`;
+
+const groups = [
+  { key: 'live', label: 'In session now', tone: 'live' },
+  { key: 'blocked', label: 'Held by the engine', tone: 'stop' },
+  { key: 'halted', label: 'Course halted under §6.3', tone: 'stop' },
+  { key: 'ok', label: 'On course', tone: 'ok' },
+  { key: 'followup', label: 'Post-course follow-up', tone: 'held' },
+  { key: 'screening', label: 'Screening', tone: 'warn' },
+  { key: 'excluded', label: 'Screened out', tone: 'held' },
+];
+---
+
+<div class="stack">
+  <div class="stats g4">
+    <div class="stat"><div class="k">Enrolled</div><div class="v">6</div><div class="n">Consented and on the protocol</div></div>
+    <div class="stat is-live"><div class="k">Sessions delivered</div><div class="v">22</div><div class="n">Across the cohort to date</div></div>
+    <div class="stat is-stop"><div class="k">Held or halted</div><div class="v">3</div><div class="n">2 held today, 1 course halted since 12 Aug</div></div>
+    <div class="stat is-ok"><div class="k">Course completed</div><div class="v">1</div><div class="n">ATN-0001 · in 12-week follow-up</div></div>
+  </div>
+
+  <div class="grid g-2-1">
+    <div class="stack">
+      {groups.map((g) => {
+        const list = patients.filter((p) => p.status === g.key);
+        if (!list.length) return null;
+        return (
+          <div>
+            <div class="sec-title">{g.label} <span class={`chip ${g.tone}`}>{list.length}</span></div>
+            <div class="pt-grid">
+              {list.map((p) => (
+                <a class={`pt ${p.status}`} href={`${R}/patient/${p.id}/`}>
+                  <div class="pt-top">
+                    <div>
+                      <div class="pt-id">{p.id}</div>
+                      <div class="pt-nm">{p.name}</div>
+                      <div class="pt-meta">{p.age} · {p.sex} · {p.diagnosis}</div>
+                    </div>
+                    <span class={`chip ${g.tone}`}>{p.stage}</span>
+                  </div>
+                  {p.sessions.length ? (
+                    <div class="dots">
+                      {p.sessions.map((s) => (
+                        <span class={`dot ${s.status === 'Complete' ? 'done' : s.status === 'In progress' ? 'now' : s.status === 'Held' ? 'held' : s.status === 'Stopped' ? 'stopped' : ''}`} title={`Session ${s.n} — ${s.status}`}>{s.n}</span>
+                      ))}
+                    </div>
+                  ) : null}
+                  <div class="pt-stage">{p.stageDetail}</div>
+                  <div class="tiny muted" style="margin-top:6px">Next: {p.nextVisit}</div>
+                  {p.blockReason ? <div class="pt-why">{p.blockReason.slice(0, 160)}{p.blockReason.length > 160 ? '…' : ''}</div> : null}
+                </a>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><h3>Screening funnel</h3><span class="hint">§5 — no enquiry is lost</span></div>
+        <div class="card-body stack-sm">
+          {funnel.map((f) => (
+            <div>
+              <div class="row-between" style="margin-bottom:3px">
+                <span class="tiny" style="font-weight:560">{f.stage}</span>
+                <span class="tiny mono" style="font-weight:700">{f.n}</span>
+              </div>
+              <div class="meter"><i class="live" style={`width:${Math.round((f.n / 34) * 100)}%`}></i></div>
+              <div class="tiny muted" style="margin-top:3px">{f.note}</div>
+            </div>
+          ))}
+        </div>
+        <div class="card-note">
+          Every drop between stages has a recorded reason. Two patients declined after reading the
+          Patient Information Sheet — that is a legitimate outcome, and the platform keeps it rather
+          than losing it.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>One identity per patient</h3></div>
+        <div class="card-body">
+          <p class="tiny" style="margin:0 0 10px;color:var(--ink-2);line-height:1.6">
+            Each record above is a single longitudinal record: one timeline carrying every session,
+            observation, laboratory result, event, deviation, consent version and caregiver diary entry.
+            There is no separate "protocol file" sitting beside the clinical record — the protocol
+            execution <em>is</em> the clinical record.
+          </p>
+          <dl class="defs">
+            <div class="def"><dt>Identity</dt><dd>One ATN identifier across every visit, facility and department</dd></div>
+            <div class="def"><dt>Duplicate detection</dt><dd>Run at registration; safe merge preserves both source records in history</dd></div>
+            <div class="def"><dt>Patient participation</dt><dd>Portal access, pre-visit questionnaires and the caregiver diary write into the same record</dd></div>
+            <div class="def"><dt>Versioning</dt><dd>Corrections append; nothing is overwritten (ALCOA+)</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

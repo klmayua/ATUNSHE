@@ -1,0 +1,429 @@
+---
+// Schedule · CRM/Ogami · Billing · People · Mobile. The operational domains.
+import { chairSchedule, upcomingWeek, patients, funnel } from '../../data/cohort.mjs';
+import { enquiries, engagementStats, ogamiThread, ogamiBoundaries, serviceCatalogue, invoices, revenue, personnel, institutions, offlineScope, migration } from '../../data/ops.mjs';
+import { followUpSchedule } from '../../data/protocol.mjs';
+const { role, view } = Astro.props;
+const R = `/${role.id}`;
+const naira = (n) => '₦' + n.toLocaleString('en-NG');
+---
+
+{view === 'schedule' && (
+  <div class="stack">
+    <div class="card">
+      <div class="card-head"><h3>Today — Wednesday 26 August 2026</h3><span class="chip stop">2 of 5 held</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Time</th><th>Room</th><th>Patient</th><th>What</th><th>Staff assigned</th><th>State</th></tr></thead>
+          <tbody>
+            {chairSchedule.map((s) => (
+              <tr class={s.state === 'In progress' ? 'is-live' : s.state.startsWith('Held') ? 'is-stop' : ''}>
+                <td class="mono n" style="font-weight:600">{s.time}</td>
+                <td>{s.chair}</td>
+                <td><div class="t">{s.name}</div><div class="s mono">{s.patient}</div></td>
+                <td class="s">{s.what}</td>
+                <td class="s">{s.staff}</td>
+                <td><span class={`chip ${s.state === 'In progress' ? 'live' : s.state.startsWith('Held') ? 'stop' : 'held'}`}>{s.state}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        A held appointment is not a cancellation. The patient is still expected, the clinical reason is
+        recorded, and the blocker is assigned to the role that can clear it — the custodian for ATN-0003,
+        the coordinator for ATN-0005.
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><h3>Week ahead</h3></div>
+        <div class="card-body">
+          <div class="tl">
+            {upcomingWeek.map((d) => (
+              <div class="tl-item">
+                <div class="tl-when">{d.date}</div>
+                {d.items.map((i) => <div class="tl-detail">{i}</div>)}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Follow-up recall schedule</h3><span class="hint">§5.3 — every patient, automatically</span></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>When</th><th>Clinic actions</th></tr></thead>
+            <tbody>
+              {followUpSchedule.map((f) => (
+                <tr><td class="t nowrap">{f.when}</td><td class="s">{f.actions}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-note">
+          Recall visits are generated from the protocol, not booked by memory. ATN-0001's 12-week
+          assessment appeared on the schedule the day the course completed.
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'crm' && (
+  <div class="stack">
+    <div class="stats g3">
+      {engagementStats.slice(0, 3).map((s) => (
+        <div class="stat"><div class="k">{s.label}</div><div class="v">{s.value}</div><div class="n">{s.sub}</div></div>
+      ))}
+    </div>
+    <div class="stats g3">
+      {engagementStats.slice(3).map((s) => (
+        <div class="stat"><div class="k">{s.label}</div><div class="v">{s.value}</div><div class="n">{s.sub}</div></div>
+      ))}
+    </div>
+
+    <div class="grid g-2-1">
+      <div class="stack">
+        <div class="card">
+          <div class="card-head"><h3>Enquiry pipeline</h3><span class="hint">Every enquiry, including the ones that did not convert</span></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Ref</th><th>Received</th><th>Channel</th><th>Who</th><th>About</th><th>Stage</th><th>Next</th></tr></thead>
+              <tbody>
+                {enquiries.map((e) => (
+                  <tr class={e.stage.startsWith('Closed') ? '' : e.stage.includes('hold') ? 'is-warn' : ''}>
+                    <td class="mono">{e.ref}</td>
+                    <td class="mono n tiny">{e.when}</td>
+                    <td class="s">{e.channel}</td>
+                    <td class="t">{e.name}</td>
+                    <td class="s" style="max-width:250px">{e.about}</td>
+                    <td><span class={`chip ${e.stage.startsWith('Closed') ? 'held' : e.stage.includes('hold') ? 'warn' : 'ok'}`}>{e.stage}</span></td>
+                    <td class="s">{e.next}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Ogami — a real conversation</h3><span class="hint">WhatsApp · became ENQ-0142</span></div>
+          <div class="card-body">
+            <div class="chat">
+              {ogamiThread.map((m) => (
+                <div class={`bubble-row ${m.from === 'patient' ? 'me' : m.from === 'system' ? 'sys' : 'ai'}`}>
+                  <div class="bubble">
+                    {m.from === 'ogami' ? <div class="who">Ogami</div> : null}
+                    {m.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="card-note">
+            Note what Ogami refuses to do: it will not decide eligibility, and it hands off the moment
+            fees come up. It booked a real slot in the real schedule and created the CRM record — the
+            appointment above is the same object the clinic sees.
+          </div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <div class="card-head"><h3>Ogami's boundaries</h3></div>
+          <div class="card-body flush">
+            {ogamiBoundaries.map((b, i) => (
+              <div class="check open" style="grid-template-columns:22px 1fr">
+                <span class="box" style={i < 2 ? 'background:var(--ok);border-color:var(--ok);color:#fff' : 'background:var(--stop);border-color:var(--stop);color:#fff'}>{i < 2 ? '✓' : '✕'}</span>
+                <span><span class="cl" style="font-weight:500;font-size:12.5px">{b}</span></span>
+              </div>
+            ))}
+          </div>
+          <div class="card-note">
+            An assistant in a clinical setting is defined by what it declines to do. These boundaries are
+            configuration, reviewable by the PI, not model behaviour to be hoped for.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Conversion</h3></div>
+          <div class="card-body stack-sm">
+            {funnel.map((f) => (
+              <div>
+                <div class="row-between" style="margin-bottom:3px">
+                  <span class="tiny">{f.stage}</span>
+                  <span class="tiny mono" style="font-weight:700">{f.n}</span>
+                </div>
+                <div class="meter"><i class="live" style={`width:${Math.round((f.n / 34) * 100)}%`}></i></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'billing' && (
+  <div class="stack">
+    <div class="note ok">
+      <span class="lbl">Charge capture is bound to gate closure</span>
+      {revenue.note} Two rows below show it working in the awkward direction: a held session that raised
+      no charge, and a halted course holding a credit rather than an invoice.
+    </div>
+
+    <div class="stats g4">
+      <div class="stat"><div class="k">Revenue month to date</div><div class="v small">{naira(revenue.monthToDate)}</div></div>
+      <div class="stat is-ok"><div class="k">Collected</div><div class="v small">{naira(revenue.collected)}</div></div>
+      <div class="stat is-warn"><div class="k">Outstanding</div><div class="v small">{naira(revenue.outstanding)}</div><div class="n">All current; nothing aged</div></div>
+      <div class="stat is-ok"><div class="k">Unbilled delivered activity</div><div class="v">{revenue.unbilledDelivered}</div><div class="n">The leak the proposal names, closed</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Invoices</h3><span class="hint">Raised from delivered clinical activity</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Invoice</th><th>Patient</th><th>Raised from</th><th>Items</th><th>Amount</th><th>Paid</th><th>Status</th></tr></thead>
+          <tbody>
+            {invoices.map((i) => (
+              <tr class={i.status.startsWith('Not raised') ? 'is-stop' : i.note ? 'is-warn' : ''}>
+                <td class="mono">{i.no}</td>
+                <td><div class="t">{i.name}</div><div class="s mono">{i.patient}</div></td>
+                <td class="s">{i.raisedFrom}</td>
+                <td class="s mono tiny">{i.items}</td>
+                <td class="n mono">{naira(i.amount)}</td>
+                <td class="n mono">{i.paid ? naira(i.paid) : '—'}</td>
+                <td>
+                  <span class={`chip ${i.status === 'Paid' ? 'ok' : i.status.startsWith('Not raised') ? 'stop' : 'warn'}`}>{i.status}</span>
+                  {i.note ? <div class="s" style="margin-top:5px;max-width:300px">{i.note}</div> : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><h3>Service catalogue</h3></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Code</th><th>Service</th><th>Price</th></tr></thead>
+            <tbody>
+              {serviceCatalogue.map((s) => (
+                <tr>
+                  <td class="mono">{s.code}</td>
+                  <td><div class="t">{s.name}</div><div class="s">{s.note}</div></td>
+                  <td class="n mono" style="font-weight:600">{naira(s.price)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Ageing</h3><span class="chip ok">Nothing past current</span></div>
+        <div class="card-body stack-sm">
+          {revenue.ageing.map((a) => (
+            <div>
+              <div class="row-between" style="margin-bottom:3px">
+                <span class="tiny">{a.bucket}</span>
+                <span class="tiny mono" style="font-weight:700">{naira(a.amount)}</span>
+              </div>
+              <div class="meter"><i class={a.amount ? 'warn' : ''} style={`width:${a.amount ? 100 : 2}%`}></i></div>
+            </div>
+          ))}
+          <hr class="hr" />
+          <div class="row-between"><span class="tiny muted">Credit held (ATN-0002, course halted)</span><span class="mono tiny" style="font-weight:700">{naira(revenue.creditHeld)}</span></div>
+          <div class="tiny muted" style="line-height:1.55">
+            When a stopping rule halts a course, the unused course balance becomes a credit
+            automatically. Billing a patient for sessions a safety rule prevented would be both wrong
+            and, in a regulated programme, indefensible.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'people' && (
+  <div class="stack">
+    <div class="note warn">
+      <span class="lbl">Credentials gate the roster, not just a list</span>
+      Two credentials are expiring. On expiry the platform removes the person from roster eligibility for
+      the roles that require them — a nurse without current registration cannot be assigned to administer,
+      and the gate that needs their signature will not accept it.
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Personnel</h3><span class="hint">§7 — credentials with expiry tracking</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Registration</th><th>GCP currency</th><th>Protocol training</th></tr></thead>
+          <tbody>
+            {personnel.map((p) => (
+              <tr class={p.regStatus.startsWith('Expiring') || p.gcpStatus === 'Renewal due' ? 'is-warn' : ''}>
+                <td class="t">{p.name}</td>
+                <td class="s">{p.role}</td>
+                <td class="s">{p.dept}</td>
+                <td>
+                  <div class="mono tiny">{p.reg}</div>
+                  <span class={`chip ${p.regStatus === 'Valid' ? 'ok' : p.regStatus === 'N/A' ? 'held' : 'warn'}`}>{p.regStatus}</span>
+                  {p.regExpiry !== '—' ? <div class="tiny muted mono" style="margin-top:3px">{p.regExpiry}</div> : null}
+                </td>
+                <td>
+                  <span class={`chip ${p.gcpStatus === 'Valid' ? 'ok' : p.gcpStatus === 'N/A' ? 'held' : 'warn'}`}>{p.gcpStatus}</span>
+                  <div class="tiny muted" style="margin-top:3px">{p.gcp}</div>
+                </td>
+                <td class="s">{p.protocolTrained}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        Protocol training is tracked <em>by version</em>. When v1.1 becomes effective, everyone shows as
+        trained on v1.0 and untrained on v1.1 until they are — which is what an inspector asks about.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Institutions & partners</h3></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Institution</th><th>Type</th><th>Relationship</th><th>Agreement</th><th>Status</th></tr></thead>
+          <tbody>
+            {institutions.map((i) => (
+              <tr class={i.flag ? 'is-warn' : ''}>
+                <td class="t">{i.name}</td>
+                <td class="s">{i.type}</td>
+                <td class="s" style="max-width:300px">{i.relationship}</td>
+                <td class="s">{i.agreement}</td>
+                <td>
+                  <span class="chip ok">{i.status}</span>
+                  {i.flag ? <div style="margin-top:4px"><span class="chip warn">{i.flag}</span></div> : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Existing-data migration</h3><span class="chip warn">{migration.status}</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Source</th><th>Volume</th><th>State</th><th>Note</th></tr></thead>
+          <tbody>
+            {migration.sources.map((s) => (
+              <tr class={s.state.startsWith('Awaiting') ? 'is-warn' : ''}>
+                <td class="t">{s.source}</td>
+                <td class="s">{s.records}</td>
+                <td><span class={`chip ${s.state === 'Mapped' ? 'ok' : 'warn'}`}>{s.state}</span></td>
+                <td class="s" style="max-width:420px">{s.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        <b>Migration rules:</b> {migration.rules.join(' · ')}.
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'mobile' && (
+  <div class="stack">
+    <div class="note">
+      <span class="lbl">The rule the platform applies</span>
+      {offlineScope.principle} That single line is the whole offline design, and it is why the answer to
+      "does it work offline?" is <b>"for these things, yes; for these, deliberately not"</b> rather than a
+      blanket yes that falls apart in an audit.
+    </div>
+
+    <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+      <div class="phone">
+        <div class="phone-bar"><span>09:41</span><span>Offline · 0 queued</span></div>
+        <div class="phone-body">
+          <div class="phone-card" style="background:var(--live-bg);border-color:var(--live-line)">
+            <div class="pt2">ATN-0004 · Session 4</div>
+            <div class="ps">Gate C — timeout awaiting witness</div>
+            <div class="chip-row" style="margin-top:7px"><span class="chip stop">Needs connection</span></div>
+          </div>
+          <div class="phone-card">
+            <div class="pt2">Record observation</div>
+            <div class="ps">15 min timepoint · BP, HR, RR, SpO₂, Temp</div>
+            <div class="chip-row" style="margin-top:7px"><span class="chip ok">Works offline</span></div>
+          </div>
+          <div class="phone-card">
+            <div class="pt2">Draft AE narrative</div>
+            <div class="ps">Appendix D · clock starts at onset</div>
+            <div class="chip-row" style="margin-top:7px"><span class="chip ok">Works offline</span></div>
+          </div>
+          <div class="phone-card">
+            <div class="pt2">Release product</div>
+            <div class="ps">Requires live cold-chain state</div>
+            <div class="chip-row" style="margin-top:7px"><span class="chip stop">Refused offline</span></div>
+          </div>
+          <div class="phone-card" style="background:var(--surface-2)">
+            <div class="ps mono tiny">
+              Cached: {offlineScope.syncStatus.cachedPatients} patients<br />
+              Expires: {offlineScope.syncStatus.cacheExpires}<br />
+              Last sync: {offlineScope.syncStatus.lastSync}<br />
+              Conflicts: {offlineScope.syncStatus.conflicts}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1;min-width:340px" class="stack">
+        <div class="card">
+          <div class="card-head"><h3>Permitted offline</h3><span class="chip ok">Capture</span></div>
+          <div class="card-body flush">
+            {offlineScope.allowed.map((a) => (
+              <div class="check yes" style="grid-template-columns:22px 1fr">
+                <span class="box">✓</span>
+                <span><span class="cl">{a.what}</span><span class="cm" style="display:block;line-height:1.55">{a.why}</span></span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Refused offline</h3><span class="chip stop">Authority</span></div>
+          <div class="card-body flush">
+            {offlineScope.refused.map((a) => (
+              <div class="check no" style="grid-template-columns:22px 1fr">
+                <span class="box">✕</span>
+                <span><span class="cl">{a.what}</span><span class="cm" style="display:block;line-height:1.55">{a.why}</span></span>
+              </div>
+            ))}
+          </div>
+          <div class="card-note">
+            The proposal's own wording: offline is "applied selectively to appropriate workflows, because
+            not every clinical operation should permit unrestricted offline access."
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Delivery</h3></div>
+          <div class="card-body">
+            <dl class="defs">
+              <div class="def"><dt>Form</dt><dd>Progressive Web Application — no app-store deployment, installs from the browser on any supported phone, tablet or desktop</dd></div>
+              <div class="def"><dt>Local storage</dt><dd>Temporary, encrypted, scoped to today's list, cleared at shift end</dd></div>
+              <div class="def"><dt>Synchronisation</dt><dd>Server timestamps preserved; the offline interval is recorded and visible, not smoothed away</dd></div>
+              <div class="def"><dt>Conflicts</dt><dd>Surfaced for human resolution — never silently last-write-wins on a clinical record</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}

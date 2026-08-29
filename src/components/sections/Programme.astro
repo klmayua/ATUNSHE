@@ -1,0 +1,262 @@
+---
+// Platform architecture · Delivery plan. The proposal, made navigable.
+import { lifecycle, layers, domains, tenancy, operatingCycle, responsibilities, phaseOne, phaseTwo, nextSteps, openDecisions, mobileOffline } from '../../data/platform.mjs';
+import { standards } from '../../data/protocol.mjs';
+const { role, view } = Astro.props;
+const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
+---
+
+{view === 'architecture' && (
+  <div class="stack">
+    <div class="note">
+      <span class="lbl">This page is the proposal, and every element links to the working thing</span>
+      Sections 1, 2, 10 and 11 of the High-Level Technical Proposal describe the platform as a lifecycle,
+      five layers, six domains and an operating cycle. Below, each one carries a link into this
+      demonstration where that capability is actually running against a real protocol.
+    </div>
+
+    <div class="sec-title">§1 — The patient lifecycle</div>
+    <div class="card">
+      <div class="card-body">
+        <div class="flow">
+          {lifecycle.map((l, i) => (
+            <>
+              <a class="flow-step" href={can(l.demo) ? `${R}/${l.demo}/` : '#'} style={can(l.demo) ? '' : 'opacity:.55;pointer-events:none'}>
+                <div class="fi">{String(i + 1).padStart(2, '0')}</div>
+                <div class="fn">{l.label}</div>
+                <div class="fd">{l.detail}</div>
+                <div class="fd" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);color:var(--navy-600);font-weight:560">{l.evidence}</div>
+              </a>
+              {i < lifecycle.length - 1 ? <span class="flow-arrow">→</span> : null}
+            </>
+          ))}
+        </div>
+      </div>
+      <div class="card-note">
+        "Each stage feeds the next… Governance and intelligence run across every stage, so that the record
+        stays accurate, trusted, and continuously improving."
+      </div>
+    </div>
+
+    <div class="sec-title">§2 — Capability layers</div>
+    <div>
+      {layers.map((l) => (
+        <div class="layer">
+          <div class="ln">{l.n}</div>
+          <div class="lb">
+            <div class="row-between" style="align-items:flex-start">
+              <div style="min-width:0">
+                <div class="lt">{l.name}</div>
+                <div class="li">{l.items.join(' · ')}</div>
+                <div class="lx"><b>In this demo:</b> {l.inDemo}</div>
+              </div>
+              {can(l.demo) ? <a class="btn sm" href={`${R}/${l.demo}/`}>Open</a> : null}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="sec-title">§3–§8 — Capability domains</div>
+    <div class="grid g2">
+      {domains.map((d) => (
+        <div class="card" style={d.primary ? 'border-color:var(--navy-600);box-shadow:inset 0 0 0 1px var(--navy-600)' : ''}>
+          <div class="card-head">
+            <div>
+              <h3>{d.name}</h3>
+              <div class="tiny muted mono" style="margin-top:2px">{d.section}</div>
+            </div>
+            {d.primary ? <span class="chip live">Differentiator</span> : null}
+          </div>
+          <div class="card-body">
+            <p class="tiny" style="margin:0 0 12px;color:var(--ink);font-weight:560;line-height:1.6">{d.outcome}</p>
+            <div class="chip-row" style="margin-bottom:12px">
+              {d.capabilities.map((c) => <span class="chip">{c}</span>)}
+            </div>
+            <div class="note" style="margin-bottom:12px"><b>Shown by:</b> {d.shownBy}</div>
+            {can(d.demo) ? <a class="btn sm primary" href={`${R}/${d.demo}/`}>{d.demoLabel} →</a> : <span class="chip held">Not visible to your role</span>}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><h3>§9 — Mobile & offline</h3></div>
+        <div class="card-body">
+          <p class="tiny" style="margin:0 0 10px;color:var(--ink);font-weight:560;line-height:1.6">{mobileOffline.outcome}</p>
+          <p class="tiny" style="margin:0;color:var(--ink-2);line-height:1.6">{mobileOffline.delivery}</p>
+          {can('mobile') ? <a class="btn sm" style="margin-top:12px" href={`${R}/mobile/`}>See the offline boundary →</a> : null}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>§10 — Multi-tenant architecture</h3><span class="chip">{tenancy.current}</span></div>
+        <div class="card-body">
+          <p class="tiny" style="margin:0 0 12px;color:var(--ink);font-weight:560;line-height:1.6">{tenancy.outcome}</p>
+          <div class="flow" style="margin-bottom:12px">
+            {tenancy.path.map((p, i) => (
+              <>
+                <div class="flow-step" style={i === 0 ? 'border-color:var(--navy-600);background:var(--live-bg)' : 'opacity:.7'}>
+                  <div class="fn" style="font-size:12px">{p}</div>
+                  {i === 0 ? <div class="fd mono tiny">{tenancy.currentTenant}</div> : null}
+                </div>
+                {i < tenancy.path.length - 1 ? <span class="flow-arrow">→</span> : null}
+              </>
+            ))}
+          </div>
+          <p class="tiny" style="margin:0 0 10px;color:var(--ink-2);line-height:1.6">{tenancy.detail}</p>
+          <div class="stack-sm">
+            {tenancy.isolation.map((i) => <div class="tiny" style="display:flex;gap:8px"><span style="color:var(--ok);font-weight:700">✓</span><span>{i}</span></div>)}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-title">§11 — The continuous operating cycle</div>
+    <div class="card">
+      <div class="card-body">
+        <div class="chip-row" style="gap:8px">
+          {operatingCycle.map((c, i) => (
+            <>
+              <span class="chip" style="font-size:12px;padding:6px 12px">{c}</span>
+              {i < operatingCycle.length - 1 ? <span class="muted">→</span> : null}
+            </>
+          ))}
+        </div>
+        <div class="note" style="margin-top:14px">
+          "Data from every stage feeds intelligence; intelligence improves protocols and workflows;
+          improved workflows produce better care, and the cycle repeats." In this demo that is not a
+          diagram — it is INS-004, which came from execution data, went to human review, and became
+          protocol v1.1 now sitting in the approval workflow.
+          {can('learning') ? <> <a href={`${R}/learning/`} style="color:var(--navy-600);font-weight:600">Follow it →</a></> : null}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Standards the architecture is built to uphold</h3></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Standard</th><th>Governs</th><th>Enforced as</th></tr></thead>
+          <tbody>
+            {standards.map((s) => (
+              <tr><td><div class="t">{s.code}</div><div class="s">{s.name}</div></td><td class="s">{s.governs}</td><td class="s">{s.enforced}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'delivery' && (
+  <div class="stack">
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><h3>Atunse Health provides</h3></div>
+        <div class="card-body flush">
+          {responsibilities.atunse.map((r) => (
+            <div class="check yes" style="grid-template-columns:22px 1fr"><span class="box">✓</span><span><span class="cl" style="font-weight:500">{r}</span></span></div>
+          ))}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Farawa provides</h3></div>
+        <div class="card-body flush">
+          {responsibilities.farawa.map((r) => (
+            <div class="check yes" style="grid-template-columns:22px 1fr"><span class="box" style="background:var(--navy-700);border-color:var(--navy-700)">✓</span><span><span class="cl" style="font-weight:500">{r}</span></span></div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-title">Phase I — 6-week build & production deployment</div>
+    <div class="card">
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Week</th><th>Focus</th><th>Primary deliverables</th><th>Exit gate</th></tr></thead>
+          <tbody>
+            {phaseOne.map((w) => (
+              <tr class={w.week === '04' ? 'is-live' : ''}>
+                <td class="mono n" style="font-weight:700;font-size:16px">{w.week}</td>
+                <td class="t" style="min-width:150px">{w.focus}</td>
+                <td class="s">{w.deliverables}</td>
+                <td><span class="chip ok">{w.gate}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        The sequence follows the patient lifecycle — registration → consent → scheduling → clinical care →
+        billing → follow-up — rather than building six isolated modules. Week 04's exit gate,
+        <b> "first agreed Atunse protocol executable"</b>, is the thing this demonstration is showing you
+        already working.
+      </div>
+    </div>
+
+    <div class="sec-title">Phase II — 6-week test, bedding-down & optimisation</div>
+    <div class="stack">
+      {phaseTwo.map((p) => (
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Weeks {p.weeks} — {p.title}</h3>
+              <div class="tiny muted" style="margin-top:3px">{p.objective}</div>
+            </div>
+            <span class="chip ok">{p.gate}</span>
+          </div>
+          <div class="card-body">
+            <div class="chip-row">{p.items.map((i) => <span class="chip">{i}</span>)}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="sec-title">Delivery path</div>
+    <div class="card">
+      <div class="card-body">
+        <div class="flow">
+          {nextSteps.map((s, i) => (
+            <>
+              <div class="flow-step">
+                <div class="fi">{s.n}</div>
+                <div class="fn">{s.title}</div>
+                <div class="fd">{s.detail}</div>
+              </div>
+              {i < nextSteps.length - 1 ? <span class="flow-arrow">→</span> : null}
+            </>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-title">Decisions that are yours, not ours</div>
+    <div class="note warn">
+      <span class="lbl">From the Background Brief</span>
+      "These are not gaps in our understanding of the standards — they are decisions that are properly
+      yours, and that good practice says we confirm with you rather than assume." Each one below runs in
+      this demo on a stated assumption, so the mechanism is visible and the decision is easy to make in
+      the room.
+    </div>
+    <div class="card">
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Decision</th><th>What we need from you</th><th>What the demo assumes</th><th>Why it matters technically</th></tr></thead>
+          <tbody>
+            {openDecisions.map((d) => (
+              <tr>
+                <td class="t" style="min-width:170px">{d.title}</td>
+                <td class="s">{d.ask}</td>
+                <td class="s"><span class="chip warn">Assumed</span><div style="margin-top:5px">{d.assumedInDemo}</div></td>
+                <td class="s">{d.why}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}

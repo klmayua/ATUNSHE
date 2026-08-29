@@ -1,0 +1,190 @@
+---
+import Shell from '../../components/Shell.astro';
+import Command from '../../components/sections/Command.astro';
+import Cohort from '../../components/sections/Cohort.astro';
+import Session from '../../components/sections/Session.astro';
+import Safety from '../../components/sections/Safety.astro';
+import Protocols from '../../components/sections/Protocols.astro';
+import Forms from '../../components/sections/Forms.astro';
+import Intelligence from '../../components/sections/Intelligence.astro';
+import Custody from '../../components/sections/Custody.astro';
+import Trust from '../../components/sections/Trust.astro';
+import Operations from '../../components/sections/Operations.astro';
+import Programme from '../../components/sections/Programme.astro';
+import Caregiver from '../../components/sections/Caregiver.astro';
+
+import { ROLES } from '../../data/roles.mjs';
+import { SECTIONS, SECTION_BY_KEY } from '../../data/nav.mjs';
+
+export function getStaticPaths() {
+  const out = [];
+  for (const role of ROLES) {
+    for (const s of SECTIONS) {
+      if (!role.allow.includes(s.key)) continue;
+      out.push({ params: { role: role.id, section: s.key }, props: { role, sectionKey: s.key } });
+    }
+  }
+  return out;
+}
+
+const { role, sectionKey } = Astro.props;
+const meta = SECTION_BY_KEY[sectionKey];
+
+// Sidebar attention pips — the platform telling each role where the friction is.
+const pips = {
+  session: { n: '2', tone: 'stop' },
+  safety: { n: '2', tone: 'warn' },
+  consent: { n: '1', tone: 'stop' },
+  product: { n: '1', tone: 'stop' },
+  cohort: { n: '3', tone: 'warn' },
+  protocols: { n: 'v1.1', tone: 'warn' },
+  forms: { n: '3', tone: 'warn' },
+  people: { n: '2', tone: 'warn' },
+};
+const visiblePips = Object.fromEntries(Object.entries(pips).filter(([k]) => role.allow.includes(k)));
+
+// Page headers — written per section, per what that section is actually for.
+const HEAD = {
+  command: {
+    title: 'Command centre',
+    sub: 'What is running, what the engine has stopped, and what is waiting on <b>your</b> authority specifically.',
+    refs: ['ATN-DEM-ADDSB-2026-001 v1.0', 'Wed 26 Aug 2026'],
+  },
+  schedule: {
+    title: 'Chairs & schedule',
+    sub: 'Sessions, rooms, staffing and the protocol-generated follow-up recalls. Two of today’s five appointments are held by the protocol engine rather than by the diary.',
+    refs: ['EMR Proposal §5'],
+  },
+  cohort: {
+    title: 'Cohort',
+    sub: 'Eight patients against one protocol, each deliberately at a different point in it — running, held, halted, completed, screening and screened out.',
+    refs: ['EMR Proposal §3', 'Protocol §5.1'],
+  },
+  session: {
+    title: 'Treatment day',
+    sub: 'The protocol engine executing. Six gates, forty-two blocking checks, seven signatures — and two sessions it will not let start.',
+    refs: ['Protocol §5.2 · §5.3 · §6.3', 'EMR Proposal §4'],
+  },
+  safety: {
+    title: 'Safety & events',
+    sub: 'Adverse events, serious adverse events and protocol deviations, each with a reporting clock that starts at recorded onset rather than at the moment someone opened a form.',
+    refs: ['Protocol §6.3', 'ICH E2A', 'Appendix D'],
+  },
+  protocols: {
+    title: 'Protocol registry',
+    sub: 'The protocol as the platform holds it: a versioned, approved, executable definition — not a document filed next to the record.',
+    refs: ['EMR Proposal §4', 'ATN-DEM-ADDSB-2026-001'],
+  },
+  forms: {
+    title: 'Working forms',
+    sub: 'Appendices A–I, each bound to the gate that produces it.',
+    refs: ['Protocol §10 Appendices'],
+  },
+  learning: {
+    title: 'Learning loop',
+    sub: 'Protocol → execution → data → AI analysis → human review → improvement. Four insights raised, one rejected on clinical grounds and kept with its reasoning.',
+    refs: ['EMR Proposal §4, Figure 3'],
+  },
+  analytics: {
+    title: 'Protocol analytics',
+    sub: 'Adherence by gate, timepoint drift, deviation reason codes and cohort measures — every number carrying the caveat it needs.',
+    refs: ['EMR Proposal §4', 'Protocol §7'],
+  },
+  product: {
+    title: 'Product & cold chain',
+    sub: 'Lot register, Certificates of Analysis, temperature history, thaw windows and reconciliation. A quarantined lot is blocking a session right now.',
+    refs: ['Appendix E', 'GDP cold chain', 'Protocol §6.2'],
+  },
+  device: {
+    title: 'ViaNase™ device',
+    sub: 'Performance checks, use record, cleaning and malfunction reporting — written by Gates A and E rather than filled in afterwards.',
+    refs: ['Appendix F', 'IFU rev. 4.2'],
+  },
+  consent: {
+    title: 'Consent register',
+    sub: 'Consent held as a live, versioned, purpose-bound state with legally-authorised-representative handling — queried at the moment of care.',
+    refs: ['EMR Proposal §8', 'Declaration of Helsinki', 'Consent & capacity'],
+  },
+  custody: {
+    title: 'Governance ledger',
+    sub: 'Chain of custody in the proposal’s own six columns, hash-chained so that removing or altering an entry is detectable.',
+    refs: ['EMR Proposal §8, Figure 6'],
+  },
+  audit: {
+    title: 'Audit & data governance',
+    sub: 'ALCOA+ implemented as behaviour, break-glass that announces itself, and the data-residency and sponsor-export boundary.',
+    refs: ['ALCOA+', 'GAMP 5 / 21 CFR Part 11', 'NDPA 2023'],
+  },
+  crm: {
+    title: 'Enquiries & Ogami',
+    sub: 'Thirty-four enquiries to eight started courses, with every drop-off reason recorded — and what the assistant is configured to refuse to do.',
+    refs: ['EMR Proposal §5'],
+  },
+  billing: {
+    title: 'Billing & revenue',
+    sub: 'Charges raised by gate closure from care actually delivered. A held session raises nothing; a halted course holds a credit.',
+    refs: ['EMR Proposal §6'],
+  },
+  people: {
+    title: 'People & institutions',
+    sub: 'Credentials, GCP currency and protocol-version training, tracked because they gate roster eligibility — plus partners and the migration landscape.',
+    refs: ['EMR Proposal §7 · §3'],
+  },
+  mobile: {
+    title: 'Mobile & offline',
+    sub: 'Capture may go offline; authority may not. The whole offline design follows from that one line.',
+    refs: ['EMR Proposal §9'],
+  },
+  architecture: {
+    title: 'Platform architecture',
+    sub: 'The proposal’s lifecycle, five layers, six domains and operating cycle — each linking into the working capability in this demonstration.',
+    refs: ['EMR Proposal §1 · §2 · §10 · §11'],
+  },
+  delivery: {
+    title: 'Delivery plan',
+    sub: 'Six-week build to production go-live, six-week bedding-down to operational acceptance — and the five decisions that are Atunse’s to make, not ours to assume.',
+    refs: ['EMR Proposal §12 · §13', 'Background Brief §6'],
+  },
+  diary: { title: 'Daily diary', sub: 'How Mrs. Adewale has been today.', refs: ['Appendix I'] },
+  portal: { title: 'Our care plan', sub: 'Visits, what happens at each one, and how to change your mind about anything.', refs: [] },
+  ogami: { title: 'Ask Ogami', sub: '', refs: [] },
+};
+
+const head = HEAD[sectionKey] || { title: meta.label, sub: meta.blurb, refs: [] };
+
+// Ogami has two faces: a clinical/operational one and the caregiver one.
+const ogamiIsCaregiver = sectionKey === 'ogami' && role.id === 'caregiver';
+---
+
+<Shell role={role} section={sectionKey} title={head.title} sub={head.sub} refs={head.refs} pips={visiblePips}>
+  {sectionKey === 'command' && <Command role={role} />}
+  {sectionKey === 'cohort' && <Cohort role={role} />}
+  {sectionKey === 'session' && <Session role={role} />}
+  {sectionKey === 'safety' && <Safety role={role} />}
+  {sectionKey === 'protocols' && <Protocols role={role} />}
+  {sectionKey === 'forms' && <Forms role={role} />}
+
+  {sectionKey === 'learning' && <Intelligence role={role} view="learning" />}
+  {sectionKey === 'analytics' && <Intelligence role={role} view="analytics" />}
+
+  {sectionKey === 'product' && <Custody role={role} view="product" />}
+  {sectionKey === 'device' && <Custody role={role} view="device" />}
+
+  {sectionKey === 'consent' && <Trust role={role} view="consent" />}
+  {sectionKey === 'custody' && <Trust role={role} view="custody" />}
+  {sectionKey === 'audit' && <Trust role={role} view="audit" />}
+
+  {sectionKey === 'schedule' && <Operations role={role} view="schedule" />}
+  {sectionKey === 'crm' && <Operations role={role} view="crm" />}
+  {sectionKey === 'billing' && <Operations role={role} view="billing" />}
+  {sectionKey === 'people' && <Operations role={role} view="people" />}
+  {sectionKey === 'mobile' && <Operations role={role} view="mobile" />}
+
+  {sectionKey === 'architecture' && <Programme role={role} view="architecture" />}
+  {sectionKey === 'delivery' && <Programme role={role} view="delivery" />}
+
+  {sectionKey === 'diary' && <Caregiver role={role} view="diary" />}
+  {sectionKey === 'portal' && <Caregiver role={role} view="portal" />}
+  {ogamiIsCaregiver && <Caregiver role={role} view="ogami" />}
+  {sectionKey === 'ogami' && !ogamiIsCaregiver && <Operations role={role} view="crm" />}
+</Shell>

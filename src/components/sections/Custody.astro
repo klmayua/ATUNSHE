@@ -1,0 +1,222 @@
+---
+// Product & cold chain · ViaNase device. Two views of physical custody.
+import { lots, tempLog, thawLog, reconciliation, devices, deviceUseLog } from '../../data/inventory.mjs';
+import { products } from '../../data/protocol.mjs';
+const { role, view } = Astro.props;
+const R = `/${role.id}`;
+---
+
+{view === 'product' && (
+  <div class="stack">
+    <div class="note stop">
+      <span class="lbl">Live release block</span>
+      Lot <b>EXP-140B-2608A</b> is quarantined after a cold-chain excursion on 24 August. Because the
+      Gate A readiness check reads lot state from this register rather than from a paper log,
+      <b> ATN-0003's session at 11:00 today cannot start</b>. No clinician had to remember the excursion;
+      the release simply is not available.
+    </div>
+
+    <div class="stats g4">
+      <div class="stat is-ok"><div class="k">Released lots</div><div class="v">{lots.filter((l) => l.released).length}</div><div class="n">In date, CoA verified, temperature in range</div></div>
+      <div class="stat is-stop"><div class="k">Quarantined</div><div class="v">{lots.filter((l) => !l.released).length}</div><div class="n">9 vials · PQC-0001 open with sponsor</div></div>
+      <div class="stat"><div class="k">Vials administered</div><div class="v">25</div><div class="n">Across 22 treatment days</div></div>
+      <div class="stat is-ok"><div class="k">Reconciliation</div><div class="v">{reconciliation.discrepancies}</div><div class="n">Discrepancies · last run {reconciliation.lastReconciled.split(' · ')[0]}</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Lot register</h3><span class="hint">Appendix E · GDP cold chain</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Lot</th><th>Product</th><th>Expiry</th><th>Recv</th><th>Admin</th><th>Waste</th><th>Quar.</th><th>Balance</th><th>CoA</th><th>Temperature</th><th>Release</th></tr></thead>
+          <tbody>
+            {lots.map((l) => (
+              <tr class={l.released ? '' : 'is-stop'}>
+                <td class="mono" style="font-weight:600">{l.lot}<div class="s">{l.storage}</div></td>
+                <td><div class="t">{l.product}</div><div class="s">{l.route} · {l.presentation}</div></td>
+                <td class="mono n">{l.expiry}</td>
+                <td class="n">{l.qtyReceived}</td>
+                <td class="n">{l.administered}</td>
+                <td class="n">{l.wasted}</td>
+                <td class="n">{l.quarantined}</td>
+                <td class="n" style="font-weight:700">{l.balance}</td>
+                <td><span class="chip ok">{l.coaStatus}</span><div class="s mono tiny" style="margin-top:3px">{l.coa.split(' · ')[0]}</div></td>
+                <td><span class={`chip ${l.tempStatus === 'In range' ? 'ok' : 'stop'}`}>{l.tempStatus}</span></td>
+                <td><span class={`chip ${l.released ? 'ok' : 'stop'}`}>{l.released ? 'Released' : 'BLOCKED'}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {lots.filter((l) => l.excursion).map((l) => (
+      <div class="card">
+        <div class="card-head"><h3>Excursion detail — {l.lot}</h3><span class="chip stop">{l.excursion.pqc}</span></div>
+        <div class="card-body">
+          <dl class="defs">
+            <div class="def"><dt>When</dt><dd class="mono">{l.excursion.when} ({l.excursion.duration})</dd></div>
+            <div class="def"><dt>Lowest reading</dt><dd class="mono" style="color:var(--stop);font-weight:700">{l.excursion.low}</dd></div>
+            <div class="def"><dt>Requirement</dt><dd class="mono">{l.excursion.requirement}</dd></div>
+            <div class="def"><dt>Cause</dt><dd>{l.excursion.cause}</dd></div>
+            <div class="def"><dt>Raised by</dt><dd>{l.excursion.raisedBy} — automatically, at the moment the probe went out of range</dd></div>
+            <div class="def"><dt>Disposition</dt><dd>{l.excursion.disposition}</dd></div>
+            <div class="def"><dt>Downstream effect</dt><dd>{l.note}</dd></div>
+          </dl>
+        </div>
+      </div>
+    ))}
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><h3>Temperature log</h3><span class="hint">Appendix E</span></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Date</th><th>Time</th><th>Unit</th><th>Temp</th><th>In range</th><th>By</th></tr></thead>
+            <tbody>
+              {tempLog.map((t) => (
+                <tr class={t.inRange ? '' : 'is-stop'}>
+                  <td class="n">{t.date}</td>
+                  <td class="mono n">{t.time}</td>
+                  <td>{t.freezer}</td>
+                  <td class="mono n" style={t.inRange ? '' : 'color:var(--stop);font-weight:700'}>{t.temp} °C</td>
+                  <td><span class={`chip ${t.inRange ? 'ok' : 'stop'}`}>{t.inRange ? 'Yes' : 'No'}</span></td>
+                  <td class="s">{t.by}{t.note ? <div class="tiny" style="color:var(--stop);margin-top:3px">{t.note}</div> : null}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <div class="card-head"><h3>Thaw & stability windows</h3><span class="hint">§6.2</span></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Product</th><th>Lot</th><th>Thawed</th><th>Window</th><th>Used</th><th></th></tr></thead>
+              <tbody>
+                {thawLog.map((t) => (
+                  <tr class={t.status === 'open' ? 'is-live' : ''}>
+                    <td class="s">{t.product}</td>
+                    <td class="mono">{t.lot}</td>
+                    <td class="mono n">{t.thawed}</td>
+                    <td class="n">{t.window}</td>
+                    <td class="s">{t.usedBy}</td>
+                    <td><span class={`chip ${t.status === 'open' ? 'live' : 'ok'}`}>{t.status === 'open' ? 'Open' : 'Closed'}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="card-note">
+            Gate E re-checks the window at the moment of intranasal delivery, not at the start of the day.
+            A session that overruns cannot quietly deliver out-of-window product.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Reconciliation</h3><span class="chip ok">Balanced</span></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Product</th><th>Recv</th><th>Admin</th><th>Waste</th><th>Quar.</th><th>Ret.</th><th>Balance</th></tr></thead>
+              <tbody>
+                {reconciliation.rows.map((r) => (
+                  <tr>
+                    <td class="t">{r.product}</td>
+                    <td class="n">{r.received}</td>
+                    <td class="n">{r.administered}</td>
+                    <td class="n">{r.wasted}</td>
+                    <td class="n">{r.quarantined}</td>
+                    <td class="n">{r.returned}</td>
+                    <td class="n" style="font-weight:700">{r.balance}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="card-note">Course total per patient: {reconciliation.perPatientCourse}. Last reconciled {reconciliation.lastReconciled}.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'device' && (
+  <div class="stack">
+    <div class="note">
+      <span class="lbl">The device is a protocol input, not an accessory</span>
+      Gate A will not close without a passed performance check, and Gate E will not close without the
+      device serial, the IFU version and the volume actually delivered. Appendix F is written by those
+      two gates rather than filled in afterwards.
+    </div>
+
+    <div class="grid g2">
+      {devices.map((d) => (
+        <div class="card">
+          <div class="card-head">
+            <h3>{d.serial}</h3>
+            <span class={`chip ${d.status === 'In service' ? 'ok' : 'held'}`}>{d.status}</span>
+          </div>
+          <div class="card-body">
+            <dl class="defs">
+              <div class="def"><dt>Model</dt><dd>{d.model}</dd></div>
+              <div class="def"><dt>Manufacturer</dt><dd>{d.manufacturer}</dd></div>
+              <div class="def"><dt>Instructions for use</dt><dd class="mono">{d.ifu}</dd></div>
+              <div class="def"><dt>Last performance check</dt><dd class="mono">{d.lastCheck}<div class="tiny muted">{d.lastCheckBy}</div></dd></div>
+              <div class="def"><dt>Last cleaning</dt><dd>{d.lastClean}</dd></div>
+              <div class="def"><dt>Single-use components</dt><dd>{d.components}</dd></div>
+              <div class="def"><dt>Uses / malfunctions</dt><dd><span class="chip">{d.uses} uses</span> <span class={`chip ${d.malfunctions ? 'stop' : 'ok'}`}>{d.malfunctions} malfunctions</span></dd></div>
+            </dl>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Use record</h3><span class="hint">Appendix F</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Date</th><th>Patient</th><th>Session</th><th>Product lot</th><th>Delivered</th><th>Operator</th><th>Device</th></tr></thead>
+          <tbody>
+            {deviceUseLog.map((u) => (
+              <tr class={u.delivered.startsWith('NOT') ? 'is-stop' : u.delivered.startsWith('Pending') ? 'is-live' : ''}>
+                <td class="n">{u.date}</td>
+                <td class="mono">{u.patient}</td>
+                <td class="n">{u.session}</td>
+                <td class="mono">{u.lot}</td>
+                <td class="s">{u.delivered}</td>
+                <td>{u.operator}</td>
+                <td class="mono">{u.device}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        The 12 Aug row records a delivery that <em>did not happen</em>. ATN-0002's session stopped after
+        the IV route when a stopping rule fired, so the intranasal route was never administered — and the
+        device log says so rather than being left blank.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Products delivered by this device</h3></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Product</th><th>Route</th><th>Dose per session</th><th>Storage</th><th>Post-thaw window</th></tr></thead>
+          <tbody>
+            {products.filter((p) => p.device).map((p) => (
+              <tr>
+                <td class="t">{p.name}</td>
+                <td>{p.route}</td>
+                <td class="s">{p.strength} · {p.presentation}</td>
+                <td class="mono">{p.storage}</td>
+                <td class="s">{p.thawWindow}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}

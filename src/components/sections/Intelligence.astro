@@ -1,0 +1,218 @@
+---
+// Learning loop · Protocol analytics. The intelligence layer.
+import { learningLoop, adherence, cohortOutcomes } from '../../data/ops.mjs';
+import { protocolVersions, qualityMetrics } from '../../data/protocol.mjs';
+import { deviations, deviationReasonCodes } from '../../data/safety.mjs';
+const { role, view } = Astro.props;
+const R = `/${role.id}`;
+---
+
+{view === 'learning' && (
+  <div class="stack">
+    <div class="card">
+      <div class="card-head"><h3>The loop</h3><span class="hint">EMR Proposal §4, Figure 3</span></div>
+      <div class="card-body">
+        <div class="flow">
+          {learningLoop.stages.map((s, i) => (
+            <>
+              <div class={`flow-step ${s.key === 'review' ? 'emph' : ''}`}>
+                <div class="fi">{String(i + 1).padStart(2, '0')}</div>
+                <div class="fn">{s.label}</div>
+                <div class="fd">{s.detail}</div>
+              </div>
+              {i < learningLoop.stages.length - 1 ? <span class="flow-arrow">→</span> : null}
+            </>
+          ))}
+        </div>
+        <div class="note warn" style="margin-top:16px">
+          <span class="lbl">The guardrail</span>
+          {learningLoop.guardrail}
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-title">Insights raised, and what happened to each</div>
+    {learningLoop.insights.map((i) => (
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>{i.id} — {i.status.split('→')[0].trim()}</h3>
+            <div class="tiny muted" style="margin-top:3px">Raised {i.raised} · confidence {i.confidence}</div>
+          </div>
+          <span class={`chip ${i.status.startsWith('Rejected') ? 'stop' : i.status.includes('protocol v1.1') ? 'warn' : 'ok'}`}>{i.status}</span>
+        </div>
+        <div class="card-body">
+          <dl class="defs">
+            <div class="def"><dt>What the data showed</dt><dd>{i.finding}</dd></div>
+            <div class="def"><dt>Basis</dt><dd>{i.basis}</dd></div>
+            <div class="def"><dt>Proposed by the intelligence layer</dt><dd>{i.proposal}</dd></div>
+            <div class="def"><dt>Human clinical review</dt><dd>{i.reviewer} · {i.reviewed}</dd></div>
+            <div class="def"><dt>Outcome</dt><dd>{i.outcome}</dd></div>
+          </dl>
+        </div>
+      </div>
+    ))}
+
+    <div class="note">
+      <span class="lbl">Why a rejected insight is kept</span>
+      INS-002 was rejected, and the reasoning is stored with it. That matters twice over: an auditor can
+      see that a proposal to narrow a safety parameter was considered and refused on statistical grounds,
+      and the engine will not re-raise the same signal as though it were new. A learning loop that only
+      keeps its wins is not an evidence trail.
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>What the loop produced</h3></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Version</th><th>State</th><th>Change</th><th>Origin</th><th>Approvals</th></tr></thead>
+          <tbody>
+            {protocolVersions.map((v) => (
+              <tr class={v.state === 'In review' ? 'is-warn' : ''}>
+                <td class="mono" style="font-weight:700">v{v.version}</td>
+                <td><span class={`chip ${v.state === 'Effective' ? 'ok' : 'warn'}`}>{v.state}</span><div class="s">{v.effective}</div></td>
+                <td class="s" style="max-width:380px">{v.note}</td>
+                <td class="s">{v.author} · {v.date}</td>
+                <td>
+                  <div class="chip-row">
+                    {v.approvals.map((a) => <span class={`chip ${a.includes('✓') ? 'ok' : a.includes('pending') ? 'warn' : ''}`}>{a}</span>)}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        v1.1 came out of INS-004. It is drafted, it has two of four approvals, and it is
+        <b> not running</b>. The clinic is still executing v1.0 today, exactly as it should be.
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'analytics' && (
+  <div class="stack">
+    <div class="stats g4">
+      <div class="stat is-ok"><div class="k">Overall adherence</div><div class="v">{adherence.overall}%</div><div class="n">Across 22 treatment days</div></div>
+      <div class="stat"><div class="k">IV push duration</div><div class="v small">{adherence.ivDuration.median}</div><div class="n">Target {adherence.ivDuration.target} · {adherence.ivDuration.outOfRange} out of range</div></div>
+      <div class="stat is-warn"><div class="k">Documentation</div><div class="v">{adherence.documentation.rate}%</div><div class="n">{adherence.documentation.formsFiled} of {adherence.documentation.formsRequired} forms filed</div></div>
+      <div class="stat is-warn"><div class="k">Deviations</div><div class="v">{deviations.length}</div><div class="n">All minor, all reviewed, 2 with corrective action</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Adherence by gate</h3><span class="hint">§4 — adherence dashboards by protocol, team and site</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Gate</th><th>Executions</th><th>On protocol</th><th>Held</th><th>Rate</th><th></th><th>Note</th></tr></thead>
+          <tbody>
+            {adherence.byGate.map((g) => (
+              <tr>
+                <td><span class="chip mono" style="font-weight:700">{g.gate}</span> <span class="t">{g.name}</span></td>
+                <td class="n">{g.executions}</td>
+                <td class="n">{g.onProtocol}</td>
+                <td class="n">{g.blocked ? <span class="chip stop">{g.blocked}</span> : '0'}</td>
+                <td class="n" style="font-weight:700">{g.rate}%</td>
+                <td style="width:130px"><div class="meter"><i class={g.rate === 100 ? '' : 'warn'} style={`width:${g.rate}%`}></i></div></td>
+                <td class="s">{g.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        A gate that held a session is counted as held, not as a failure. Gate A's 95.5 % is the engine
+        working: it refused to release quarantined product. Adherence measures whether the protocol was
+        followed, and refusing to proceed <em>is</em> following it.
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><h3>Monitoring timepoint punctuality</h3><span class="hint">Appendix C windows</span></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Timepoint</th><th>On time</th><th>Late</th><th>Median drift</th><th></th></tr></thead>
+            <tbody>
+              {adherence.timepointPunctuality.map((t) => (
+                <tr class={t.late ? 'is-warn' : ''}>
+                  <td class="t">{t.tp}</td>
+                  <td class="n">{t.onTime}</td>
+                  <td class="n">{t.late}</td>
+                  <td class="mono n">{t.medianDrift}</td>
+                  <td style="width:110px"><div class="meter"><i class={t.late ? 'warn' : ''} style={`width:${Math.round((t.onTime / (t.onTime + t.late)) * 100)}%`}></i></div></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-note">
+          Drift is measured because it is measurable. The single late 120-minute observation produced
+          DEV-0011, which produced a roster change, which produced nineteen on-time observations since.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Deviation reason codes</h3></div>
+        <div class="card-body flush">
+          {deviationReasonCodes.map((c) => (
+            <div class="check open" style="grid-template-columns:1fr auto">
+              <span>
+                <span class="cl mono" style="font-size:12px">{c.code}</span>
+                <span class="cm" style="display:block">{c.label}</span>
+              </span>
+              <span class={`chip ${c.count ? 'warn' : 'ok'}`}>{c.count}</span>
+            </div>
+          ))}
+        </div>
+        <div class="card-note">
+          Two codes have never fired: <span class="mono">PRODUCT-HOLD</span> and
+          <span class="mono"> CONSENT-LAPSE</span>. Both nearly did today — and in each case the gate
+          stopped the session <em>before</em> a deviation could occur. A prevented deviation is a better
+          outcome than a well-documented one.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Cohort measures</h3><span class="chip warn">Exploratory and descriptive only</span></div>
+      <div class="card-body">
+        <div class="note warn" style="margin-bottom:14px">{cohortOutcomes.note}</div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Measure</th><th>Baseline mean</th><th>Latest mean</th><th>n</th><th>Direction</th><th>Caveat carried with the number</th></tr></thead>
+            <tbody>
+              {cohortOutcomes.measures.map((m) => (
+                <tr>
+                  <td class="t">{m.measure}</td>
+                  <td class="n mono">{m.baselineMean}</td>
+                  <td class="n mono">{m.latestMean}</td>
+                  <td class="n">{m.n}</td>
+                  <td><span class={`chip ${m.direction === 'flat' ? 'held' : 'ok'}`}>{m.direction === 'up' ? '↑' : m.direction === 'down' ? '↓' : '→'} {m.direction}</span></td>
+                  <td class="s">{m.caveat}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div class="note" style="margin-top:14px">
+          <b>Every number here ships with its caveat attached.</b> This is an open-label study of an
+          investigational regimen with n=8 and no control arm. A platform that displayed these as clean
+          "outcomes" would be doing the programme a disservice — and would not survive an ethics review.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Outstanding documentation</h3><span class="chip warn">{adherence.documentation.outstanding.length}</span></div>
+      <div class="card-body flush">
+        {adherence.documentation.outstanding.map((o) => (
+          <div class="check open" style="grid-template-columns:22px 1fr">
+            <span class="box" style="border-style:dashed"></span>
+            <span><span class="cl">{o}</span></span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
