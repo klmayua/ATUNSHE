@@ -237,7 +237,7 @@ export const patients = [
       note: 'Suspended automatically on capacity re-assessment. The record is not deleted or overwritten: the original consent stands in history with a superseding status entry (ALCOA+).',
       history: [
         { v: 'v2.0', event: 'Signed by patient', when: '19 Aug 2026', by: 'Dr. E. Obi' },
-        { v: 'v2.0', event: 'Capacity re-assessment — capacity not retained', when: '24 Aug 2026', by: 'Dr. F. Sola' },
+        { v: 'v2.0', event: 'Capacity re-assessment — capacity not retained', when: '24 Aug 2026', by: 'Dr. Sola' },
         { v: 'v2.0', event: 'Consent suspended pending LAR execution', when: '24 Aug 2026', by: 'System (capacity rule)' },
         { v: 'v2.1', event: 'LAR consent issued for signature', when: '25 Aug 2026', by: 'N. Aluko' },
       ],
@@ -527,7 +527,7 @@ export const patients = [
       note: 'Screening record retained under the research file; no treatment consent opened.',
       history: [
         { v: '—', event: 'Screening opened', when: '20 Aug 2026', by: 'N. Aluko' },
-        { v: '—', event: 'Eligibility determination: not eligible', when: '22 Aug 2026', by: 'Dr. F. Sola' },
+        { v: '—', event: 'Eligibility determination: not eligible', when: '22 Aug 2026', by: 'Dr. Sola' },
       ],
     },
     vitalsPre: { bp: '188/112', hr: '88', rr: '17', spo2: '97%', temp: '36.8 °C', neuro: 'Alert, orientated ×3' },
@@ -555,7 +555,7 @@ export const funnel = [
 
 // --- Today's chair schedule -------------------------------------------------
 export const chairSchedule = [
-  { time: '09:30', chair: 'Chair 2', patient: 'ATN-0004', name: 'Mrs. Folake Adewale', what: 'Session 4 of 6', state: 'In progress', staff: 'N. Bello · Dr. Sola · C. Nwosu' },
+  { time: '09:30', chair: 'Chair 2', patient: 'ATN-0004', name: 'Mrs. Folake Adewale', what: 'Session 4 of 6', state: 'In progress', staff: 'N. Bello · Dr. Sola · Dr. Adesanya · C. Nwosu' },
   { time: '11:00', chair: 'Chair 1', patient: 'ATN-0003', name: 'Alhaji Musa Danjuma', what: 'Session 3 of 6', state: 'Held — Gate A', staff: 'T. Ilesanmi' },
   { time: '13:00', chair: 'Room 4', patient: 'ATN-0006', name: 'Mrs. Yetunde Balogun', what: 'Screening — ENT referral', state: 'Held — eligibility', staff: 'N. Aluko' },
   { time: '14:00', chair: 'Chair 1', patient: 'ATN-0005', name: 'Dr. Emeka Obi', what: 'Session 1 of 6', state: 'Held — Gate B', staff: 'N. Aluko · Dr. Sola' },

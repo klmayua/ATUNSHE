@@ -107,6 +107,11 @@ export const roleFocus = {
     headline: 'Three decisions carry your signature today',
     line: 'One session is waiting on your authorisation, one course is halted pending your determination, and a protocol amendment raised by the learning loop is waiting on two more approvals.',
   },
+  attending: {
+    kicker: 'Clinical cover',
+    headline: 'You can close the timeout that is holding Chair 2',
+    line: 'Nurse Bello signed as verifier at 09:34 and cannot also witness. You are a different authenticated user, so your witness signature is accepted — but the authorisation line is Dr. Sola’s alone, and the platform will refuse you there.',
+  },
   nurse: {
     kicker: 'Your clinic',
     headline: 'Chair 2 is running; Chair 1 will not open',

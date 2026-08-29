@@ -347,7 +347,7 @@ function thawRemaining(t) {
   })}
 </div>
 
-<script is:inline define:vars={{ me: { id: role.id, short: role.short, name: role.name, canAuthorise: role.canAuthorise, canWitness: role.canWitness } }}>
+<script is:inline define:vars={{ me: { id: role.id, short: role.short, name: role.name, role: role.role, canAuthorise: role.canAuthorise, canWitness: role.canWitness } }}>
   // Session switcher
   const tabs = document.querySelectorAll('.sess-tab');
   function showSess(id) {
@@ -389,15 +389,15 @@ function thawRemaining(t) {
 
       if (needs === 'canAuthorise' && !me.canAuthorise) {
         ok = false;
-        msg = '<b>Signature refused.</b> Physician authorisation under §5.2 C may only be recorded by a role holding authorisation authority — the Principal Investigator. Your role is ' + me.short + '. Nothing has been written to the record; the refusal itself is logged to the audit trail.';
+        msg = '<b>Signature refused.</b> Physician authorisation under §5.2 C may only be recorded by a role holding authorisation authority. §3 Table 4 reserves that to the Principal Investigator, Dr. Sola. You are signed in as ' + me.short + ' (' + me.role + '), who may examine, review and witness but may not authorise an administration. Nothing has been written to the record; the refusal itself is logged to the audit trail.';
       } else if (differs && me.id === ALREADY_VERIFIER) {
         ok = false;
-        msg = '<b>Signature refused — two-person verification.</b> You (' + me.short + ') are already recorded as the verifier at 09:34. §5.2 C requires the witness to be an independent second person. The platform compares authenticated identities, so one person cannot satisfy both halves of a timeout, however the paper form is filled in. Ask a second signed-in clinical user to witness.';
+        msg = '<b>Signature refused — two-person verification.</b> You (' + me.short + ') are already recorded as the verifier at 09:34. §5.2 C requires the witness to be an independent second person. The platform compares authenticated identities, so one person cannot satisfy both halves of a timeout, however the paper form is filled in. A second signed-in clinical user must witness — Dr. Adesanya (Sub-Investigator) is on the unit and can.';
       } else if (!me.canWitness) {
         ok = false;
         msg = '<b>Signature refused.</b> Your role is not permitted to witness a pre-dose timeout.';
       } else {
-        msg = '<b>Signature recorded.</b> ' + me.short + ' witnessed the timeout at ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + '. A ledger entry has been appended (who / did what / when / authority / to what / what next) and Gate C can now close once physician authorisation is recorded.';
+        msg = '<b>Signature recorded.</b> ' + me.short + ' (' + me.role + ') witnessed the timeout at ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ', as a different authenticated identity from the verifier. A ledger entry has been appended — who / did what / when / authority / to what / what next — and Gate C now waits only on physician authorisation from Dr. Sola.';
       }
 
       out.className = 'sig-result note ' + (ok ? 'ok' : 'stop');

@@ -514,6 +514,8 @@ table { border-collapse: collapse; width: 100%; }
   background: var(--surface); transition: 0.14s; min-width: 0;
 }
 .signin-role:hover { border-color: var(--accent); background: var(--surface-2); box-shadow: var(--shadow); transform: translateY(-1px); }
+.signin-role.picked { border-color: var(--accent); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--accent); }
+.signin-role.picked .nm::after { content: ' ✓'; color: var(--accent); font-weight: 700; }
 .signin-role .av {
   width: 32px; height: 32px; border-radius: 50%; background: var(--accent);
   color: #fff; display: grid; place-items: center; font-weight: 650; font-size: 11.5px; flex: none;

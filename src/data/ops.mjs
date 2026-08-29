@@ -79,7 +79,8 @@ export const revenue = {
 
 // --- §7 People & institutions -----------------------------------------------
 export const personnel = [
-  { name: 'Dr. Folasade Sola', role: 'Principal Investigator / Supervising Physician', dept: 'ADDSB Programme', reg: 'MDCN/R/48812', regExpiry: '2027-03-31', regStatus: 'Valid', gcp: 'ICH E6(R3) — 14 Feb 2026', gcpStatus: 'Valid', protocolTrained: 'v1.0 · 30 Jun 2026' },
+  { name: 'Dr. Sola', role: 'Principal Investigator / Supervising Physician', dept: 'ADDSB Programme', reg: 'MDCN/R/48812', regExpiry: '2027-03-31', regStatus: 'Valid', gcp: 'ICH E6(R3) — 14 Feb 2026', gcpStatus: 'Valid', protocolTrained: 'v1.0 · 30 Jun 2026' },
+  { name: 'Dr. Adesanya', role: 'Sub-Investigator / Attending Physician', dept: 'ADDSB Programme', reg: 'MDCN/R/51207', regExpiry: '2027-06-30', regStatus: 'Valid', gcp: 'ICH E6(R3) — 03 Mar 2026', gcpStatus: 'Valid', protocolTrained: 'v1.0 · 02 Jul 2026 · delegation log signed by PI' },
   { name: 'Nurse Amaka Bello', role: 'Clinic Nurse', dept: 'ADDSB Programme', reg: 'NMCN/RN/220441', regExpiry: '2026-11-30', regStatus: 'Expiring in 96 days', gcp: 'ICH E6(R3) — 20 Feb 2026', gcpStatus: 'Valid', protocolTrained: 'v1.0 · 02 Jul 2026' },
   { name: 'Tunde Ilesanmi', role: 'Pharmacist / Product Custodian', dept: 'Pharmacy', reg: 'PCN/PH/19023', regExpiry: '2027-01-31', regStatus: 'Valid', gcp: 'ICH E6(R3) — 14 Feb 2026', gcpStatus: 'Valid', protocolTrained: 'v1.0 · 30 Jun 2026 · GDP cold chain 12 Jul 2026' },
   { name: 'Chidi Nwosu', role: 'ViaNase™ Device Operator', dept: 'ADDSB Programme', reg: '—', regExpiry: '—', regStatus: 'N/A', gcp: 'ICH E6(R3) — 06 Mar 2026', gcpStatus: 'Valid', protocolTrained: 'v1.0 · 02 Jul 2026 · ViaNase IFU 4.2 certified 08 Jul 2026' },
@@ -155,7 +156,7 @@ export const learningLoop = {
       basis: '22 treatment days, 5 AEs of this type, clustered by session number and timepoint.',
       proposal: 'Add a mandatory 24-hour caregiver telephone check after Session 1 only, and add a standing-BP measurement to the 30-minute timepoint for Session 1.',
       status: 'Accepted → drafted as protocol v1.1',
-      reviewer: 'Dr. F. Sola',
+      reviewer: 'Dr. Sola',
       reviewed: '24 Aug 2026',
       outcome: 'PI and Clinical Director approved. Medical Director and Ethics review pending. Not in force — v1.0 remains the effective version until v1.1 is approved and effective-dated.',
     },
@@ -167,7 +168,7 @@ export const learningLoop = {
       basis: '20 completed monitoring gates, 1 deviation, roster data joined to session times.',
       proposal: 'Operational, not protocol: roster a second monitoring nurse whenever two chairs are scheduled to overlap.',
       status: 'Accepted → operational change, no protocol amendment',
-      reviewer: 'Dr. F. Sola',
+      reviewer: 'Dr. Sola',
       reviewed: '15 Aug 2026',
       outcome: 'Implemented in the roster from 17 Aug. No recurrence since. Recorded as the corrective action on DEV-0011.',
     },
@@ -179,7 +180,7 @@ export const learningLoop = {
       basis: '20 IV administrations across 3 operators.',
       proposal: 'Consider narrowing the permitted push window.',
       status: 'Rejected by clinical review',
-      reviewer: 'Dr. F. Sola',
+      reviewer: 'Dr. Sola',
       reviewed: '08 Aug 2026',
       outcome:
         'Rejected. All durations were inside the protocol window, no reactions correlated with the shorter durations, and n is far too small to justify narrowing a safety parameter. Recorded with the reasoning so the same signal is not re-raised — a rejected insight is part of the evidence trail, not a deleted one.',
@@ -192,7 +193,7 @@ export const learningLoop = {
       basis: '5 AEs, 1 SAE, 1 PQC.',
       proposal: 'No change. Report as a quality metric to the governance board.',
       status: 'Accepted → reporting only',
-      reviewer: 'Dr. F. Sola',
+      reviewer: 'Dr. Sola',
       reviewed: '30 Jul 2026',
       outcome: 'Added to the standing quality-metric pack.',
     },

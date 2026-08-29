@@ -45,32 +45,32 @@ const people = ROLES.filter((r) => r.isPatient || r.isCaregiver);
         <div class="signin-group-label">Clinical &amp; operations</div>
         <div class="signin-grid">
           {staff.map((r) => (
-            <a class="signin-role" style={`--accent:${r.accent}`} href={`/${r.id}/${r.home}/`}>
+            <button type="button" class="signin-role" data-role={r.id} style={`--accent:${r.accent}`}>
               <span class="av">{r.initials}</span>
               <span class="tx">
                 <span class="nm">{r.name}</span>
                 <span class="rl">{r.role}</span>
               </span>
-            </a>
+            </button>
           ))}
         </div>
 
         <div class="signin-group-label">Patient &amp; family</div>
         <div class="signin-grid">
           {people.map((r) => (
-            <a class="signin-role" style={`--accent:${r.accent}`} href={`/${r.id}/${r.home}/`}>
+            <button type="button" class="signin-role" data-role={r.id} style={`--accent:${r.accent}`}>
               <span class="av">{r.initials}</span>
               <span class="tx">
                 <span class="nm">{r.name}</span>
                 <span class="rl">{r.role}</span>
               </span>
-            </a>
+            </button>
           ))}
         </div>
 
-        <p class="signin-note">
-          Demonstration environment · password <span class="mono">demo</span> for every account.
-          All patient data is fabricated.
+        <p class="signin-note" id="hint">
+          Choose an account above to fill in its credentials, then sign in.
+          Password is <span class="mono">demo</span> for every account. All patient data is fabricated.
         </p>
       </div>
 
@@ -80,14 +80,35 @@ const people = ROLES.filter((r) => r.isPatient || r.isCaregiver);
       </p>
     </main>
 
-    <script is:inline define:vars={{ roles: ROLES.map((r) => ({ id: r.id, u: r.username, p: r.password, home: r.home })) }}>
+    <script is:inline define:vars={{ roles: ROLES.map((r) => ({ id: r.id, u: r.username, p: r.password, home: r.home, name: r.name })) }}>
       const f = document.getElementById('f');
       const e = document.getElementById('err');
+      const uEl = document.getElementById('u');
+      const pEl = document.getElementById('p');
+      const hint = document.getElementById('hint');
+
+      // Choosing an account fills the credentials. It does NOT sign in —
+      // the user still clicks Sign in, so the login step is actually seen.
+      document.querySelectorAll('.signin-role').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const r = roles.find((x) => x.id === btn.dataset.role);
+          if (!r) return;
+          e.style.display = 'none';
+          uEl.value = r.u;
+          pEl.value = r.p;
+          document.querySelectorAll('.signin-role').forEach((b) => b.classList.remove('picked'));
+          btn.classList.add('picked');
+          hint.innerHTML =
+            'Credentials filled for <b>' + r.name + '</b>. Click <b>Sign in</b> to continue.';
+          uEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      });
+
       f.addEventListener('submit', (ev) => {
         ev.preventDefault();
         e.style.display = 'none';
-        const u = document.getElementById('u').value.trim().toLowerCase();
-        const p = document.getElementById('p').value;
+        const u = uEl.value.trim().toLowerCase();
+        const p = pEl.value;
         const r = roles.find((x) => x.u === u || x.id === u);
         if (!r) {
           e.textContent = 'No account matches that username.';

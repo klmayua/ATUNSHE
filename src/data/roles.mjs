@@ -15,12 +15,12 @@
 export const ROLES = [
   {
     id: 'pi',
-    name: 'Dr. Folasade Sola',
+    name: 'Dr. Sola',
     short: 'Dr. Sola',
-    initials: 'FS',
+    initials: 'SO',
     role: 'Principal Investigator',
     roleFull: 'Principal Investigator / Supervising Physician',
-    username: 'f.sola',
+    username: 'sola',
     password: 'demo',
     duties:
       'Final eligibility determination; confirms the treatment regimen; authorises each administration; risk–benefit assessment; AE/SAE management and reporting; stopping decisions.',
@@ -35,6 +35,34 @@ export const ROLES = [
       'command', 'cohort', 'patient', 'session', 'protocols', 'protocol', 'forms', 'form',
       'safety', 'consent', 'custody', 'audit', 'product', 'device', 'schedule',
       'analytics', 'learning', 'people', 'architecture', 'delivery', 'ogami', 'mobile',
+    ],
+  },
+  {
+    // Sub-Investigator. §3 Table 4 reserves final eligibility, administration
+    // authorisation and stopping decisions to the Principal Investigator, so
+    // this role can examine, review and WITNESS a timeout — but cannot sign
+    // the authorisation line. That distinction is the point of having both.
+    id: 'attending',
+    name: 'Dr. Adesanya',
+    short: 'Dr. Adesanya',
+    initials: 'TA',
+    role: 'Sub-Investigator',
+    roleFull: 'Sub-Investigator / Attending Physician',
+    username: 'adesanya',
+    password: 'demo',
+    duties:
+      'Clinical examination and pre-session safety review under the Principal Investigator; independent witness at the pre-dose timeout; adverse-event recognition, grading and escalation. Final eligibility, administration authorisation and stopping decisions remain with the PI.',
+    protocolRef: '§3 Table 4 — delegated',
+    home: 'command',
+    accent: '#1b5e63',
+    canAuthorise: false,
+    canWitness: true,
+    canSignOff: false,
+    breakGlass: false,
+    allow: [
+      'command', 'cohort', 'patient', 'session', 'protocols', 'protocol', 'forms', 'form',
+      'safety', 'consent', 'schedule', 'analytics', 'learning', 'product', 'device',
+      'mobile', 'ogami',
     ],
   },
   {

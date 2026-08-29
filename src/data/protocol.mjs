@@ -38,7 +38,7 @@ export const protocolMeta = {
     'Open-label, physician-supervised, biomarker-informed early clinical study of an investigational dual-route extracellular-vesicle biologic regimen',
   sponsor: 'KweHealth, LLC',
   site: 'Atunse Healthcare Ltd.',
-  pi: 'Dr. Folasade Sola',
+  pi: 'Dr. Sola',
   indication: 'Adults with documented dementia or progressive cognitive decline',
   regimen:
     'Six weekly sessions. Each session: IV Rejuvenate Serum™ 1 mL (70B EV) by slow push, then intranasal ExoPure™ 140B 3 mL (140B EV) via ViaNase™. Fixed dose, no escalation.',
@@ -405,7 +405,7 @@ export const standards = [
 // --- Protocol lifecycle (§4 of the EMR proposal) ----------------------------
 export const protocolVersions = [
   { version: '1.0', date: '2026-06-29', author: 'KweHealth, LLC', state: 'Effective', effective: '2026-06-29', note: 'Standardized clinical protocol for the dual-route ADDSB regimen in dementia, mapped to the KweHealth clinical protocol template.', approvals: ['Principal Investigator', 'Clinical Director', 'Medical Director', 'Ethics / Regulatory Reviewer'] },
-  { version: '1.1', date: '2026-08-24', author: 'Dr. F. Sola', state: 'In review', effective: 'Pending approval', note: 'Proposed: add a mandatory 24 h caregiver telephone check after Session 1 only. Raised by the learning loop from 3 recorded Session-1 dizziness events (all mild, all resolved).', approvals: ['Principal Investigator ✓', 'Clinical Director ✓', 'Medical Director — pending', 'Ethics / Regulatory Reviewer — pending'] },
+  { version: '1.1', date: '2026-08-24', author: 'Dr. Sola', state: 'In review', effective: 'Pending approval', note: 'Proposed: add a mandatory 24 h caregiver telephone check after Session 1 only. Raised by the learning loop from 3 recorded Session-1 dizziness events (all mild, all resolved).', approvals: ['Principal Investigator ✓', 'Clinical Director ✓', 'Medical Director — pending', 'Ethics / Regulatory Reviewer — pending'] },
 ];
 
 export const relatedProtocols = [

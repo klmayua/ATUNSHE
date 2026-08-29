@@ -43,7 +43,7 @@ export const custodyLedger = [
   },
   {
     seq: 1044,
-    who: 'Dr. F. Sola',
+    who: 'Dr. Sola',
     whoRole: 'Principal Investigator',
     did: 'Completed pre-session safety review — no stopping criterion present',
     when: '26 Aug 2026 · 09:29:18 WAT',
@@ -108,7 +108,7 @@ export const custodyLedger = [
   },
   {
     seq: 1038,
-    who: 'Dr. F. Sola',
+    who: 'Dr. Sola',
     whoRole: 'Principal Investigator',
     did: 'Recorded stopping decision and study hold',
     when: '12 Aug 2026 · 12:04:31 WAT',
@@ -180,17 +180,17 @@ export const consentPurposes = [
 // --- Audit trail (ALCOA+) ---------------------------------------------------
 export const auditTrail = [
   { when: '26 Aug · 09:34:07', actor: 'N. Bello', action: 'SIGN', object: 'ATN-0004 · Session 4 · Gate C verifier signature', outcome: 'Recorded', ip: '10.20.4.18', device: 'Clinic tablet 03' },
-  { when: '26 Aug · 09:29:18', actor: 'Dr. F. Sola', action: 'CLOSE_GATE', object: 'ATN-0004 · Session 4 · Gate B', outcome: 'Closed', ip: '10.20.4.02', device: 'Consult desktop' },
+  { when: '26 Aug · 09:29:18', actor: 'Dr. Sola', action: 'CLOSE_GATE', object: 'ATN-0004 · Session 4 · Gate B', outcome: 'Closed', ip: '10.20.4.02', device: 'Consult desktop' },
   { when: '26 Aug · 09:26:40', actor: 'System', action: 'VERIFY_CONSENT', object: 'ATN-0004 · consent v2.0', outcome: 'In force — gate check satisfied', ip: '—', device: 'Platform' },
   { when: '26 Aug · 09:12:04', actor: 'T. Ilesanmi', action: 'RELEASE_PRODUCT', object: 'RJV-70B-2608C, EXP-140B-2608B → ATN-0004 S4', outcome: 'Released', ip: '10.20.4.31', device: 'Pharmacy terminal' },
   { when: '26 Aug · 08:40:11', actor: 'T. Ilesanmi', action: 'THAW_START', object: 'Lot EXP-140B-2608B · 1 vial', outcome: 'Window opened — 12 h room temperature', ip: '10.20.4.31', device: 'Pharmacy terminal' },
-  { when: '26 Aug · 08:02:55', actor: 'Dr. F. Sola', action: 'AMEND', object: 'ATN-0004 · Session 3 note', outcome: 'Correction recorded as a NEW versioned entry; original retained and visible', ip: '10.20.4.02', device: 'Consult desktop' },
+  { when: '26 Aug · 08:02:55', actor: 'Dr. Sola', action: 'AMEND', object: 'ATN-0004 · Session 3 note', outcome: 'Correction recorded as a NEW versioned entry; original retained and visible', ip: '10.20.4.02', device: 'Consult desktop' },
   { when: '25 Aug · 17:44:02', actor: 'N. Aluko', action: 'ISSUE_CONSENT', object: 'ATN-0005 · LAR consent v2.1', outcome: 'Issued for signature', ip: '10.20.4.09', device: 'Coordinator desktop' },
   { when: '24 Aug · 16:02:44', actor: 'System', action: 'SUSPEND_CONSENT', object: 'ATN-0005 · consent v2.0', outcome: 'Suspended by capacity rule', ip: '—', device: 'Platform' },
   { when: '24 Aug · 05:34:12', actor: 'T. Ilesanmi', action: 'QUARANTINE', object: 'Lot EXP-140B-2608A · 9 vials', outcome: 'Quarantined', ip: '10.20.4.31', device: 'Pharmacy terminal' },
   { when: '24 Aug · 05:30:00', actor: 'System', action: 'RAISE_EXCURSION', object: 'Freezer 2 · −11.4 °C for 3 h 20 min', outcome: 'Excursion raised; lot release blocked', ip: '—', device: 'Platform' },
-  { when: '22 Aug · 11:18:37', actor: 'Dr. F. Sola', action: 'BREAK_GLASS', object: 'ATN-0007 · full record (out-of-scope access)', outcome: 'Granted — reason recorded, 4 h expiry, coordinator notified, entry flagged for review', ip: '10.20.4.02', device: 'Consult desktop' },
-  { when: '12 Aug · 12:04:31', actor: 'Dr. F. Sola', action: 'STOP_COURSE', object: 'ATN-0002 · Sessions 3–6', outcome: 'Suspended under §6.3', ip: '10.20.4.02', device: 'Consult desktop' },
+  { when: '22 Aug · 11:18:37', actor: 'Dr. Sola', action: 'BREAK_GLASS', object: 'ATN-0007 · full record (out-of-scope access)', outcome: 'Granted — reason recorded, 4 h expiry, coordinator notified, entry flagged for review', ip: '10.20.4.02', device: 'Consult desktop' },
+  { when: '12 Aug · 12:04:31', actor: 'Dr. Sola', action: 'STOP_COURSE', object: 'ATN-0002 · Sessions 3–6', outcome: 'Suspended under §6.3', ip: '10.20.4.02', device: 'Consult desktop' },
 ];
 
 export const auditPrinciples = [
@@ -206,7 +206,7 @@ export const breakGlass = {
   policy: 'Break-glass grants a permitted role time-boxed access outside their normal scope for an emergency. It is never silent.',
   requires: ['Stated reason, selected from a controlled list plus free text', 'Automatic 4-hour expiry', 'Immediate notification to the Study Coordinator and PI', 'Entry flagged for mandatory post-hoc review'],
   holders: ['Principal Investigator'],
-  lastUse: { when: '22 Aug 2026 · 11:18', who: 'Dr. F. Sola', what: 'ATN-0007 full record during out-of-hours hypertensive assessment', reason: 'Emergency clinical assessment — patient not on the accessing clinician’s active list', review: 'Reviewed and accepted 23 Aug by N. Aluko' },
+  lastUse: { when: '22 Aug 2026 · 11:18', who: 'Dr. Sola', what: 'ATN-0007 full record during out-of-hours hypertensive assessment', reason: 'Emergency clinical assessment — patient not on the accessing clinician’s active list', review: 'Reviewed and accepted 23 Aug by N. Aluko' },
 };
 
 export const dataGovernance = {

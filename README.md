@@ -45,14 +45,15 @@ prose can never drift from it:
 
 ## Roles
 
-Eight roles — six from protocol §3 Table 4, plus administration and the two patient-side
+Nine roles — six from protocol §3 Table 4 (one of them held by two physicians), plus administration and the two patient-side
 roles the proposal's §3 requires. Not invented personas: each role's permissions follow from
 the duties the protocol assigns it, because separation of duties is a clinical requirement
 before it is an interface choice.
 
 | Role | Sign in as | Lands on |
 |---|---|---|
-| Principal Investigator — Dr. Folasade Sola | `f.sola` | Command centre |
+| Principal Investigator — Dr. Sola | `sola` | Command centre |
+| Sub-Investigator — Dr. Adesanya | `adesanya` | Command centre |
 | Clinic Nurse — Amaka Bello | `a.bello` | Command centre |
 | Pharmacist / Product Custodian — Tunde Ilesanmi | `t.ilesanmi` | Product & cold chain |
 | ViaNase™ Device Operator — Chidi Nwosu | `c.nwosu` | Device log |
@@ -61,7 +62,7 @@ before it is an interface choice.
 | **Patient — Mrs. Comfort Eze (ATN-0008)** | `c.eze` | My care |
 | Caregiver — Mrs. Bisi Adewale | `b.adewale` | Daily diary |
 
-Password for all: `demo`. Or just click a role on the landing page.
+Password for all: `demo`. Choosing an account on the landing page fills its credentials into the form — you still click **Sign in**.
 
 ### The patient side
 
@@ -79,9 +80,12 @@ has no clinical record pages at all — not a hidden menu, no page. `npm run ver
 
 ## Four things worth clicking
 
-1. **`/nurse/session/`** → Gate C → *Sign as N. Bello*. The platform refuses: Nurse Bello is
-   already the verifier, and §5.2 C requires an independent second person. It compares
-   authenticated identities, not initials on paper.
+1. **The two-person timeout, from both sides.** `/nurse/session/` → Gate C → *Sign as N. Bello*
+   is **refused**: she is already the verifier and §5.2 C needs an independent second person.
+   Then `/attending/session/` → Gate C → the same button **succeeds** for Dr. Adesanya, because
+   she is a different authenticated identity — but the *authorisation* line refuses her too,
+   since §3 Table 4 reserves that to Dr. Sola alone. The platform compares identities and
+   authority, not initials on paper.
 2. **`/pharmacist/product/`** — the cold-chain excursion that is holding a session, and the
    quarantined lot that cannot be released.
 3. **`/pi/learning/`** — four insights from execution data. One was **rejected** by clinical
@@ -119,7 +123,7 @@ npm run check      # build + verify
 - every role reaches its declared landing page
 - no prose claim about gate, check or signature counts contradicts the engine
 
-Current: **176 pages · 3,336 internal links · 0 problems.**
+Current: **207 pages · 3,929 internal links · 0 problems.**
 
 ## Layout
 
@@ -127,7 +131,7 @@ Current: **176 pages · 3,336 internal links · 0 problems.**
 src/data/protocol.mjs      the executable protocol — gates, checks, stopping rules, clocks
 src/data/appendices.mjs    Appendices A–I as structured, gate-bound form definitions
 src/data/cohort.mjs        8 patients, each at a different point in the protocol
-src/data/roles.mjs         the 8 roles + RBAC, from protocol §3 Table 4
+src/data/roles.mjs         the 9 roles + RBAC, from protocol §3 Table 4
 src/data/trust.mjs         consent state, hash-chained custody ledger, ALCOA+ audit
 src/data/inventory.mjs     lots, cold chain, thaw windows, device log
 src/data/safety.mjs        AE/SAE register with clocks, deviations with reason codes
