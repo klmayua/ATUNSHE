@@ -1,234 +1,340 @@
 ---
+// THE COMMAND CENTRE.
+//
+// Rebuilt so each role gets a structurally different dashboard, not the same
+// skeleton with different rows. A custodian's day and a PI's day have almost
+// nothing in common; a dashboard that pretends otherwise is a template.
+//
+// Three bands, in this order:
+//   1. RIGHT NOW   — the live protocol, on the dashboard, with its gate chain
+//   2. YOUR DESK   — the worklist that actually belongs to this signed-in role
+//   3. PREVENTED   — what did not happen this month, and how we know
+import Spark from '../Spark.astro';
 import { patients, chairSchedule, upcomingWeek, funnel, TODAY } from '../../data/cohort.mjs';
 import { events, deviations } from '../../data/safety.mjs';
-import { qualityMetrics, gates, totalGateChecks } from '../../data/protocol.mjs';
-import { adherence, revenue, enquiries } from '../../data/ops.mjs';
-import { ledgerIntegrity } from '../../data/trust.mjs';
-import { lots } from '../../data/inventory.mjs';
+import { gates, evaluateGate, totalGateChecks, qualityMetrics } from '../../data/protocol.mjs';
+import { adherence, revenue, personnel, offlineScope } from '../../data/ops.mjs';
+import { ledgerIntegrity, consentRegister, auditTrail } from '../../data/trust.mjs';
+import { lots, tempLog, thawLog, devices, deviceUseLog, reconciliation } from '../../data/inventory.mjs';
+import { prevented, preventedNote, tempTrace, sessionsPerWeek, roleFocus } from '../../data/value.mjs';
 
 const { role } = Astro.props;
 const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
+const naira = (n) => '₦' + n.toLocaleString('en-NG');
 
-const canCohort = role.allow.includes('cohort');
-const canPatient = role.allow.includes('patient');
-const canSession = role.allow.includes('session');
-
+const live = patients.find((p) => p.status === 'live');
 const held = patients.filter((p) => p.status === 'blocked');
-const live = patients.filter((p) => p.status === 'live');
-const halted = patients.filter((p) => p.status === 'halted');
 const openEvents = events.filter((e) => e.status.startsWith('Open'));
 const quarantined = lots.filter((l) => !l.released);
+const focus = roleFocus[role.id] || { kicker: 'Today', headline: 'Programme status', line: '' };
 
-// Decisions that are genuinely waiting on this specific role.
-const DECISIONS = {
+// Live gate chain for the hero band.
+const heroGates = live
+  ? gates.map((g) => {
+      const st = live.live.gateState[g.key] || {};
+      const ev = evaluateGate(g, st);
+      const order = gates.map((x) => x.key);
+      let cls = 'locked';
+      if (st.closedAt) cls = 'done';
+      else if (ev.status === 'blocked') cls = 'blocked';
+      else if (live.live.currentGate === g.key) cls = 'active';
+      else if (order.indexOf(g.key) < order.indexOf(live.live.currentGate)) cls = 'done';
+      return { key: g.key, name: g.name.split(' — ')[0], cls, ev };
+    })
+  : [];
+
+const maxSessions = Math.max(...sessionsPerWeek.map((s) => s.n + (s.held || 0)));
+
+// ---------------------------------------------------------------------------
+// Per-role worklists. Each item is a real object in the data with a real route.
+// ---------------------------------------------------------------------------
+const WORK = {
   pi: [
-    { t: 'SAE-0002 — determination required', s: 'ATN-0002 course halted since 12 Aug under §6.3 (neurologic worsening). Ethics review 27 Aug. Resume, withdraw, or amend.', tone: 'stop', href: `${R}/safety/` },
-    { t: 'Protocol v1.1 — your approval is recorded, two remain', s: 'Raised by the learning loop from 3 Session-1 dizziness events. Medical Director and Ethics still pending. v1.0 remains in force until then.', tone: 'warn', href: `${R}/protocols/` },
-    { t: 'ATN-0004 Session 4 — awaiting your authorisation', s: 'Gates A and B closed. Timeout has one of two signatures. Your authorisation is the third and last.', tone: 'live', href: `${R}/session/` },
-    { t: 'ATN-0006 eligibility — held pending ENT', s: 'Nasal obstruction found at screening. Exclusion criterion under assessment; ENT review Fri 28 Aug.', tone: 'warn', href: `${R}/cohort/` },
+    { p: 'pri', t: 'SAE-0002 — your determination is the gate', s: 'ATN-0002 halted since 12 Aug under §6.3 (neurologic worsening). CT clear, event resolved, NfL raised versus baseline. Ethics review 27 Aug. Resume, withdraw, or amend the protocol.', m: 'Open 14 days · patient suspended · ethics informed', href: can('safety') ? `${R}/safety/` : null, tag: 'Blocking', tone: 'stop' },
+    { p: 'now', t: 'ATN-0004 Session 4 — physician authorisation outstanding', s: 'Gates A and B closed and ledger-recorded. Timeout holds one of two witness signatures. Yours is the authorising third.', m: 'Chair 2 · started 09:31 · thaw window closes 20:40', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live' },
+    { p: 'act', t: 'Protocol v1.1 — two approvals still required', s: 'Raised by the learning loop from three Session-1 dizziness events. You and the Clinical Director have signed; Medical Director and Ethics have not. v1.0 remains in force until they do.', m: 'INS-004 · drafted 24 Aug · not executing', href: can('protocols') ? `${R}/protocols/` : null, tag: 'Approval', tone: 'warn' },
+    { p: 'act', t: 'ATN-0006 eligibility determination — held', s: 'Nasal eligibility examination found significant right-sided obstruction, an exclusion criterion under §5.1. ENT review Friday 28 Aug, then your determination.', m: 'Screening open 4 days · consent not yet sought', href: can('cohort') ? `${R}/cohort/` : null, tag: 'Decision', tone: 'warn' },
   ],
   nurse: [
-    { t: 'ATN-0004 Session 4 — you are the verifier', s: 'You signed the timeout at 09:34. It needs an independent witness before Gate D opens. You cannot be both.', tone: 'live', href: `${R}/session/` },
-    { t: 'Chair 1 at 11:00 will not proceed', s: 'ATN-0003 product is quarantined. Do not prepare the chair; the custodian is handling it.', tone: 'stop', href: `${R}/session/` },
-    { t: 'Your NMCN registration expires in 96 days', s: 'NMCN/RN/220441 · 30 Nov 2026. Renewal reminder issued.', tone: 'warn', href: `${R}/safety/` },
+    { p: 'now', t: 'ATN-0004 Session 4 — you are the verifier, not the witness', s: 'You signed the timeout at 09:34. §5.2 C requires an independent second person before Gate D opens. Ask a second signed-in clinical user; the platform will refuse you.', m: 'Chair 2 · Gate C · 7 of 7 items verified, 1 of 2 signatures', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live' },
+    { p: 'pri', t: 'Do not prepare Chair 1 for 11:00', s: 'ATN-0003 is held at Gate A on quarantined product. The custodian owns clearing it. The patient is still expected — this is a hold, not a cancellation.', m: 'ATN-0003 · Session 3 of 6 · lot EXP-140B-2608A', href: can('session') ? `${R}/session/` : null, tag: 'Held', tone: 'stop' },
+    { p: 'act', t: 'Callback owed — Mrs. Bisi Adewale', s: 'Caregiver reported restlessness on Sunday evening through Ogami. Already in the diary for 23 Aug and attached to today’s interval review. She asked for a nurse call.', m: 'Raised 08:12 via WhatsApp · attached to ATN-0004 Gate B', href: can('cohort') ? `${R}/cohort/` : null, tag: 'Today', tone: 'warn' },
+    { p: 'act', t: 'Your NMCN registration expires in 96 days', s: 'NMCN/RN/220441 lapses 30 Nov 2026. On expiry the platform removes you from roster eligibility for administration, and gates requiring your signature will not accept it.', m: 'Renewal reminder issued', href: null, tag: 'Credential', tone: 'warn' },
   ],
   pharmacist: [
-    { t: 'Lot EXP-140B-2608A quarantined — 9 vials', s: 'Freezer 2 excursion 24 Aug (−11.4 °C, 3 h 20 min). PQC-0001 open with sponsor. This is what is holding ATN-0003.', tone: 'stop', href: `${R}/product/` },
-    { t: 'Two thaw windows open now', s: 'EXP-140B-2608B and RJV-70B-2608C thawed 08:40 for ATN-0004. Both close 20:40.', tone: 'live', href: `${R}/product/` },
-    { t: 'Substitute lot needed for ATN-0003', s: 'EXP-140B-2607A is released and in date with 6 vials. Release decision is yours.', tone: 'warn', href: `${R}/product/` },
+    { p: 'pri', t: 'Lot EXP-140B-2608A — 9 vials quarantined', s: 'Freezer 2 door seal failed on 24 Aug: −11.4 °C for 3 h 20 min against a ≤ −20 °C requirement. You raised PQC-0001 within 2 h 45 min. Sponsor determination outstanding.', m: 'Quarantine store · no patient exposure · KWE-PQC-2026-0009', href: can('product') ? `${R}/product/` : null, tag: 'Blocking', tone: 'stop' },
+    { p: 'pri', t: 'Release decision needed for ATN-0003, 11:00', s: 'EXP-140B-2607A is released, in date to 12 Jan 2027 and holds six vials. Substituting it clears Gate A. The decision is yours, and it is recorded as yours.', m: 'Session held 0 h 00 · patient expected 11:00', href: can('product') ? `${R}/product/` : null, tag: 'Decision', tone: 'warn' },
+    { p: 'now', t: 'Two thaw windows open', s: 'EXP-140B-2608B and RJV-70B-2608C thawed at 08:40 at room temperature. Both close at 20:40. Gate E re-checks the window at delivery, not at release.', m: '11 h 06 remaining of 12 h', href: can('product') ? `${R}/product/` : null, tag: 'Live now', tone: 'live' },
+    { p: 'done', t: 'Reconciliation balanced', s: `${reconciliation.discrepancies} discrepancies. 48 vials of each product received; 12 and 13 administered; 1 wasted, accounted to the ATN-0002 stopped session.`, m: reconciliation.lastReconciled, href: can('product') ? `${R}/product/` : null, tag: 'Clear', tone: 'ok' },
   ],
   operator: [
-    { t: 'ATN-0004 Session 4 — Gate E not yet reached', s: 'Device VN-CPD-004417 checked and passed at 08:55. Waiting on the timeout and the IV route.', tone: 'live', href: `${R}/session/` },
-    { t: '11:00 intranasal delivery cancelled', s: 'ATN-0003 held at Gate A. No device preparation required.', tone: 'stop', href: `${R}/device/` },
+    { p: 'now', t: 'ATN-0004 Session 4 — Gate E not yet reached', s: 'VN-CPD-004417 passed its output check at 08:55 against IFU rev. 4.2. The session is at Gate C; intranasal delivery follows the IV route.', m: 'Chair 2 · lot EXP-140B-2608B · 3 mL, both nostrils', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live' },
+    { p: 'pri', t: '11:00 intranasal delivery cancelled upstream', s: 'ATN-0003 held at Gate A on product. No device preparation, no adapter drawn. The device log will record that no delivery occurred rather than being left blank.', m: 'ATN-0003 · Session 3 of 6', href: can('device') ? `${R}/device/` : null, tag: 'Held', tone: 'stop' },
+    { p: 'done', t: 'Both devices in service, zero malfunctions', s: '27 uses on VN-CPD-004417 and 4 on the reserve unit, with a single-use adapter and cartridge discarded after every one.', m: 'Last clean 25 Aug · IFU §7', href: can('device') ? `${R}/device/` : null, tag: 'Clear', tone: 'ok' },
   ],
   coordinator: [
-    { t: 'ATN-0005 LAR consent v2.1 unsigned', s: 'Issued 25 Aug to Mrs. Chioma Obi. Today’s 14:00 session is held at Gate B until it is executed.', tone: 'stop', href: `${R}/consent/` },
-    { t: 'Three forms outstanding', s: 'ATN-0003 Appendix E (held session), ATN-0005 Appendix H, ATN-0002 Appendix D outcome narrative.', tone: 'warn', href: `${R}/forms/` },
-    { t: 'Sponsor coded export due Monday 31 Aug', s: 'Weekly run under the DPA. DPA parameters still pending confirmation with KweHealth.', tone: 'warn', href: `${R}/audit/` },
-    { t: 'ENQ-0142 screening call booked', s: 'Mrs. Adaeze Uche, Thu 27 Aug 10:00. Ogami captured and booked it; escalated to you for fees.', tone: 'ok', href: `${R}/crm/` },
+    { p: 'pri', t: 'ATN-0005 LAR consent v2.1 unsigned — a treatment is held on it', s: 'You issued it on 25 Aug to Mrs. Chioma Obi after the 24 Aug capacity re-assessment. Today’s 14:00 session sits at Gate B and will not proceed until it is executed.', m: 'Issued 17:44, 25 Aug · session held 14:00', href: can('consent') ? `${R}/consent/` : null, tag: 'Blocking', tone: 'stop' },
+    { p: 'act', t: 'Three forms outstanding', s: 'ATN-0003 Appendix E for the held session; ATN-0005 Appendix H interval review; ATN-0002 Appendix D outcome narrative, which cannot close until the PI determination lands.', m: `${adherence.documentation.rate}% filed · ${adherence.documentation.formsFiled} of ${adherence.documentation.formsRequired}`, href: can('forms') ? `${R}/forms/` : null, tag: 'Action', tone: 'warn' },
+    { p: 'act', t: 'Sponsor coded export runs Monday 31 Aug', s: 'Weekly cadence under the Data Processing Agreement — which is not yet executed. The Background Brief flags the DPA parameters as a decision for the working session.', m: 'Last run 10 Aug · 8 subjects · acknowledged', href: can('audit') ? `${R}/audit/` : null, tag: 'Scheduled', tone: 'warn' },
+    { p: 'done', t: 'ENQ-0142 captured, qualified and booked by Ogami', s: 'Mrs. Adaeze Uche, enquiring for her mother. Ogami answered eligibility framing, declined to determine eligibility, booked Thu 27 Aug 10:00 and escalated fees to you.', m: 'First response 4 min · 61% of enquiries handled without staff', href: can('crm') ? `${R}/crm/` : null, tag: 'Clear', tone: 'ok' },
   ],
   administrator: [
-    { t: 'Two credentials expiring', s: 'Dr. I. Okeke MDCN in 20 days; Nurse A. Bello NMCN in 96 days. Both block roster assignment on expiry.', tone: 'warn', href: `${R}/people/` },
-    { t: '₦2.7M outstanding, none aged past current', s: 'ATN-0008 instalment 3 of 4 due 1 Sep. No 30/60/90-day balances.', tone: 'ok', href: `${R}/billing/` },
-    { t: 'KweHealth DPA still unexecuted', s: 'Supply agreement is in place; the data-processing agreement is not. It gates the sponsor research export.', tone: 'warn', href: `${R}/people/` },
+    { p: 'act', t: 'Two credentials expiring', s: 'Dr. I. Okeke MDCN in 20 days; Nurse A. Bello NMCN in 96 days. Expiry removes each person from roster eligibility for the roles that require them — this is a scheduling constraint, not a filing note.', m: 'MDCN/R/39114 · NMCN/RN/220441', href: can('people') ? `${R}/people/` : null, tag: 'Action', tone: 'warn' },
+    { p: 'act', t: 'KweHealth DPA still unexecuted', s: 'The supply agreement is in place; the data-processing agreement is not. It gates the weekly coded research export, which currently runs on assumed parameters.', m: 'Sponsor · flagged in the Background Brief', href: can('people') ? `${R}/people/` : null, tag: 'Contract', tone: 'warn' },
+    { p: 'done', t: `${naira(revenue.outstanding)} outstanding, nothing aged`, s: 'ATN-0008 instalment 3 of 4 due 1 Sep. No 30, 60 or 90-day balances, and unbilled delivered activity is zero because charges are raised by gate closure.', m: `Collected ${naira(revenue.collected)} · credit held ${naira(revenue.creditHeld)}`, href: can('billing') ? `${R}/billing/` : null, tag: 'Clear', tone: 'ok' },
+    { p: 'done', t: 'Governance ledger intact', s: `Verified to entry #${ledgerIntegrity.verifiedTo} with ${ledgerIntegrity.breaks} breaks. One break-glass access in 90 days, reviewed and accepted.`, m: ledgerIntegrity.lastVerification, href: can('custody') ? `${R}/custody/` : null, tag: 'Clear', tone: 'ok' },
   ],
 };
-const decisions = DECISIONS[role.id] || [];
-
-const greeting = {
-  pi: 'Programme oversight',
-  nurse: 'Your clinic today',
-  pharmacist: 'Custody & release',
-  operator: 'Device & delivery',
-  coordinator: 'Study file & compliance',
-  administrator: 'Facility operations',
-}[role.id] || 'Today';
+const work = WORK[role.id] || [];
 ---
 
 <div class="stack">
-  <!-- What is actually happening right now -->
-  <div class="stats g4">
-    <div class={`stat ${live.length ? 'is-live' : ''}`}>
-      <div class="k">Sessions in progress</div>
-      <div class="v">{live.length}</div>
-      <div class="n">{live.map((p) => `${p.name} · S${p.sessionNo}`).join(', ') || 'None'}</div>
+  <!-- ================= BAND 1 — RIGHT NOW ================= -->
+  <div class="hero">
+    <div class="hero-top">
+      <div style="min-width:0">
+        <div class="hero-k">{focus.kicker} · {TODAY}</div>
+        <h2>{focus.headline}</h2>
+        <p>{focus.line}</p>
+      </div>
+      <div class="hero-metrics">
+        <div class="hero-metric live"><div class="hm-v">1</div><div class="hm-k">Session running</div></div>
+        <div class="hero-metric stop"><div class="hm-v">{held.length}</div><div class="hm-k">Held by the engine</div></div>
+        <div class="hero-metric"><div class="hm-v">{adherence.overall}%</div><div class="hm-k">Protocol adherence</div></div>
+        <div class="hero-metric ok"><div class="hm-v">0</div><div class="hm-k">Late safety reports</div></div>
+      </div>
     </div>
-    <div class={`stat ${held.length ? 'is-stop' : ''}`}>
-      <div class="k">Held by the engine</div>
-      <div class="v">{held.length}</div>
-      <div class="n">Sessions the platform refused to let start today</div>
-    </div>
-    <div class={`stat ${openEvents.length ? 'is-warn' : ''}`}>
-      <div class="k">Open safety events</div>
-      <div class="v">{openEvents.length}</div>
-      <div class="n">{openEvents.map((e) => e.id).join(', ')}</div>
-    </div>
-    <div class="stat is-ok">
-      <div class="k">Protocol adherence</div>
-      <div class="v">{adherence.overall}%</div>
-      <div class="n">{totalGateChecks} blocking checks × 22 treatment days</div>
-    </div>
+
+    {live && can('session') ? (
+      <>
+        <div class="hero-chain">
+          {heroGates.map((g) => (
+            <span class={`hero-gate ${g.cls}`}>
+              <b>{g.key}</b>
+              <span>{g.name}</span>
+              {g.cls === 'active' ? <span style="opacity:.8">· {g.ev.satisfied}/{g.ev.required}</span> : null}
+            </span>
+          ))}
+        </div>
+        <p style="margin-top:10px;font-size:12px">
+          <b style="color:#fff">{live.name}</b> · {live.id} · Session {live.live.session} of 6 · {live.live.chair} ·
+          started {live.live.startedAt} —
+          <a href={`${R}/session/`} style="color:var(--gold-400);font-weight:640"> open the runner →</a>
+        </p>
+      </>
+    ) : null}
   </div>
 
-  {decisions.length ? (
-    <div class="card">
-      <div class="card-head">
-        <h3>{greeting} — waiting on you</h3>
-        <span class="hint">{TODAY}</span>
-      </div>
-      <div class="card-body flush">
-        {decisions.map((d) => (
-          <a class="check yes" href={d.href} style="grid-template-columns:22px 1fr auto">
-            <span class={`box ${d.tone === 'stop' ? 'no' : ''}`} style={
-              d.tone === 'live' ? 'background:var(--live);border-color:var(--live);color:#fff'
-              : d.tone === 'warn' ? 'background:var(--gold-500);border-color:var(--gold-600);color:#241c00'
-              : d.tone === 'ok' ? 'background:var(--ok);border-color:var(--ok);color:#fff' : ''
-            }>{d.tone === 'stop' ? '!' : d.tone === 'warn' ? '!' : '›'}</span>
-            <span>
-              <span class="cl">{d.t}</span>
-              <span class="cm" style="display:block">{d.s}</span>
-            </span>
-            <span class={`chip ${d.tone}`}>{d.tone === 'stop' ? 'Blocking' : d.tone === 'warn' ? 'Action' : d.tone === 'live' ? 'Live' : 'Info'}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  ) : null}
-
+  <!-- ================= BAND 2 — YOUR DESK ================= -->
   <div class="grid g-2-1">
     <div class="stack">
       <div class="card">
         <div class="card-head">
-          <h3>Chairs today</h3>
-          <a class="btn sm" href={`${R}/schedule/`}>Full schedule</a>
+          <h3>Waiting on you</h3>
+          <span class="hint">{role.roleFull}</span>
         </div>
-        <div class="tbl-wrap">
-          <table class="tbl">
-            <thead>
-              <tr><th>Time</th><th>Room</th><th>Patient</th><th>What</th><th>State</th><th>Staff</th></tr>
-            </thead>
-            <tbody>
-              {chairSchedule.map((s) => {
-                const tone = s.state === 'In progress' ? 'is-live' : s.state.startsWith('Held') ? 'is-stop' : '';
-                return (
-                  <tr class={tone}>
-                    <td class="n mono">{s.time}</td>
-                    <td class="n">{s.chair}</td>
-                    <td>
-                      <div class="t">{s.name}</div>
-                      <div class="s mono">{s.patient}</div>
-                    </td>
-                    <td>{s.what}</td>
-                    <td>
-                      <span class={`chip ${s.state === 'In progress' ? 'live' : s.state.startsWith('Held') ? 'stop' : 'held'}`}>{s.state}</span>
-                    </td>
-                    <td class="s">{s.staff}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div class="card-body flush">
+          {work.map((w) => {
+            const inner = (
+              <>
+                <div class="wl-top">
+                  <div style="min-width:0">
+                    <div class="wl-t">{w.t}</div>
+                    <div class="wl-s">{w.s}</div>
+                    <div class="wl-m">{w.m}</div>
+                  </div>
+                  <span class={`chip ${w.tone}`}>{w.tag}</span>
+                </div>
+              </>
+            );
+            return w.href ? <a class={`wl ${w.p}`} href={w.href}>{inner}</a> : <div class={`wl ${w.p}`}>{inner}</div>;
+          })}
         </div>
         <div class="card-note">
-          Two of today's five appointments are held. Neither was cancelled by a person — the engine
-          refused to close a gate, and the schedule reflects that.
-          {canSession ? <> <a href={`${R}/session/`} style="color:var(--navy-600);font-weight:600">See why →</a></> : null}
+          This list is different for every role signed in, because the protocol assigns the duty to a
+          named role. Nothing here is a notification someone chose to send — each item is a gate, a
+          clock or a credential that is genuinely blocking.
         </div>
       </div>
 
-      {canCohort ? (
+      <!-- Role-specific working module -->
+      {(role.id === 'pi' || role.id === 'nurse') && (
         <div class="card">
-          <div class="card-head"><h3>Cohort at a glance</h3><a class="btn sm" href={`${R}/cohort/`}>Open cohort</a></div>
-          <div class="card-body">
-            <div class="pt-grid">
-              {patients.slice(0, 6).map((p) => (
-                <a class={`pt ${p.status}`} href={canPatient ? `${R}/patient/${p.id}/` : `${R}/cohort/`}>
-                  <div class="pt-top">
-                    <div>
-                      <div class="pt-id">{p.id}</div>
-                      <div class="pt-nm">{p.name}</div>
-                      <div class="pt-meta">{p.age} · {p.sex} · {p.diagnosis}</div>
-                    </div>
-                    <span class={`chip ${p.status === 'live' ? 'live' : p.status === 'blocked' || p.status === 'halted' ? 'stop' : p.status === 'ok' ? 'ok' : p.status === 'screening' ? 'warn' : 'held'}`}>{p.stage}</span>
-                  </div>
-                  {p.sessions.length ? (
-                    <div class="dots">
-                      {p.sessions.map((s) => (
-                        <span class={`dot ${s.status === 'Complete' ? 'done' : s.status === 'In progress' ? 'now' : s.status === 'Held' ? 'held' : s.status === 'Stopped' ? 'stopped' : ''}`}>{s.n}</span>
-                      ))}
-                    </div>
-                  ) : null}
-                  <div class="pt-stage">{p.stageDetail}</div>
-                </a>
-              ))}
-            </div>
+          <div class="card-head">
+            <h3>Chairs today</h3>
+            {can('schedule') ? <a class="btn sm" href={`${R}/schedule/`}>Full schedule</a> : null}
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Time</th><th>Room</th><th>Patient</th><th>What</th><th>State</th><th>Staff</th></tr></thead>
+              <tbody>
+                {chairSchedule.map((s) => (
+                  <tr class={s.state === 'In progress' ? 'is-live' : s.state.startsWith('Held') ? 'is-stop' : ''}>
+                    <td class="n mono">{s.time}</td>
+                    <td class="n">{s.chair}</td>
+                    <td><div class="t">{s.name}</div><div class="s mono">{s.patient}</div></td>
+                    <td class="s">{s.what}</td>
+                    <td><span class={`chip ${s.state === 'In progress' ? 'live' : s.state.startsWith('Held') ? 'stop' : 'held'}`}>{s.state}</span></td>
+                    <td class="s">{s.staff}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-      ) : (
+      )}
+
+      {role.id === 'pharmacist' && (
         <div class="card">
-          <div class="card-head"><h3>Clinical records</h3><span class="chip held">Not available to your role</span></div>
-          <div class="card-body">
-            <p class="tiny" style="margin:0;color:var(--ink-2);line-height:1.6">
-              The Facility Administrator role manages people, institutions, configuration and revenue.
-              It carries <b>no clinical record access</b> — not a hidden menu, but no generated page and
-              no route. The schedule above shows that a session is held and who owns clearing it, which
-              is what administration needs, without exposing the clinical reason.
-            </p>
+          <div class="card-head"><h3>Release board</h3>{can('product') ? <a class="btn sm" href={`${R}/product/`}>Full register</a> : null}</div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Lot</th><th>Product</th><th>Expiry</th><th>Balance</th><th>Temperature</th><th>Release</th></tr></thead>
+              <tbody>
+                {lots.map((l) => (
+                  <tr class={l.released ? '' : 'is-stop'}>
+                    <td class="mono" style="font-weight:600">{l.lot}<div class="s">{l.storage}</div></td>
+                    <td class="s">{l.product}</td>
+                    <td class="mono n">{l.expiry}</td>
+                    <td class="n" style="font-weight:700">{l.balance}</td>
+                    <td><span class={`chip ${l.tempStatus === 'In range' ? 'ok' : 'stop'}`}>{l.tempStatus}</span></td>
+                    <td><span class={`chip ${l.released ? 'ok' : 'stop'}`}>{l.released ? 'Released' : 'BLOCKED'}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="card-note">Gate A reads this table directly. A lot that is not released here cannot start a session anywhere in the clinic.</div>
+        </div>
+      )}
+
+      {role.id === 'operator' && (
+        <div class="card">
+          <div class="card-head"><h3>Device use record</h3>{can('device') ? <a class="btn sm" href={`${R}/device/`}>Full log</a> : null}</div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Date</th><th>Patient</th><th>Lot</th><th>Delivered</th><th>Device</th></tr></thead>
+              <tbody>
+                {deviceUseLog.map((u) => (
+                  <tr class={u.delivered.startsWith('NOT') ? 'is-stop' : u.delivered.startsWith('Pending') ? 'is-live' : ''}>
+                    <td class="n">{u.date}</td>
+                    <td class="mono">{u.patient}</td>
+                    <td class="mono">{u.lot}</td>
+                    <td class="s">{u.delivered}</td>
+                    <td class="mono">{u.device}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {role.id === 'coordinator' && (
+        <div class="card">
+          <div class="card-head"><h3>Consent register</h3>{can('consent') ? <a class="btn sm" href={`${R}/consent/`}>Open register</a> : null}</div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Patient</th><th>Version</th><th>Status</th><th>Given by</th><th>Last verified</th></tr></thead>
+              <tbody>
+                {consentRegister.map((c) => (
+                  <tr class={c.status === 'Suspended' ? 'is-stop' : ''}>
+                    <td><div class="t">{c.name}</div><div class="s mono">{c.patient}</div></td>
+                    <td class="mono">{c.version}</td>
+                    <td><span class={`chip ${c.status.startsWith('In force') ? 'ok' : c.status === 'Suspended' ? 'stop' : 'held'}`}>{c.status}</span></td>
+                    <td class="s">{c.signedBy}</td>
+                    <td class="s">{c.lastVerified}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="card-note">Verified at every Gate B. The register is not a filing cabinet — it is the thing the gate queries.</div>
+        </div>
+      )}
+
+      {role.id === 'administrator' && (
+        <div class="card">
+          <div class="card-head"><h3>Credentials & roster eligibility</h3>{can('people') ? <a class="btn sm" href={`${R}/people/`}>Open register</a> : null}</div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Name</th><th>Role</th><th>Registration</th><th>GCP</th><th>Protocol training</th></tr></thead>
+              <tbody>
+                {personnel.map((p) => (
+                  <tr class={p.regStatus.startsWith('Expiring') || p.gcpStatus === 'Renewal due' ? 'is-warn' : ''}>
+                    <td class="t">{p.name}</td>
+                    <td class="s">{p.role}</td>
+                    <td>
+                      <span class={`chip ${p.regStatus === 'Valid' ? 'ok' : p.regStatus === 'N/A' ? 'held' : 'warn'}`}>{p.regStatus}</span>
+                      {p.regExpiry !== '—' ? <div class="tiny muted mono" style="margin-top:3px">{p.regExpiry}</div> : null}
+                    </td>
+                    <td><span class={`chip ${p.gcpStatus === 'Valid' ? 'ok' : p.gcpStatus === 'N/A' ? 'held' : 'warn'}`}>{p.gcpStatus}</span></td>
+                    <td class="s">{p.protocolTrained}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
     </div>
 
+    <!-- Right column -->
     <div class="stack">
+      {(role.id === 'pharmacist' || role.id === 'pi' || role.id === 'administrator') && (
+        <div class="card">
+          <div class="card-head"><h3>Cold chain — 8 days</h3><span class="chip stop">1 excursion</span></div>
+          <div class="card-body">
+            <Spark points={tempTrace.points} threshold={tempTrace.requirement} invert={false} />
+            <div class="row-between" style="margin-top:8px">
+              <span class="tiny muted mono">19 Aug</span>
+              <span class="tiny" style="color:var(--stop);font-weight:640">−11.4 °C · 24 Aug</span>
+              <span class="tiny muted mono">26 Aug</span>
+            </div>
+            <div class="tiny muted" style="margin-top:9px;line-height:1.55">
+              Dashed line is the ≤ −20 °C storage requirement. The two points above it are the door-seal
+              failure that quarantined lot EXP-140B-2608A and is holding a session this morning.
+            </div>
+            {can('product') ? <a class="btn sm" style="margin-top:11px" href={`${R}/product/`}>Cold-chain log →</a> : null}
+          </div>
+        </div>
+      )}
+
+      <div class="card">
+        <div class="card-head"><h3>Sessions delivered</h3><span class="hint">per week</span></div>
+        <div class="card-body">
+          <div class="bars">
+            {sessionsPerWeek.map((s) => (
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:2px">
+                {s.held ? <div class="b stop" style={`height:${(s.held / maxSessions) * 46}px`} title={`${s.held} held`}></div> : null}
+                {s.stopped ? <div class="b stop" style={`height:${(s.stopped / maxSessions) * 46}px`} title={`${s.stopped} stopped`}></div> : null}
+                <div class="b" style={`height:${(s.n / maxSessions) * 46}px`}></div>
+              </div>
+            ))}
+          </div>
+          <div class="bars-x">{sessionsPerWeek.map((s) => <span>{s.w.split(' ')[1]}</span>)}</div>
+          <div class="tiny muted" style="margin-top:9px;line-height:1.55">
+            22 sessions delivered. Red segments are the stopped session in Aug week 2 (SAE-0002) and the
+            two held this week — shown rather than smoothed out of the count.
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-head"><h3>Programme integrity</h3></div>
         <div class="card-body stack-sm">
-          <div class="row-between">
-            <span class="tiny muted">Governance ledger</span>
-            <span class="chip ok dot">{ledgerIntegrity.status} · {ledgerIntegrity.breaks} breaks</span>
-          </div>
-          <div class="row-between">
-            <span class="tiny muted">Verified to entry</span>
-            <span class="mono tiny">#{ledgerIntegrity.verifiedTo}</span>
-          </div>
-          <div class="row-between">
-            <span class="tiny muted">Quarantined lots</span>
-            <span class={`chip ${quarantined.length ? 'stop' : 'ok'}`}>{quarantined.length ? `${quarantined.length} lot · 9 vials` : 'None'}</span>
-          </div>
-          <div class="row-between">
-            <span class="tiny muted">Deviations logged</span>
-            <span class="chip">{deviations.length} · all reviewed</span>
-          </div>
-          <div class="row-between">
-            <span class="tiny muted">Late safety reports</span>
-            <span class="chip ok">0</span>
-          </div>
+          <div class="row-between"><span class="tiny muted">Governance ledger</span><span class="chip ok dot">{ledgerIntegrity.status} · {ledgerIntegrity.breaks} breaks</span></div>
+          <div class="row-between"><span class="tiny muted">Verified to entry</span><span class="mono tiny">#{ledgerIntegrity.verifiedTo}</span></div>
+          <div class="row-between"><span class="tiny muted">Quarantined lots</span><span class={`chip ${quarantined.length ? 'stop' : 'ok'}`}>{quarantined.length ? `${quarantined.length} · 9 vials` : 'None'}</span></div>
+          <div class="row-between"><span class="tiny muted">Open safety events</span><span class={`chip ${openEvents.length ? 'warn' : 'ok'}`}>{openEvents.length}</span></div>
+          <div class="row-between"><span class="tiny muted">Deviations</span><span class="chip">{deviations.length} · all reviewed</span></div>
           <hr class="hr" />
           {qualityMetrics.slice(0, 4).map((q) => (
             <div>
               <div class="row-between" style="margin-bottom:2px">
                 <span class="tiny">{q.metric}</span>
-                <span class={`tiny mono ${q.status === 'ok' ? '' : 'muted'}`} style={q.status === 'ok' ? 'color:var(--ok);font-weight:600' : 'color:var(--warn);font-weight:600'}>{q.actual}</span>
+                <span class="tiny mono" style={q.status === 'ok' ? 'color:var(--ok);font-weight:640' : 'color:var(--warn);font-weight:640'}>{q.actual}</span>
               </div>
               <div class="meter"><i class={q.status === 'ok' ? '' : 'warn'} style={`width:${q.status === 'ok' ? 100 : 88}%`}></i></div>
             </div>
@@ -236,6 +342,23 @@ const greeting = {
         </div>
         <div class="card-note">Protocol §7 quality metrics, computed from execution records rather than entered by hand.</div>
       </div>
+
+      {(role.id === 'coordinator' || role.id === 'administrator') && (
+        <div class="card">
+          <div class="card-head"><h3>Enquiry funnel</h3>{can('crm') ? <a class="btn sm" href={`${R}/crm/`}>Open</a> : null}</div>
+          <div class="card-body stack-sm">
+            {funnel.map((f) => (
+              <div>
+                <div class="row-between" style="margin-bottom:2px">
+                  <span class="tiny">{f.stage}</span>
+                  <span class="tiny mono" style="font-weight:700">{f.n}</span>
+                </div>
+                <div class="meter"><i class="live" style={`width:${Math.round((f.n / 34) * 100)}%`}></i></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div class="card">
         <div class="card-head"><h3>This week</h3></div>
@@ -250,23 +373,26 @@ const greeting = {
           </div>
         </div>
       </div>
-
-      {role.id === 'coordinator' || role.id === 'administrator' ? (
-        <div class="card">
-          <div class="card-head"><h3>Enquiry funnel</h3><a class="btn sm" href={`${R}/crm/`}>Open</a></div>
-          <div class="card-body stack-sm">
-            {funnel.map((f) => (
-              <div>
-                <div class="row-between" style="margin-bottom:2px">
-                  <span class="tiny">{f.stage}</span>
-                  <span class="tiny mono" style="font-weight:600">{f.n}</span>
-                </div>
-                <div class="meter"><i class="live" style={`width:${Math.round((f.n / 34) * 100)}%`}></i></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
     </div>
+  </div>
+
+  <!-- ================= BAND 3 — WHAT DID NOT HAPPEN ================= -->
+  <div class="sec-title">What the platform prevented this month</div>
+  <div class="roi g3">
+    {prevented.map((p) => {
+      const inner = (
+        <>
+          <div class={`rv ${p.tone === 'warn' ? 'warn' : ''}`}>{p.value}</div>
+          <div class="rk">{p.label}</div>
+          <div class="rd">{p.detail}</div>
+          <div style="margin-top:8px"><span class="chip ref">{p.ref}</span></div>
+        </>
+      );
+      return can(p.where) ? <a class="roi-item" href={`${R}/${p.where}/`}>{inner}</a> : <div class="roi-item">{inner}</div>;
+    })}
+  </div>
+  <div class="note">
+    <span class="lbl">Why this band exists</span>
+    {preventedNote}
   </div>
 </div>

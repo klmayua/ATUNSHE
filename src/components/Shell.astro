@@ -34,14 +34,6 @@ const sectionLabel = title;
           </div>
         </div>
 
-        <div class="rail-who">
-          <div class="av">{role.initials}</div>
-          <div style="min-width:0">
-            <div class="nm">{role.short}</div>
-            <div class="rl">{role.role}</div>
-          </div>
-        </div>
-
         <nav class="rail-nav">
           {nav.map((g) => (
             <div class="nav-group">
@@ -57,8 +49,7 @@ const sectionLabel = title;
         </nav>
 
         <div class="rail-foot">
-          <a href="/">Switch role</a>
-          <div class="rail-env">atunse-lagos-01 · demo</div>
+          <div class="rail-env">atunse-lagos-01 · demo environment</div>
         </div>
       </aside>
 
@@ -70,8 +61,35 @@ const sectionLabel = title;
             <b>{sectionLabel}</b>
           </div>
           <div class="topbar-right">
-            <span class="env-chip">Wed 26 Aug 2026 · WAT</span>
-            <span class="env-chip">ATN-DEM-ADDSB-2026-001 v1.0</span>
+            <span class="env-chip hide-sm">Wed 26 Aug 2026 · WAT</span>
+            {!role.isPatient && !role.isCaregiver ? (
+              <span class="env-chip hide-sm">ATN-DEM-ADDSB-2026-001 v1.0</span>
+            ) : null}
+
+            <div class="acct">
+              <button class="acct-btn" id="acct-btn" aria-haspopup="true" aria-expanded="false">
+                <span class="acct-txt">
+                  <span class="acct-nm">{role.short}</span>
+                  <span class="acct-rl">{role.role}</span>
+                </span>
+                <span class="acct-av" style={`background:${role.accent}`}>{role.initials}</span>
+              </button>
+              <div class="acct-menu" id="acct-menu" hidden>
+                <div class="acct-head">
+                  <span class="acct-av lg" style={`background:${role.accent}`}>{role.initials}</span>
+                  <div style="min-width:0">
+                    <div class="acct-nm2">{role.name}</div>
+                    <div class="acct-rl2">{role.roleFull}</div>
+                  </div>
+                </div>
+                <div class="acct-meta">
+                  <div><span>Signed in as</span><b class="mono">{role.username}</b></div>
+                  <div><span>Tenant</span><b class="mono">atunse-lagos-01</b></div>
+                  <div><span>Session</span><b class="mono">Expires 18:00 WAT</b></div>
+                </div>
+                <a class="acct-item" href="/">Sign out</a>
+              </div>
+            </div>
           </div>
         </header>
 
@@ -89,5 +107,24 @@ const sectionLabel = title;
         </main>
       </div>
     </div>
+
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById('acct-btn');
+        var menu = document.getElementById('acct-menu');
+        if (!btn || !menu) return;
+        function close() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var open = menu.hidden;
+          menu.hidden = !open;
+          btn.setAttribute('aria-expanded', String(open));
+        });
+        document.addEventListener('click', function (e) {
+          if (!menu.hidden && !menu.contains(e.target)) close();
+        });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+      })();
+    </script>
   </body>
 </html>

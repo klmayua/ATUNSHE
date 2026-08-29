@@ -1,0 +1,499 @@
+---
+// THE PATIENT EXPERIENCE.
+//
+// EMR Proposal §3 is explicit that the record is patient-centred and
+// patient-driven: "the patient participates in their own record rather than
+// being a passive subject of it." That means five things this component has to
+// actually do, not describe — let her see her record, see and prepare for her
+// visits, report her own symptoms and outcomes into the clinical record, and
+// hold and change her own consent.
+//
+// Mrs. Comfort Eze (ATN-0008) has retained capacity and is at Session 5 of 6.
+// She is the right patient to show this with: a dementia programme where the
+// patient can still drive her own record is exactly the case the portal has to
+// handle well, and handle in plain language.
+import { patientById } from '../../data/cohort.mjs';
+import { followUpSchedule, protocolMeta } from '../../data/protocol.mjs';
+import { events } from '../../data/safety.mjs';
+
+const { role, view } = Astro.props;
+const R = `/${role.id}`;
+const p = patientById(role.scopedTo || 'ATN-0008');
+const myEvents = events.filter((e) => e.patient === p.id);
+const nextSession = p.sessions.find((s) => s.status === 'Scheduled');
+const done = p.sessionsComplete;
+---
+
+{view === 'portal' && (
+  <div class="stack pf">
+    <div class="card">
+      <div class="card-body">
+        <div class="row-between" style="align-items:flex-start;margin-bottom:16px">
+          <div>
+            <h2 style="font-size:19px">Good morning, Mrs. Eze</h2>
+            <p style="margin:6px 0 0;font-size:14px">
+              You have completed <b>{done} of your 6 treatment sessions</b>. Your next visit is
+              <b> {nextSession ? nextSession.date : 'to be arranged'}</b> at 10:00.
+            </p>
+          </div>
+          <span class="chip ok dot">On track</span>
+        </div>
+
+        <div class="course-rail">
+          {p.sessions.map((s) => (
+            <div class={`seg ${s.status === 'Complete' ? 'done' : s.status === 'Scheduled' && s.n === done + 1 ? 'now' : ''}`}
+                 title={`Session ${s.n} — ${s.status} — ${s.date}`}>{s.n}</div>
+          ))}
+        </div>
+        <div class="row-between" style="margin-top:7px">
+          <span class="tiny muted">Session 1 · 22 July</span>
+          <span class="tiny muted">Session 6 · 4 September</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><h3>Your next visit</h3><span class="chip live">Friday</span></div>
+        <div class="card-body">
+          <p style="margin:0 0 12px;font-size:15px;font-weight:600">Friday 28 August, 10:00</p>
+          <dl class="defs">
+            <div class="def"><dt>What</dt><dd>Session 5 of 6 — both treatments, as before</dd></div>
+            <div class="def"><dt>How long</dt><dd>About 3 hours, including the 2 hours of checks afterwards</dd></div>
+            <div class="def"><dt>Bring</dt><dd>Your medicines list, and please come with your daughter</dd></div>
+            <div class="def"><dt>Before you come</dt><dd>Tell us how you have been — it takes two minutes</dd></div>
+          </dl>
+          <div class="btn-row" style="margin-top:14px">
+            <a class="btn primary" href={`${R}/mysymptoms/`}>Tell us how you are feeling</a>
+            <a class="btn" href={`${R}/myvisits/`}>Visit details</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Anything you need to do</h3></div>
+        <div class="card-body flush">
+          <div class="wl act">
+            <div class="wl-top">
+              <div><div class="wl-t">Pre-visit questions for Friday</div><div class="wl-s">Not yet answered. Your doctor reads this before your visit.</div></div>
+              <span class="chip warn">2 min</span>
+            </div>
+          </div>
+          <div class="wl done">
+            <div class="wl-top">
+              <div><div class="wl-t">Payment instalment 3 of 4</div><div class="wl-s">Due 1 September. Nothing to do today.</div></div>
+              <span class="chip ok">Scheduled</span>
+            </div>
+          </div>
+          <div class="wl done">
+            <div class="wl-top">
+              <div><div class="wl-t">Your consent is up to date</div><div class="wl-s">Signed 15 July. You can change or withdraw it at any time.</div></div>
+              <span class="chip ok">In force</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>What happens at each visit</h3></div>
+      <div class="card-body">
+        <div class="big-step done"><div class="n">1</div><div><div class="t">Before you arrive</div><div class="d">The pharmacist checks your medicine and the team checks the equipment. If anything is not right, we postpone — that has happened to another patient this week, and it is the system doing its job.</div></div></div>
+        <div class="big-step done"><div class="n">2</div><div><div class="t">Checking in · about 20 minutes</div><div class="d">We confirm who you are, confirm your consent is still current, read what you told us about how you have been, and record your blood pressure, pulse, breathing, oxygen and temperature. The doctor examines you and confirms it is safe to go ahead.</div></div></div>
+        <div class="big-step done"><div class="n">3</div><div><div class="t">The safety check · about 5 minutes</div><div class="d">Two members of staff separately confirm the right person, right medicine, right dose and right equipment, and the doctor signs. One person cannot do this alone — the system will not let them.</div></div></div>
+        <div class="big-step now"><div class="n">4</div><div><div class="t">The drip · 10 to 15 minutes</div><div class="d">Given slowly, in small amounts with pauses in between. A nurse stays with you throughout.</div></div></div>
+        <div class="big-step"><div class="n">5</div><div><div class="t">The nasal spray · a few minutes</div><div class="d">Given with a special device, after we check your nose is clear.</div></div></div>
+        <div class="big-step"><div class="n">6</div><div><div class="t">Watching afterwards · 2 hours</div><div class="d">Checks at 15, 30, 60 and 120 minutes. The doctor confirms you are ready before you go home, and we give you written instructions and a number to call.</div></div></div>
+      </div>
+      <div class="card-note">
+        This is {protocolMeta.id}, the treatment protocol your care follows. You can ask for a copy of it at any time.
+      </div>
+    </div>
+
+    <div class="card" style="border-color:var(--stop-line)">
+      <div class="card-head" style="background:var(--stop-bg);border-color:var(--stop-line)">
+        <h3 style="color:var(--stop)">Call us straight away if you notice any of these</h3>
+      </div>
+      <div class="card-body">
+        <div class="grid g2" style="gap:9px">
+          {['Trouble breathing, swelling of face or lips, a widespread rash', 'Fainting, chest pain, severe dizziness', 'Sudden confusion, weakness, trouble speaking, a fit', 'A nosebleed that will not stop', 'Fever or signs of infection', 'Anything at all that worries you'].map((i) => (
+            <div class="note stop" style="margin:0">{i}</div>
+          ))}
+        </div>
+        <div class="btn-row" style="margin-top:15px">
+          <a class="btn danger" href="tel:+2348000000000">Call the clinic · 0800 000 0000</a>
+          <a class="btn" href="tel:+2348000000001">Emergency · 0800 000 0001</a>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'myvisits' && (
+  <div class="stack pf">
+    <div class="card">
+      <div class="card-head"><h3>Coming up</h3></div>
+      <div class="card-body flush">
+        {p.sessions.filter((s) => s.status === 'Scheduled').map((s, i) => (
+          <div class={`wl ${i === 0 ? 'now' : ''}`}>
+            <div class="wl-top">
+              <div>
+                <div class="wl-t">Session {s.n} of 6 — {s.date}</div>
+                <div class="wl-s">10:00 · about 3 hours including the checks afterwards · please bring someone with you</div>
+              </div>
+              <span class={`chip ${i === 0 ? 'live' : 'held'}`}>{i === 0 ? 'Next' : 'Booked'}</span>
+            </div>
+          </div>
+        ))}
+        <div class="wl">
+          <div class="wl-top">
+            <div><div class="wl-t">After your course finishes</div><div class="wl-s">We will see you again at 4, 8 and 12 weeks, then at 6 and 12 months. These are already booked in — we will remind you before each one.</div></div>
+            <span class="chip held">Automatic</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-note">Reminders come by SMS and WhatsApp. You choose which, and you can turn them off — see My consent &amp; choices.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Visits so far</h3><span class="chip ok">{done} completed</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Visit</th><th>Date</th><th>How it went</th></tr></thead>
+          <tbody>
+            {p.sessions.filter((s) => s.status === 'Complete').map((s) => (
+              <tr>
+                <td class="t nowrap">Session {s.n} of 6</td>
+                <td class="n mono">{s.date}</td>
+                <td class="s">
+                  {s.tolerated ? 'Went well, no problems on the day.' : 'See the note from your team.'}
+                  {s.deviation ? (
+                    <div class="note warn" style="margin-top:6px;padding:7px 9px;font-size:11.5px">
+                      One of your two-hour checks was recorded 21 minutes late that day because of an
+                      emergency in the next chair. Your doctor reviewed it and there was no effect on
+                      your care. We changed the staffing rota so it does not happen again. We are telling
+                      you because it is your record.
+                    </div>
+                  ) : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        You see the same record your clinicians see, including the one thing that did not go to plan.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Your follow-up schedule</h3></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>When</th><th>What we will do</th></tr></thead>
+          <tbody>
+            {followUpSchedule.filter((f) => f.key !== 'weekly').map((f) => (
+              <tr><td class="t nowrap">{f.when}</td><td class="s">{f.actions}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'myrecord' && (
+  <div class="stack pf">
+    <div class="note">
+      <span class="lbl">This is your record, not a summary of it</span>
+      Everything below is the same data your clinical team reads. If something looks wrong to you, say
+      so — a correction is added as a new entry alongside the original, and the original stays visible.
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>About you</h3></div>
+      <div class="card-body">
+        <dl class="defs">
+          <div class="def"><dt>Name</dt><dd>{p.name}</dd></div>
+          <div class="def"><dt>Your patient number</dt><dd class="mono">{p.id}</dd></div>
+          <div class="def"><dt>Date of birth</dt><dd>{p.dob}</dd></div>
+          <div class="def"><dt>Diagnosis</dt><dd>{p.diagnosis} · {p.dxDate}</dd></div>
+          <div class="def"><dt>Your treatment</dt><dd>Six weekly sessions of the ADDSB programme. You are on session {done + 1}.</dd></div>
+          <div class="def"><dt>Who is with you</dt><dd>{p.caregiver.name} ({p.caregiver.relationship}) · {p.caregiver.phone}</dd></div>
+          <div class="def"><dt>Your care team</dt><dd>Dr. Folasade Sola (your doctor) · Nurse Amaka Bello · Ngozi Aluko (coordinator)</dd></div>
+        </dl>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn">Update my details</button>
+          <button class="btn">Something here looks wrong</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Your test results</h3><span class="hint">Released by your doctor</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Test</th><th>Your result</th><th>Usual range</th><th>When</th></tr></thead>
+          <tbody>
+            {p.labs.map((l) => (
+              <tr class={l.flag !== 'ok' ? 'is-warn' : ''}>
+                <td class="t">{l.name}</td>
+                <td class="mono n" style={l.flag !== 'ok' ? 'color:var(--warn);font-weight:700' : ''}>{l.value}</td>
+                <td class="s mono tiny">{l.ref}</td>
+                <td class="n tiny">{l.at}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        Results appear here once your doctor has seen them, so nobody finds an unexplained number before
+        their clinician has read it. If anything is flagged, your doctor will already know.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Your memory and daily-living assessments</h3></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Assessment</th><th>At the start</th><th>Most recent</th></tr></thead>
+          <tbody>
+            {[['MMSE', 'mmse'], ['MoCA', 'moca'], ['CDR-SB', 'cdrsb'], ['ADCS-ADL', 'adcsadl'], ['NPI-Q', 'npiq']].map(([label, k]) => (
+              <tr>
+                <td class="t">{label}</td>
+                <td class="n mono">{p.baseline[k]}</td>
+                <td class="n mono" style="font-weight:640">{p.latest ? p.latest[k] : '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-note">
+        <b>Please read these carefully with your doctor.</b> These scores move around for many reasons,
+        including how tired you were on the day. This is an early study of a treatment that has not been
+        proven to work, and a change in these numbers is not evidence that it has. Your doctor will talk
+        you through what they do and do not mean.
+      </div>
+    </div>
+
+    {myEvents.length ? (
+      <div class="card">
+        <div class="card-head"><h3>Things that happened during treatment</h3></div>
+        <div class="card-body flush">
+          {myEvents.map((e) => (
+            <div class="wl done">
+              <div class="wl-top">
+                <div>
+                  <div class="wl-t">{e.title}</div>
+                  <div class="wl-s">{e.description}</div>
+                  <div class="wl-s"><b>What happened next:</b> {e.outcomeNote}</div>
+                  <div class="wl-m">{e.onset} · recorded by {e.reportedBy} · reference {e.id}</div>
+                </div>
+                <span class="chip ok">{e.outcome}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div class="card-note">Every side effect is written down, however small, and your doctor reviews each one.</div>
+      </div>
+    ) : null}
+
+    <div class="card">
+      <div class="card-head"><h3>Your money</h3></div>
+      <div class="card-body">
+        <dl class="defs">
+          <div class="def"><dt>Your course</dt><dd>Six-session course · ₦8,100,000</dd></div>
+          <div class="def"><dt>Paid so far</dt><dd>₦5,400,000 — instalments 1, 2 and 3</dd></div>
+          <div class="def"><dt>Still to pay</dt><dd>₦2,700,000 — instalment 4, due 1 September</dd></div>
+        </dl>
+        <div class="note" style="margin-top:12px">
+          You are only ever charged for care that was actually delivered. If a session cannot go ahead —
+          as happened to another patient this week — no charge is raised for it.
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'mysymptoms' && (
+  <div class="stack pf">
+    <div class="note live">
+      <span class="lbl">Before your visit on Friday</span>
+      Your answers go straight into your record and your doctor reads them at check-in, before deciding
+      whether it is safe to treat. This is the part of the visit that starts at home.
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Since your last visit, how have you been?</h3><span class="hint">About 2 minutes</span></div>
+      <div class="card-body">
+        {[
+          ['Your sleep', 'Better than usual', 'About the same', 'Worse than usual'],
+          ['Your appetite', 'Better than usual', 'About the same', 'Worse than usual'],
+          ['Your mood', 'Better than usual', 'About the same', 'Worse than usual'],
+          ['Your memory and concentration', 'Better than usual', 'About the same', 'Worse than usual'],
+          ['Managing day to day at home', 'Better than usual', 'About the same', 'Worse than usual'],
+        ].map(([q, ...opts]) => (
+          <div style="padding:14px 0;border-bottom:1px solid var(--line)">
+            <div style="font-size:14.5px;font-weight:620;margin-bottom:10px">{q}</div>
+            <div class="choice">{opts.map((o) => <button type="button">{o}</button>)}</div>
+          </div>
+        ))}
+
+        <div style="padding:16px 0 6px">
+          <div style="font-size:14.5px;font-weight:620;margin-bottom:8px">Have you had any new symptoms?</div>
+          <div class="choice" style="margin-bottom:12px">
+            <button type="button">No, nothing new</button>
+            <button type="button">Yes — let me describe it</button>
+          </div>
+          <div class="blank-box" style="min-height:80px"></div>
+        </div>
+
+        <div style="padding:10px 0 6px">
+          <div style="font-size:14.5px;font-weight:620;margin-bottom:8px">Have your medicines changed?</div>
+          <div class="choice">
+            <button type="button">No change</button>
+            <button type="button">Yes — something changed</button>
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top:20px">
+          <button class="btn primary" style="font-size:15px;padding:12px 22px">Send to my care team</button>
+          <span class="chip ok dot">Saves without internet and sends when you are back online</span>
+        </div>
+      </div>
+      <div class="card-note">
+        This is Appendix H, the follow-up form your clinician completes at every visit — the parts only
+        you can answer are asked of you directly rather than being written down second-hand.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>What you told us before your last visit</h3><span class="hint">19 August</span></div>
+      <div class="card-body">
+        <div class="scale-row"><span>Your sleep</span><span class="chip ok">Better than usual</span></div>
+        <div class="scale-row"><span>Your appetite</span><span class="chip">About the same</span></div>
+        <div class="scale-row"><span>Your mood</span><span class="chip ok">Better than usual</span></div>
+        <div class="scale-row"><span>Your memory and concentration</span><span class="chip ok">Better than usual</span></div>
+        <div class="scale-row"><span>New symptoms</span><span class="chip ok">None</span></div>
+        <div class="scale-row"><span>Medicines</span><span class="chip">No change</span></div>
+        <div class="note ok" style="margin-top:14px">
+          <b>Your doctor's note from that visit:</b> "Interval review unremarkable. Patient reports
+          improved sleep and evening settling for a third consecutive week. No stopping criterion
+          present — proceed to Session 4." — Dr. F. Sola, 19 Aug
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'myconsent' && (
+  <div class="stack pf">
+    <div class="card">
+      <div class="card-head"><h3>What you agreed to</h3><span class="chip ok dot">In force</span></div>
+      <div class="card-body">
+        <dl class="defs">
+          <div class="def"><dt>Signed</dt><dd>{p.consent.signed} — by you</dd></div>
+          <div class="def"><dt>Version</dt><dd class="mono">{p.consent.version}</dd></div>
+          <div class="def"><dt>Runs until</dt><dd>{p.consent.expires}, unless you change it before then</dd></div>
+        </dl>
+        <div class="note" style="margin-top:14px">
+          Your consent is not a form in a drawer. It is checked by the system at the start of every
+          single visit, and if it were ever not in force, the visit would stop before it began.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>You agreed to these separately</h3><span class="hint">Each one can be changed on its own</span></div>
+      <div class="card-body flush">
+        {[
+          { t: 'Having the treatment', d: 'The six sessions and the follow-up visits afterwards.', on: true, req: true, note: 'Withdrawing this stops your treatment. Your ordinary care with us is unaffected.' },
+          { t: 'Sharing coded information for research', d: 'Your information without your name, date of birth or contact details, shared with KweHealth who make the medicine.', on: true, req: false, note: 'You can turn this off and carry on with treatment. It is genuinely separate.' },
+          { t: 'Reminders by SMS and WhatsApp', d: 'Appointment reminders and instructions before each visit.', on: true, req: false, note: 'Turn either channel off; we will call you instead.' },
+          { t: 'Keeping samples after the study', d: 'Storing blood and biomarker samples beyond this study.', on: false, req: false, note: 'You have not been asked for this, and we have not done it. If we ever wanted to, we would have to ask you again with a new consent form — not add it quietly to this one.' },
+        ].map((c) => (
+          <div class="wl" style={c.on ? '' : 'opacity:.75'}>
+            <div class="wl-top">
+              <div>
+                <div class="wl-t">{c.t}</div>
+                <div class="wl-s">{c.d}</div>
+                <div class="wl-s" style="color:var(--ink-3)">{c.note}</div>
+              </div>
+              <div style="text-align:right;flex:none">
+                <span class={`chip ${c.on ? 'ok' : 'held'}`}>{c.on ? 'Agreed' : 'Not agreed'}</span>
+                {!c.req ? <div style="margin-top:7px"><button class="btn sm">{c.on ? 'Turn off' : 'Turn on'}</button></div> : null}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Changing your mind</h3></div>
+      <div class="card-body">
+        <p style="margin:0 0 14px">
+          You can withdraw from any part of this at any time, without giving a reason, and it will not
+          affect the ordinary care you receive from us. You do not need to explain yourself to anyone.
+        </p>
+        <div class="btn-row">
+          <button class="btn">Change what I agreed to</button>
+          <button class="btn danger">Withdraw from the study</button>
+        </div>
+        <div class="note warn" style="margin-top:14px">
+          <b>What happens to information already collected.</b> Records made before you withdraw are
+          kept, because they are part of the safety record for the study and we are required to keep
+          them. Nothing new is collected, and no further information is shared. We will explain all of
+          this to you before anything is finalised.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Everything that has happened to your consent</h3></div>
+      <div class="card-body">
+        <div class="tl">
+          {p.consent.history.map((h) => (
+            <div class="tl-item ok">
+              <div class="tl-when">{h.when}</div>
+              <div class="tl-what">{h.event}</div>
+              <div class="tl-detail">{h.by}</div>
+            </div>
+          ))}
+        </div>
+        <div class="card-note" style="margin:14px -20px -20px">
+          You can see this history because it is yours. Nothing in it can be edited or removed — a change
+          is always added on top, never written over.
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{view === 'ogami' && (
+  <div class="stack pf" style="max-width:740px">
+    <div class="card">
+      <div class="card-head"><h3>Ask Ogami</h3><span class="chip">Answers from your approved information sheet</span></div>
+      <div class="card-body">
+        <div class="chat">
+          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>Good morning, Mrs. Eze. How can I help? I can answer questions about your visits, what to expect, and your appointments. Anything medical I will pass straight to your team.</div></div>
+          <div class="bubble-row me"><div class="bubble">Do I need to fast before Friday?</div></div>
+          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>No — you do not need to fast for a treatment session. Please eat and drink normally, and take your usual medicines unless your doctor has told you otherwise. Fasting is only needed before some of the blood tests, and none are booked for Friday.</div></div>
+          <div class="bubble-row me"><div class="bubble">My MMSE went from 22 to 23. Does that mean it is working?</div></div>
+          <div class="bubble-row ai"><div class="bubble"><div class="who">Ogami</div>I am not able to tell you what your results mean — that is a conversation for Dr. Sola, and I do not want to give you a wrong impression either way.<br /><br />What I can tell you is what the study itself says: this is an early study of a treatment that has not been shown to work, there is no comparison group, and scores like the MMSE move by a point or two for ordinary reasons including how rested you were. Your doctor will go through your results properly with you.<br /><br />I have added your question to Friday's notes so Dr. Sola raises it with you. Would you like me to book a longer appointment so there is time to talk it through?</div></div>
+          <div class="bubble-row me"><div class="bubble">Yes please, that would help.</div></div>
+          <div class="bubble-row sys"><div class="bubble">Question attached to ATN-0008 pre-visit review · 15 minutes added to 28 Aug appointment · Dr. F. Sola notified</div></div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <input style="flex:1;height:44px;padding:0 13px;border:1px solid var(--line);border-radius:var(--r-sm);font-size:14px" placeholder="Ask a question…" />
+          <button class="btn primary">Send</button>
+        </div>
+      </div>
+      <div class="card-note">
+        Ogami declined to interpret a clinical result and said why. For an investigational treatment in
+        a vulnerable group, an assistant that answers that question enthusiastically is a liability —
+        so it is configured not to, and the refusal is reviewable by the Principal Investigator.
+      </div>
+    </div>
+  </div>
+)}

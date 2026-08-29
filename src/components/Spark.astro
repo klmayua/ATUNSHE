@@ -1,0 +1,31 @@
+---
+// Inline SVG line chart with an optional threshold rule. No library: the whole
+// point of the cold-chain trace is that the breach is visible at a glance, and
+// that needs about twenty lines of geometry, not a charting dependency.
+const { points, threshold = null, w = 320, h = 44, invert = false } = Astro.props;
+
+const vals = points.map((p) => p.v);
+const lo = Math.min(...vals, threshold ?? Infinity);
+const hi = Math.max(...vals, threshold ?? -Infinity);
+const pad = (hi - lo) * 0.18 || 1;
+const min = lo - pad;
+const max = hi + pad;
+
+const x = (i) => (points.length === 1 ? w / 2 : (i / (points.length - 1)) * w);
+const y = (v) => h - ((v - min) / (max - min)) * h;
+
+const line = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
+const area = `${line} L${w},${h} L0,${h} Z`;
+const ty = threshold != null ? y(threshold) : null;
+// A point is "bad" when it sits on the wrong side of the threshold.
+const isBad = (v) => (threshold == null ? false : invert ? v < threshold : v > threshold);
+---
+
+<svg class="spark" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" role="img" aria-label="trend">
+  <path class="fillarea" d={area} />
+  {ty != null ? <line class="thresh" x1="0" y1={ty} x2={w} y2={ty} /> : null}
+  <path class={`ln${points.some((p) => isBad(p.v)) ? ' stop' : ' ok'}`} d={line} vector-effect="non-scaling-stroke" />
+  {points.map((p, i) => (
+    <circle class={`pt${isBad(p.v) ? ' bad' : ''}`} cx={x(i)} cy={y(p.v)} r={isBad(p.v) ? 3 : 1.8} />
+  ))}
+</svg>

@@ -45,9 +45,10 @@ prose can never drift from it:
 
 ## Roles
 
-Seven roles, taken from protocol §3 Table 4 plus administration and caregiver access — not
-invented personas. Each role's permissions follow from the duties the protocol assigns it,
-because separation of duties is a clinical requirement before it is an interface choice.
+Eight roles — six from protocol §3 Table 4, plus administration and the two patient-side
+roles the proposal's §3 requires. Not invented personas: each role's permissions follow from
+the duties the protocol assigns it, because separation of duties is a clinical requirement
+before it is an interface choice.
 
 | Role | Sign in as | Lands on |
 |---|---|---|
@@ -57,15 +58,26 @@ because separation of duties is a clinical requirement before it is an interface
 | ViaNase™ Device Operator — Chidi Nwosu | `c.nwosu` | Device log |
 | Study Coordinator — Ngozi Aluko | `n.aluko` | Consent register |
 | Facility Administrator — Adaora Eze | `a.eze` | Command centre |
+| **Patient — Mrs. Comfort Eze (ATN-0008)** | `c.eze` | My care |
 | Caregiver — Mrs. Bisi Adewale | `b.adewale` | Daily diary |
 
 Password for all: `demo`. Or just click a role on the landing page.
+
+### The patient side
+
+§3 of the proposal says the record is *patient-driven* — "the patient participates in their
+own record rather than being a passive subject of it." The patient portal therefore does five
+things rather than describing them: she reads her own record and released results, sees and
+prepares for her visits, **reports her own symptoms and outcomes into the clinical record**
+(they are read at Gate B before the physician decides it is safe to treat), and holds and
+changes her own consent purpose by purpose. Plain language throughout, and the one thing that
+went wrong in her course is shown to her, not hidden.
 
 **Access control is resolved at build time.** Every page is generated per role, so a section a
 role may not see is not rendered, not linked, and *has no route*. The Facility Administrator
 has no clinical record pages at all — not a hidden menu, no page. `npm run verify` asserts this.
 
-## Three things worth clicking
+## Four things worth clicking
 
 1. **`/nurse/session/`** → Gate C → *Sign as N. Bello*. The platform refuses: Nurse Bello is
    already the verifier, and §5.2 C requires an independent second person. It compares
@@ -75,6 +87,13 @@ has no clinical record pages at all — not a hidden menu, no page. `npm run ver
 3. **`/pi/learning/`** — four insights from execution data. One was **rejected** by clinical
    review and kept with its reasoning; one became protocol v1.1, which is in the approval
    workflow and is *not running*.
+4. **`/patient/myconsent/`** then **`/patient/ogami/`** — the patient turning research sharing
+   off without touching her treatment, and the assistant declining to tell her whether her
+   MMSE score means the treatment is working.
+
+Every command centre closes with a band headed **"What the platform prevented this month"** —
+the exposures, the invalid treatment, the late report and the mis-billing that did not happen,
+each traceable to the gate that stopped it.
 
 ## Mapping to the proposal
 
@@ -100,7 +119,7 @@ npm run check      # build + verify
 - every role reaches its declared landing page
 - no prose claim about gate, check or signature counts contradicts the engine
 
-Current: **170 pages · 3,298 internal links · 0 problems.**
+Current: **176 pages · 3,336 internal links · 0 problems.**
 
 ## Layout
 
@@ -108,13 +127,15 @@ Current: **170 pages · 3,298 internal links · 0 problems.**
 src/data/protocol.mjs      the executable protocol — gates, checks, stopping rules, clocks
 src/data/appendices.mjs    Appendices A–I as structured, gate-bound form definitions
 src/data/cohort.mjs        8 patients, each at a different point in the protocol
-src/data/roles.mjs         the 7 roles + RBAC, from protocol §3 Table 4
+src/data/roles.mjs         the 8 roles + RBAC, from protocol §3 Table 4
 src/data/trust.mjs         consent state, hash-chained custody ledger, ALCOA+ audit
 src/data/inventory.mjs     lots, cold chain, thaw windows, device log
 src/data/safety.mjs        AE/SAE register with clocks, deviations with reason codes
 src/data/ops.mjs           CRM/Ogami, billing, people, analytics, learning loop, offline scope
 src/data/platform.mjs      the proposal's architecture, made navigable
+src/data/value.mjs         what the platform prevented, and the dashboard trend series
 src/data/nav.mjs           role-filtered navigation
+src/components/Spark.astro  inline SVG trend chart with threshold rule
 src/components/sections/   one component per capability area
 src/pages/[role]/          per-role static generation (this is the access control)
 scripts/verify.mjs         build verifier

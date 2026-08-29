@@ -34,8 +34,12 @@ export const SECTIONS = [
   { key: 'architecture', label: 'Platform architecture', group: 'Programme', blurb: 'Layers, domains, lifecycle, tenancy' },
   { key: 'delivery', label: 'Delivery plan', group: 'Programme', blurb: '6-week build, 6-week bedding-down, open decisions' },
 
+  { key: 'portal', label: 'My care', group: 'My care', blurb: 'Where I am in the course and what happens next' },
+  { key: 'myvisits', label: 'My visits', group: 'My care', blurb: 'Past and upcoming visits, reminders, instructions' },
+  { key: 'myrecord', label: 'My record', group: 'My care', blurb: 'Results, medicines and my whole history' },
+  { key: 'mysymptoms', label: 'How I am feeling', group: 'My care', blurb: 'Before each visit, in my own words' },
+  { key: 'myconsent', label: 'My consent & choices', group: 'My care', blurb: 'What I agreed to, and changing my mind' },
   { key: 'diary', label: 'Daily diary', group: 'My care', blurb: 'Record how the day went' },
-  { key: 'portal', label: 'Our care plan', group: 'My care', blurb: 'Visits, what to expect, who to call' },
   { key: 'ogami', label: 'Ask Ogami', group: 'My care', blurb: 'Questions, appointments, guidance' },
 ];
 

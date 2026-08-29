@@ -1,7 +1,9 @@
 ---
 import { ROLES } from '../data/roles.mjs';
-import { totalGateChecks, totalSignatures, gates } from '../data/protocol.mjs';
 import '../styles/global.css';
+
+const staff = ROLES.filter((r) => !r.isPatient && !r.isCaregiver);
+const people = ROLES.filter((r) => r.isPatient || r.isCaregiver);
 ---
 
 <html lang="en">
@@ -15,91 +17,72 @@ import '../styles/global.css';
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
-    <title>Atunse Health — Protocol Platform</title>
+    <title>Atunse Health — Sign in</title>
   </head>
-  <body>
-    <div class="gate">
-      <section class="gate-brief">
-        <div class="mark">
-          <img src="/assets/atunse_gold_transparent.png" alt="" />
+  <body class="signin-body">
+    <main class="signin">
+      <div class="signin-card">
+        <img class="signin-logo" src="/assets/atunse_gold_transparent.png" alt="Atunse Health" />
+        <h1>Atunse Health</h1>
+        <p class="signin-tag">Protocol Platform</p>
+
+        <div id="err" class="gate-err" style="display:none"></div>
+
+        <form class="signin-form" id="f">
           <div>
-            <b>Atunse Health</b>
-            <span>Protocol Platform</span>
+            <label for="u">Username</label>
+            <input id="u" type="text" placeholder="e.g. f.sola" autocomplete="off" />
           </div>
-        </div>
+          <div>
+            <label for="p">Password</label>
+            <input id="p" type="password" placeholder="••••••" autocomplete="off" />
+          </div>
+          <button type="submit">Sign in</button>
+        </form>
 
-        <h1>The protocol stops being a document and starts <em>running the clinic</em>.</h1>
-        <p>
-          This is a working demonstration of the Atunse Health EMR built around one real
-          protocol — <span class="mono">ATN-DEM-ADDSB-2026-001</span>, the dual-route ADDSB
-          regimen in dementia — with its nine working forms, its stopping rules and its
-          reporting clocks executing as the system itself.
-        </p>
-        <p>
-          Sign in as any of the roles from the protocol's own responsibilities table. Each sees a
-          genuinely different platform, because separation of duties is a clinical requirement
-          before it is an interface choice.
-        </p>
+        <div class="gate-or">or continue as</div>
 
-        <div class="gate-facts">
-          <div class="gate-fact"><span>Protocol executing</span><b>{gates.length} gates</b></div>
-          <div class="gate-fact"><span>Blocking checks per treatment day</span><b>{totalGateChecks}</b></div>
-          <div class="gate-fact"><span>Signatures required per treatment day</span><b>{totalSignatures}</b></div>
-          <div class="gate-fact"><span>Working forms bound to gates</span><b>Appendices A–I</b></div>
-          <div class="gate-fact"><span>Patients enrolled in the demo cohort</span><b>8</b></div>
-          <div class="gate-fact"><span>Sessions currently held by the engine</span><b>3</b></div>
-        </div>
-
-        <div class="gate-foot">
-          Demonstration environment. All patient data is fabricated for this walkthrough.<br />
-          Prepared by Farawa for Atunse Health leadership · Confidential
-        </div>
-      </section>
-
-      <section class="gate-panel">
-        <h2>Choose a role</h2>
-        <p class="lede">
-          Seven roles, taken from protocol §3 Table&nbsp;4 plus administration and caregiver access.
-          The platform each one sees follows from the duties the protocol assigns them.
-        </p>
-
-        <div class="role-list">
-          {ROLES.map((r) => (
-            <a class="role-btn" style={`--accent:${r.accent}`} href={`/${r.id}/${r.home}/`}>
+        <div class="signin-group-label">Clinical &amp; operations</div>
+        <div class="signin-grid">
+          {staff.map((r) => (
+            <a class="signin-role" style={`--accent:${r.accent}`} href={`/${r.id}/${r.home}/`}>
               <span class="av">{r.initials}</span>
-              <span>
+              <span class="tx">
                 <span class="nm">{r.name}</span>
-                <span class="rl">{r.roleFull}</span>
+                <span class="rl">{r.role}</span>
               </span>
-              <span class="ref">{r.protocolRef}</span>
             </a>
           ))}
         </div>
 
-        <div class="gate-or">or sign in</div>
+        <div class="signin-group-label">Patient &amp; family</div>
+        <div class="signin-grid">
+          {people.map((r) => (
+            <a class="signin-role" style={`--accent:${r.accent}`} href={`/${r.id}/${r.home}/`}>
+              <span class="av">{r.initials}</span>
+              <span class="tx">
+                <span class="nm">{r.name}</span>
+                <span class="rl">{r.role}</span>
+              </span>
+            </a>
+          ))}
+        </div>
 
-        <form class="gate-form" id="f">
-          <div id="e" class="gate-err" style="display:none"></div>
-          <div>
-            <label for="u">Username</label>
-            <input id="u" type="text" placeholder="f.sola" autocomplete="off" />
-          </div>
-          <div>
-            <label for="p">Password</label>
-            <input id="p" type="password" placeholder="demo" autocomplete="off" />
-          </div>
-          <button type="submit">Sign in</button>
-        </form>
-        <p class="tiny muted" style="margin-top:12px;max-width:420px">
-          Demo credentials: any username above with the password <span class="mono">demo</span>.
-          There is no real authentication here — the roles are the point, not the login.
+        <p class="signin-note">
+          Demonstration environment · password <span class="mono">demo</span> for every account.
+          All patient data is fabricated.
         </p>
-      </section>
-    </div>
+      </div>
+
+      <p class="signin-foot">
+        Atunse Health EMR · Protocol <span class="mono">ATN-DEM-ADDSB-2026-001</span> v1.0<br />
+        Prepared by Farawa for Atunse Health leadership · Confidential
+      </p>
+    </main>
 
     <script is:inline define:vars={{ roles: ROLES.map((r) => ({ id: r.id, u: r.username, p: r.password, home: r.home })) }}>
       const f = document.getElementById('f');
-      const e = document.getElementById('e');
+      const e = document.getElementById('err');
       f.addEventListener('submit', (ev) => {
         ev.preventDefault();
         e.style.display = 'none';
@@ -107,12 +90,12 @@ import '../styles/global.css';
         const p = document.getElementById('p').value;
         const r = roles.find((x) => x.u === u || x.id === u);
         if (!r) {
-          e.textContent = 'No demo account matches that username.';
+          e.textContent = 'No account matches that username.';
           e.style.display = 'block';
           return;
         }
         if (r.p !== p) {
-          e.textContent = 'Incorrect demo password — it is “demo”. Or just choose a role above.';
+          e.textContent = 'Incorrect password. For this demonstration it is “demo”.';
           e.style.display = 'block';
           return;
         }

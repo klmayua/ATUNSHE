@@ -154,12 +154,34 @@ export const ROLES = [
     ],
   },
   {
+    id: 'patient',
+    name: 'Mrs. Comfort Eze',
+    short: 'Mrs. Eze',
+    initials: 'CE',
+    role: 'Patient',
+    roleFull: 'Patient — ATN-0008, Session 5 of 6',
+    username: 'c.eze',
+    password: 'demo',
+    duties:
+      'Access to her own record, results and care plan; patient-entered history and pre-visit questionnaires; patient-reported symptoms and outcomes; patient-held consent and communication preferences.',
+    protocolRef: 'EMR Proposal §3 — patient-driven',
+    home: 'portal',
+    accent: '#1d5b7a',
+    canAuthorise: false,
+    canWitness: false,
+    canSignOff: false,
+    breakGlass: false,
+    allow: ['portal', 'myrecord', 'myvisits', 'mysymptoms', 'myconsent', 'ogami'],
+    scopedTo: 'ATN-0008',
+    isPatient: true,
+  },
+  {
     id: 'caregiver',
     name: 'Mrs. Bisi Adewale',
     short: 'B. Adewale',
     initials: 'BA',
     role: 'Caregiver',
-    roleFull: 'Caregiver — daily observation diary',
+    roleFull: 'Caregiver — for Mrs. Folake Adewale (ATN-0004)',
     username: 'b.adewale',
     password: 'demo',
     duties:
@@ -173,6 +195,7 @@ export const ROLES = [
     breakGlass: false,
     allow: ['diary', 'portal', 'ogami'],
     scopedTo: 'ATN-0004',
+    isCaregiver: true,
   },
 ];
 

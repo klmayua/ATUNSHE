@@ -12,6 +12,7 @@ import Trust from '../../components/sections/Trust.astro';
 import Operations from '../../components/sections/Operations.astro';
 import Programme from '../../components/sections/Programme.astro';
 import Caregiver from '../../components/sections/Caregiver.astro';
+import Patient from '../../components/sections/Patient.astro';
 
 import { ROLES } from '../../data/roles.mjs';
 import { SECTIONS, SECTION_BY_KEY } from '../../data/nav.mjs';
@@ -146,14 +147,16 @@ const HEAD = {
     refs: ['EMR Proposal §12 · §13', 'Background Brief §6'],
   },
   diary: { title: 'Daily diary', sub: 'How Mrs. Adewale has been today.', refs: ['Appendix I'] },
-  portal: { title: 'Our care plan', sub: 'Visits, what happens at each one, and how to change your mind about anything.', refs: [] },
+  portal: { title: 'My care', sub: 'Where you are in your treatment, and what happens next.', refs: [] },
+  myvisits: { title: 'My visits', sub: 'What is booked, what has happened, and what to expect each time.', refs: [] },
+  myrecord: { title: 'My record', sub: 'Your results, assessments and history — the same record your care team reads.', refs: [] },
+  mysymptoms: { title: 'How I am feeling', sub: 'Your doctor reads this before your visit, and before deciding it is safe to treat.', refs: [] },
+  myconsent: { title: 'My consent & choices', sub: 'What you agreed to, each part separately, and how to change any of it.', refs: [] },
   ogami: { title: 'Ask Ogami', sub: '', refs: [] },
 };
 
 const head = HEAD[sectionKey] || { title: meta.label, sub: meta.blurb, refs: [] };
 
-// Ogami has two faces: a clinical/operational one and the caregiver one.
-const ogamiIsCaregiver = sectionKey === 'ogami' && role.id === 'caregiver';
 ---
 
 <Shell role={role} section={sectionKey} title={head.title} sub={head.sub} refs={head.refs} pips={visiblePips}>
@@ -184,7 +187,15 @@ const ogamiIsCaregiver = sectionKey === 'ogami' && role.id === 'caregiver';
   {sectionKey === 'delivery' && <Programme role={role} view="delivery" />}
 
   {sectionKey === 'diary' && <Caregiver role={role} view="diary" />}
-  {sectionKey === 'portal' && <Caregiver role={role} view="portal" />}
-  {ogamiIsCaregiver && <Caregiver role={role} view="ogami" />}
-  {sectionKey === 'ogami' && !ogamiIsCaregiver && <Operations role={role} view="crm" />}
+
+  {sectionKey === 'portal' && role.isPatient && <Patient role={role} view="portal" />}
+  {sectionKey === 'portal' && !role.isPatient && <Caregiver role={role} view="portal" />}
+  {sectionKey === 'myvisits' && <Patient role={role} view="myvisits" />}
+  {sectionKey === 'myrecord' && <Patient role={role} view="myrecord" />}
+  {sectionKey === 'mysymptoms' && <Patient role={role} view="mysymptoms" />}
+  {sectionKey === 'myconsent' && <Patient role={role} view="myconsent" />}
+
+  {sectionKey === 'ogami' && role.isPatient && <Patient role={role} view="ogami" />}
+  {sectionKey === 'ogami' && role.isCaregiver && <Caregiver role={role} view="ogami" />}
+  {sectionKey === 'ogami' && !role.isPatient && !role.isCaregiver && <Operations role={role} view="crm" />}
 </Shell>
