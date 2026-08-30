@@ -229,8 +229,8 @@ function thawRemaining(t) {
                     {s.g.key === 'F' ? (
                       <div class="card-body" style="border-top:1px solid var(--line)">
                         <div class="sec-title" style="margin-top:0">Observation grid — Appendix C</div>
-                        <div class="tbl-wrap">
-                          <table class="tbl">
+                        <div class="tbl-wrap" data-matrix>
+                          <table class="tbl" data-matrix>
                             <thead>
                               <tr><th>Timepoint</th>{vitalFields.map((f) => <th>{f}</th>)}<th>Init.</th></tr>
                             </thead>

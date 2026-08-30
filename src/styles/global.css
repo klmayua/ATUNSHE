@@ -1013,3 +1013,214 @@ table { border-collapse: collapse; width: 100%; }
   .pt-grid { grid-template-columns: 1fr 1fr; }
   .roi.g3 { grid-template-columns: 1fr 1fr; }
 }
+
+/* ==========================================================================
+   TABLES ON A PHONE
+   ==========================================================================
+   This app is 61 tables, several of them 8–12 columns wide. A horizontally
+   scrolling 12-column grid on a 360px screen is not a mobile experience, it
+   is a desktop table you have to drag. Below the rail breakpoint every record
+   table becomes a stack of cards: one card per row, one labelled line per
+   field, first cell promoted to the card heading.
+
+   The layout is pure CSS, so it is correct before any script runs. The field
+   labels are copied from each table's own <th> by a small script — a
+   progressive enhancement, not a dependency.
+
+   Matrix tables opt out with data-matrix: where the grid itself carries the
+   meaning (an observation sheet is timepoint × vital sign) breaking it into
+   cards would destroy the thing the reader is scanning for. Those keep the
+   horizontal scroll and gain a scroll affordance instead.
+   ========================================================================== */
+
+@media (max-width: 1000px) {
+  /* ---- Matrix tables: keep the grid, make the scroll obvious ---- */
+  .tbl-wrap[data-matrix] {
+    position: relative;
+    background:
+      linear-gradient(to right, var(--surface) 30%, rgba(255, 255, 255, 0)),
+      linear-gradient(to left, var(--surface) 30%, rgba(255, 255, 255, 0)) 100% 0,
+      radial-gradient(farthest-side at 0 50%, rgba(16, 25, 42, 0.14), transparent),
+      radial-gradient(farthest-side at 100% 50%, rgba(16, 25, 42, 0.14), transparent) 100% 0;
+    background-repeat: no-repeat;
+    background-size: 34px 100%, 34px 100%, 13px 100%, 13px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+  .tbl-wrap[data-matrix]::after {
+    content: 'Scroll →';
+    position: absolute; top: 6px; right: 8px;
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--ink-4); background: var(--surface); padding: 2px 6px; border-radius: 999px;
+    border: 1px solid var(--line); pointer-events: none;
+  }
+  .tbl[data-matrix] { font-size: 12px; }
+  .tbl[data-matrix] th, .tbl[data-matrix] td { padding: 8px 10px; white-space: nowrap; }
+
+  /* ---- Record tables: become cards ---- */
+  .tbl-wrap:not([data-matrix]) { overflow-x: visible; }
+
+  .tbl:not([data-matrix]) { display: block; }
+  .tbl:not([data-matrix]) thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  .tbl:not([data-matrix]) tbody { display: block; }
+
+  .tbl:not([data-matrix]) tr {
+    display: block;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--line-strong);
+    border-radius: var(--r);
+    background: var(--surface);
+    padding: 11px 13px;
+    margin-bottom: 9px;
+  }
+  .tbl:not([data-matrix]) tr:last-child { margin-bottom: 0; }
+  .tbl:not([data-matrix]) tbody tr:hover { background: var(--surface); }
+
+  /* Row status becomes a card accent rather than a wash of colour. */
+  .tbl:not([data-matrix]) tr.is-stop { border-left-color: var(--stop); background: var(--stop-bg); }
+  .tbl:not([data-matrix]) tr.is-warn { border-left-color: var(--gold-500); background: var(--warn-bg); }
+  .tbl:not([data-matrix]) tr.is-live { border-left-color: var(--live); background: var(--live-bg); }
+
+  .tbl:not([data-matrix]) td {
+    display: grid;
+    grid-template-columns: 38% 1fr;
+    gap: 10px;
+    align-items: baseline;
+    padding: 6px 0;
+    border: 0;
+    border-bottom: 1px solid rgba(16, 25, 42, 0.07);
+    white-space: normal;
+    font-size: 13px;
+  }
+  .tbl:not([data-matrix]) td:last-child { border-bottom: 0; padding-bottom: 0; }
+  .tbl:not([data-matrix]) td::before {
+    content: attr(data-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    line-height: 1.45;
+  }
+  /* An unlabelled cell (script not yet run, or a header-less column) still
+     reads correctly — it simply spans the full width. */
+  .tbl:not([data-matrix]) td:not([data-label])::before { content: none; }
+  .tbl:not([data-matrix]) td:not([data-label]) { grid-template-columns: 1fr; }
+
+  /* First cell is the card heading: full width, larger, no label. */
+  .tbl:not([data-matrix]) td:first-child {
+    grid-template-columns: 1fr;
+    font-size: 14.5px;
+    font-weight: 640;
+    padding-top: 0;
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tbl:not([data-matrix]) td:first-child::before { content: none; }
+  .tbl:not([data-matrix]) td:first-child .s { font-weight: 400; }
+
+  /* Empty cells carry no information on a phone — drop them. */
+  .tbl:not([data-matrix]) td:empty { display: none; }
+
+  /* Right-aligned numerics go left with everything else. */
+  .tbl:not([data-matrix]) td.n { text-align: left; white-space: normal; }
+  .tbl:not([data-matrix]) td .meter { margin-top: 4px; }
+  .tbl:not([data-matrix]) td[style*="max-width"] { max-width: none !important; }
+  .tbl:not([data-matrix]) td[style*="width:"] { width: auto !important; }
+}
+
+@media (max-width: 640px) {
+  .tbl:not([data-matrix]) td { grid-template-columns: 1fr; gap: 2px; padding: 7px 0; }
+  .tbl:not([data-matrix]) td::before { margin-bottom: 1px; }
+  .tbl:not([data-matrix]) tr { padding: 11px 12px; }
+}
+
+
+/* ==========================================================================
+   CONTENT ON A PHONE — the parts behind the navigation
+   ========================================================================== */
+
+@media (max-width: 1000px) {
+  /* ---- The gate chain stays a chain, but snaps and shows there is more ---- */
+  .chain { scroll-snap-type: x mandatory; border-radius: var(--r); }
+  .chain-node { scroll-snap-align: start; min-width: 152px; padding: 12px 13px; }
+  .chain-node .gn { font-size: 12px; }
+
+  /* ---- Hero: four metrics become a 2×2 block instead of a squeezed row ---- */
+  .hero-metrics {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; width: 100%;
+    padding-top: 14px; margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .hero-metric .hm-v { font-size: 23px; }
+  .hero-metric .hm-k { font-size: 10.5px; }
+  .hero-top { flex-direction: column; align-items: stretch; }
+
+  /* ---- Checks: the blocking/advisory chip belongs with the label ---- */
+  .check .cm { gap: 4px 8px; }
+  .check .cm .chip, .check .cm .src { font-size: 10px; }
+  .check .why { font-size: 11.5px; padding: 8px 10px; }
+
+  /* ---- Signature blocks ---- */
+  .sig { padding: 12px; }
+  .sig .sv { font-size: 12px; }
+
+  /* ---- Stat tiles: tighter, and the caption is allowed to wrap ---- */
+  .stat .n { font-size: 11px; }
+
+  /* ---- ROI band ---- */
+  .roi-item { padding: 14px; }
+  .roi-item .rv { font-size: 20px; }
+
+  /* ---- Worklist ---- */
+  .wl-t { font-size: 13px; }
+  .wl-s { font-size: 12px; }
+
+  /* ---- Cards inside cards get thinner rules ---- */
+  .card + .card { margin-top: 12px; }
+  .grid { gap: 12px; }
+  .stack { gap: 12px; }
+
+  /* ---- Chips wrap instead of forcing width ---- */
+  .chip { white-space: normal; }
+  .chip-row { gap: 5px; }
+
+  /* ---- Timeline ---- */
+  .tl { padding-left: 19px; }
+  .tl-detail { font-size: 12.5px; }
+
+  /* ---- Appendix form sheet ---- */
+  .crit { grid-template-columns: 28px 1fr; gap: 9px; font-size: 12.5px; }
+  .sig-slot { padding: 10px 11px; }
+
+  /* ---- Notes ---- */
+  .note { font-size: 12px; padding: 11px 12px; }
+
+  /* ---- Patient-facing: bigger targets, calmer type ---- */
+  .pf p { font-size: 15px; }
+  .big-step .t { font-size: 14.5px; }
+  .big-step .d { font-size: 13px; }
+  .scale-row { grid-template-columns: 1fr; gap: 6px; align-items: start; }
+
+  /* ---- Ogami chat sizes to the viewport rather than a fixed box ---- */
+  .ogami-log { max-height: 52vh; }
+  .ogami-input { position: sticky; bottom: 0; }
+}
+
+@media (max-width: 640px) {
+  .hero { padding: 15px 14px; }
+  .hero h2 { font-size: 17px; }
+  .chain-node { min-width: 140px; }
+  .card-head { flex-wrap: wrap; gap: 8px; }
+  .card-head h3 { font-size: 12.5px; }
+  .sec-title { font-size: 11px; }
+  .page-head .sub { font-size: 12.5px; }
+  .roi-item .rv { font-size: 19px; }
+
+  /* Two-up stat blocks keep their value legible at 360px. */
+  .stat { padding: 11px 12px; }
+  .stat .k { font-size: 10.5px; }
+  .stat .v { font-size: 19px; }
+}

@@ -97,6 +97,8 @@ const cssRequired = [
   ['safe-area-inset-bottom', 'iOS safe-area inset'],
   ['prefers-reduced-motion', 'reduced-motion handling'],
   ['overflow-x:hidden', 'horizontal-overflow guard'],
+  ['.tbl:not([data-matrix])thead', 'table card-mode (header hidden on mobile)'],
+  ['content:attr(data-label)', 'table card-mode field labels'],
 ];
 for (const [needle, what] of cssRequired) {
   if (!allCss.replace(/\s+/g, '').includes(needle.replace(/\s+/g, ''))) {
@@ -125,6 +127,25 @@ for (const f of files) {
   const items = (html.match(/class="bnav-item/g) || []).length;
   if (items < 3) {
     console.log(`MOBILE THIN  ${rel} bottom nav has only ${items} item(s)`);
+    errors++;
+  }
+
+  // Table contract. On a phone a record table becomes a stack of cards whose
+  // field labels are read from its own <th>. A table with no header row would
+  // stack into unlabelled values — worse than the scroller it replaced. And a
+  // matrix table must be marked on BOTH the wrapper (scroll affordance) and
+  // the table (opt out of card mode), or the two disagree.
+  for (const m of html.matchAll(/<table class="tbl"( data-matrix)?>([\s\S]*?)<\/table>/g)) {
+    const isMatrix = !!m[1];
+    if (!isMatrix && !/<thead[\s\S]*?<th/.test(m[2])) {
+      console.log(`TABLE UNLABELLED  ${rel} has a card-mode table with no header row`);
+      errors++;
+    }
+  }
+  const matrixTables = (html.match(/<table class="tbl" data-matrix>/g) || []).length;
+  const matrixWraps = (html.match(/<div class="tbl-wrap" data-matrix>/g) || []).length;
+  if (matrixTables !== matrixWraps) {
+    console.log(`TABLE MATRIX MISMATCH  ${rel} ${matrixTables} matrix table(s) but ${matrixWraps} marked wrapper(s)`);
     errors++;
   }
 }

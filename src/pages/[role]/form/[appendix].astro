@@ -138,8 +138,8 @@ const demo = patientById('ATN-0004');
 
           {s.kind === 'monitoring' && (
             <div class="form-sec-body flush">
-              <div class="tbl-wrap">
-                <table class="tbl">
+              <div class="tbl-wrap" data-matrix>
+                <table class="tbl" data-matrix>
                   <thead><tr><th>Timepoint</th><th>Time</th>{vitalFields.map((f) => <th>{f}</th>)}<th>Init.</th></tr></thead>
                   <tbody>
                     {monitoringTimepoints.map((t) => (

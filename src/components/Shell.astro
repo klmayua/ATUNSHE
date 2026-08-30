@@ -192,6 +192,27 @@ const sectionLabel = title;
           });
         }
 
+        // Card-mode table labels.
+        // The stacked layout is CSS, so it is right before this runs; this
+        // only copies each column's <th> onto its cells so a field keeps its
+        // name once the header row is visually hidden. Matrix tables, where
+        // the grid itself is the meaning, are skipped.
+        Array.prototype.forEach.call(document.querySelectorAll('table.tbl'), function (t) {
+          if (t.hasAttribute('data-matrix')) return;
+          var heads = t.querySelectorAll('thead th');
+          if (!heads.length) return;
+          var labels = Array.prototype.map.call(heads, function (h) {
+            return (h.textContent || '').trim();
+          });
+          Array.prototype.forEach.call(t.querySelectorAll('tbody tr'), function (row) {
+            Array.prototype.forEach.call(row.children, function (cell, i) {
+              if (labels[i] && !cell.hasAttribute('data-label')) {
+                cell.setAttribute('data-label', labels[i]);
+              }
+            });
+          });
+        });
+
         // Mobile sheet
         var sheet = document.getElementById('m-sheet');
         var scrim = document.getElementById('m-scrim');
