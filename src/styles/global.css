@@ -950,3 +950,66 @@ table { border-collapse: collapse; width: 100%; }
   .bubble.typing span { animation: none; opacity: 0.5; }
   * { scroll-behavior: auto !important; }
 }
+
+/* ==========================================================================
+   SESSION SWITCHER
+   Three tabs sharing 336px is unreadable, so on a phone the strip scrolls
+   instead of squashing. On desktop it fills the card as before.
+   ========================================================================== */
+.sess-tabs { display: flex; gap: 1px; background: var(--line); }
+.sess-tab {
+  flex: 1; text-align: left; padding: 13px 16px; background: var(--surface);
+  border: 0; border-bottom: 3px solid transparent; min-width: 0;
+}
+
+/* ==========================================================================
+   MOBILE FIXES — found by auditing the built output rather than assumed
+   ========================================================================== */
+@media (max-width: 1000px) {
+  /* A 310px minimum track overflows a 360px phone once padding is taken off,
+     which pushed the whole page sideways. One column below the rail. */
+  .pt-grid { grid-template-columns: 1fr; }
+
+  /* The switcher scrolls; each tab keeps a readable width. */
+  .sess-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+  .sess-tab { flex: 0 0 auto; min-width: 190px; scroll-snap-align: start; }
+
+  /* Hashes, keys and embed snippets are the longest unbreakable strings in
+     the app. Inside a scrolling table that is fine; anywhere else it is not. */
+  .def dd .mono, .note .mono, .acct-meta b, .stat .v.small { overflow-wrap: anywhere; }
+
+  /* Belt and braces: nothing may scroll the page sideways. */
+  html, body { overflow-x: hidden; }
+  .main, .page { max-width: 100%; min-width: 0; }
+
+  /* Sticky table headers fight a scrolling page on iOS; the wrapper scrolls
+     instead, so the header does not need to stick. */
+  .tbl th { position: static; }
+
+  /* Signature grid and form meta share the row on a phone rather than
+     stretching a single 210px track across the screen. */
+  .sig-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  /* Login card: 32px side padding on a 360px screen leaves 296px of content. */
+  .signin-card { padding: 26px 18px 22px; border-radius: 14px; }
+  .signin { padding: 22px 12px; }
+  .signin-logo { width: 62px; height: 62px; }
+  .signin-card h1 { font-size: 19px; }
+  .signin-role { padding: 11px 12px; min-height: 52px; }
+  .signin-foot { font-size: 10.5px; }
+
+  /* Course rail: six segments plus gaps need room to stay legible. */
+  .course-rail .seg { font-size: 12px; height: 34px; }
+
+  /* Session dots on a patient card. */
+  .dot { width: 24px; height: 21px; font-size: 10px; }
+}
+
+/* Larger phones in landscape and small tablets keep two columns where the
+   content genuinely benefits from it. */
+@media (min-width: 641px) and (max-width: 1000px) {
+  .pt-grid { grid-template-columns: 1fr 1fr; }
+  .roi.g3 { grid-template-columns: 1fr 1fr; }
+}

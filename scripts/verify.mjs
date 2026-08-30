@@ -7,6 +7,15 @@ import { ROLES } from '../src/data/roles.mjs';
 
 const DIST = new URL('../dist/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 
+function walkCss(dir, out = []) {
+  for (const e of readdirSync(dir)) {
+    const p = join(dir, e);
+    if (statSync(p).isDirectory()) walkCss(p, out);
+    else if (e.endsWith('.css')) out.push(p);
+  }
+  return out;
+}
+
 function walk(dir, out = []) {
   for (const e of readdirSync(dir)) {
     const p = join(dir, e);
@@ -72,6 +81,51 @@ for (const [re, expected, what] of totalAssertions) {
       console.log(`STALE COUNT  "${m[0].trim()}" — engine computes ${expected} ${what}`);
       errors++;
     }
+  }
+}
+
+// ── Mobile guarantees ──────────────────────────────────────────────────────
+// These were claimed once and not checked. Now they are checked: a page that
+// loses its bottom navigation, its centred logo bar or its viewport metadata
+// fails the build rather than shipping a phone with no way to navigate.
+const cssFiles = walkCss(DIST);
+const allCss = cssFiles.map((f) => readFileSync(f, 'utf8')).join('\n');
+
+const cssRequired = [
+  ['.bnav-item', 'bottom-nav item styles'],
+  ['.mbar-logo', 'centred mobile logo bar'],
+  ['safe-area-inset-bottom', 'iOS safe-area inset'],
+  ['prefers-reduced-motion', 'reduced-motion handling'],
+  ['overflow-x:hidden', 'horizontal-overflow guard'],
+];
+for (const [needle, what] of cssRequired) {
+  if (!allCss.replace(/\s+/g, '').includes(needle.replace(/\s+/g, ''))) {
+    console.log(`MOBILE CSS MISSING  ${what} (${needle})`);
+    errors++;
+  }
+}
+
+for (const f of files) {
+  const rel = '/' + relative(DIST, f).replace(/\\/g, '/').replace(/index\.html$/, '');
+  if (rel === '/') continue; // the sign-in page has no app chrome by design
+  const html = readFileSync(f, 'utf8');
+  const need = [
+    ['class="bnav"', 'bottom navigation'],
+    ['class="mbar"', 'mobile top bar'],
+    ['id="m-sheet"', 'More sheet'],
+    ['viewport-fit=cover', 'viewport-fit=cover'],
+  ];
+  for (const [needle, what] of need) {
+    if (!html.includes(needle)) {
+      console.log(`MOBILE MISSING  ${rel} has no ${what}`);
+      errors++;
+    }
+  }
+  // A bottom bar with nothing in it is worse than none at all.
+  const items = (html.match(/class="bnav-item/g) || []).length;
+  if (items < 3) {
+    console.log(`MOBILE THIN  ${rel} bottom nav has only ${items} item(s)`);
+    errors++;
   }
 }
 
