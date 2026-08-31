@@ -8,6 +8,7 @@ import { appendices } from '../../data/appendices.mjs';
 import { ROLES } from '../../data/roles.mjs';
 const { role } = Astro.props;
 const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
 ---
 
 <div class="stack">
@@ -41,13 +42,15 @@ const R = `/${role.id}`;
         <div class="stat"><div class="k">Signatures / day</div><div class="v">{totalSignatures}</div></div>
         <div class="stat"><div class="k">Bound forms</div><div class="v">9</div></div>
       </div>
-      <div class="note">
-        <span class="lbl">What "executable" means here</span>
-        The protocol document is 11 sections and 11 tables. The engine holds it as
-        <b> {gates.length} gates, {totalGateChecks} blocking checks, {totalSignatures} required signatures,
-        7 stopping rules and 4 reporting clocks</b>, each carrying the clause it enforces. Change the
-        document and you change the machine — they cannot drift apart, because there is only one of them.
-      </div>
+      <details class="why">
+        <summary>What "executable" means here</summary>
+        <div class="why-body">
+          The protocol document is 11 sections and 11 tables. The engine holds it as
+          <b> {gates.length} gates, {totalGateChecks} blocking checks, {totalSignatures} required signatures,
+          7 stopping rules and 4 reporting clocks</b>, each carrying the clause it enforces. Change the
+          document and you change the machine — they cannot drift apart, because there is only one of them.
+        </div>
+      </details>
     </div>
   </div>
 
@@ -97,7 +100,7 @@ const R = `/${role.id}`;
           </tbody>
         </table>
       </div>
-      <div class="card-note">Fixed dose at every session. No escalation across the course — the engine has no dose-escalation path to take.</div>
+      <div class="card-note">Fixed dose every session · no escalation path exists</div>
     </div>
 
     <div class="card">
@@ -140,9 +143,9 @@ const R = `/${role.id}`;
       ))}
     </div>
     <div class="card-note">
-      <b>v1.1 is in review and is not running.</b> Draft → review → approval → effective dating → rollback
-      is the lifecycle, and the platform will not execute a version that has not cleared it. That is
-      the difference between a protocol engine and a wiki.
+      <b>v1.1 is in review and is not running.</b>
+      <details class="why"><summary>The lifecycle it has to clear</summary><div class="why-body">Draft → review → approval → effective dating → rollback. The platform will not execute a
+        version that has not cleared it. That is the difference between a protocol engine and a wiki.</div></details>
     </div>
   </div>
 
@@ -160,10 +163,7 @@ const R = `/${role.id}`;
           {exclusionCriteria.map((c) => <div class="tiny" style="display:flex;gap:8px"><span style="color:var(--stop);font-weight:700">✕</span><span>{c}</span></div>)}
         </div>
       </div>
-      <div class="card-note">
-        Two patients in the cohort sit against these lists right now: ATN-0007 excluded on uncontrolled
-        hypertension, ATN-0006 held pending ENT review of nasal anatomy.
-      </div>
+      <div class="card-note">ATN-0007 excluded · ATN-0006 held pending ENT review</div>
     </div>
 
     <div class="stack">
@@ -265,8 +265,8 @@ const R = `/${role.id}`;
       </table>
     </div>
     <div class="card-note">
-      From the Background Brief: "The protocol you have written already embodies most of these.
-      The platform's job is to make each one enforceable in daily operation."
+      <details class="why"><summary>From the Background Brief</summary><div class="why-body">"The protocol you have written already embodies most of these. The platform's job is to make
+        each one enforceable in daily operation." </div></details>
     </div>
   </div>
 

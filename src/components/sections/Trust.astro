@@ -5,16 +5,21 @@ import { consentRegister, consentPurposes, custodyLedger, ledgerIntegrity, audit
 import { patients } from '../../data/cohort.mjs';
 const { role, view } = Astro.props;
 const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
 ---
 
 {view === 'consent' && (
   <div class="stack">
-    <div class="note">
-      <span class="lbl">Consent is a state, not a document</span>
-      Every row below is a live object with a version, a status, a giver, an expiry and a purpose set —
-      queried at the moment of care, not retrieved from a folder. <b>ATN-0005 is the proof:</b> a capacity
-      re-assessment changed the state automatically, and today's session stopped at Gate B as a direct
-      consequence. Nobody had to notice.
+    <div class="actbar stop">
+      <div class="actbar-body">
+        <div class="actbar-k">Blocking · ATN-0005 · §5.2 B</div>
+        <div class="actbar-t">LAR consent v2.1 unsigned — today's 14:00 session is held</div>
+        <div class="actbar-s">Issued 25 Aug after the capacity re-assessment.</div>
+        <details class="why"><summary>Why consent is state, not a document</summary><div class="why-body">Every row below is a live object with a version, a status, a giver, an expiry and a purpose
+          set — queried at the moment of care, not retrieved from a folder. The capacity re-assessment
+          changed the state automatically and Gate B stopped as a direct consequence. Nobody had to notice.</div></details>
+      </div>
+      {can('session') ? <a class="btn primary" href={`${R}/session/`}>See the held session</a> : null}
     </div>
 
     <div class="stats g4">
@@ -64,10 +69,10 @@ const R = `/${role.id}`;
             ))}
           </div>
           <div class="note stop" style="margin-top:14px">
-            <b>Nothing was overwritten.</b> The original consent still stands in the record with its
-            original signature; a superseding status entry sits above it. That is ALCOA+ — a correction
-            is a new record, never an edit — and it is why an auditor can reconstruct what was true on
-            any given day.
+            <b>Nothing was overwritten.</b>
+            <details class="why"><summary>What that means</summary><div class="why-body">The original consent still stands in the record with its original signature; a superseding
+            status entry sits above it. That is ALCOA+ — a correction is a new record, never an edit —
+            and it is why an auditor can reconstruct what was true on any given day.</div></details>
           </div>
         </div>
       </div>
@@ -87,9 +92,9 @@ const R = `/${role.id}`;
           ))}
         </div>
         <div class="card-note">
-          A patient can withdraw research-data sharing without withdrawing from treatment. Bundled
+          <details class="why"><summary>Why purposes are separate</summary><div class="why-body">A patient can withdraw research-data sharing without withdrawing from treatment. Bundled
           consent cannot express that; purpose-bound consent can, and the Nigeria Data Protection Act
-          expects it.
+          expects it.</div></details>
         </div>
       </div>
     </div>
@@ -99,11 +104,10 @@ const R = `/${role.id}`;
 {view === 'custody' && (
   <div class="stack">
     <div class="note">
-      <span class="lbl">Figure 6 of the proposal, rendered literally</span>
-      <span class="mono" style="font-size:12px">WHO → DID WHAT → WHEN → AUTHORITY → TO WHAT → WHAT NEXT</span>.
-      Those are the columns below, because that is the shape the proposal specifies. Each entry carries
-      the hash of the entry before it, so removing or altering a row breaks the chain and is detectable
-      without having to trust the database.
+      <span class="mono" style="font-size:12px">WHO → DID WHAT → WHEN → AUTHORITY → TO WHAT → WHAT NEXT</span>
+      <details class="why"><summary>Why the chain is hashed</summary><div class="why-body">Those are the columns below, because that is the shape Figure 6 of the proposal specifies.
+        Each entry carries the hash of the entry before it, so removing or altering a row breaks the
+        chain and is detectable without having to trust the database.</div></details>
     </div>
 
     <div class="stats g4">
@@ -140,17 +144,24 @@ const R = `/${role.id}`;
           </tbody>
         </table>
       </div>
-      <div class="card-note">{ledgerIntegrity.anchor}</div>
+      <div class="card-note">
+        <details class="why">
+          <summary>What is anchored, and what is not</summary>
+          <div class="why-body">{ledgerIntegrity.anchor}</div>
+        </details>
+      </div>
     </div>
 
-    <div class="note warn">
-      <span class="lbl">On the blockchain question</span>
-      The proposal is precise about this and so is the platform: a permissioned chain anchors
-      <b> governance-event digests</b> so tampering is detectable. <b>Patient records are never written
-      to a chain</b> — they stay in the secure, in-region data layer where they can be corrected,
-      access-controlled and, where the law requires, erased. Anything else would be a data-protection
-      liability dressed up as a feature.
-    </div>
+    <details class="why">
+      <summary>On the blockchain question</summary>
+      <div class="why-body">
+        The proposal is precise about this and so is the platform: a permissioned chain anchors
+        <b>governance-event digests</b> so tampering is detectable. <b>Patient records are never written
+        to a chain</b> — they stay in the secure, in-region data layer where they can be corrected,
+        access-controlled and, where the law requires, erased. Anything else would be a data-protection
+        liability dressed up as a feature.
+      </div>
+    </details>
   </div>
 )}
 
@@ -191,9 +202,9 @@ const R = `/${role.id}`;
         </table>
       </div>
       <div class="card-note">
-        Note the <span class="mono">AMEND</span> entry at 08:02. A correction to a clinical note did not
-        change the note — it created a new version and left the original visible. And the
-        <span class="mono"> BREAK_GLASS</span> entry announced itself to two people the moment it happened.
+        <details class="why"><summary>Two entries worth opening</summary><div class="why-body">The <span class="mono">AMEND</span> entry at 08:02: a correction to a clinical note did not
+        change the note — it created a new version and left the original visible. The
+        <span class="mono">BREAK_GLASS</span> entry announced itself to two people the moment it happened.</div></details>
       </div>
     </div>
 
@@ -236,10 +247,10 @@ const R = `/${role.id}`;
             <div class="def"><dt>Basis</dt><dd>{dataGovernance.sponsorExport.basis}</dd></div>
           </dl>
           <div class="note warn" style="margin-top:12px">
-            <b>{dataGovernance.sponsorExport.status}.</b> The Background Brief lists this as one of the
-            points that is properly Atunse's to decide with KweHealth, not ours to assume. The demo runs
-            on an assumed parameter set so the mechanism is visible; the real parameters are a decision
-            for the working session.
+            <b>{dataGovernance.sponsorExport.status}.</b>
+            <details class="why"><summary>Why it is left open</summary><div class="why-body">The Background Brief lists this as one of the points that is properly Atunse's to decide with
+            KweHealth, not ours to assume. The demo runs on an assumed parameter set so the mechanism is
+            visible; the real parameters are a decision for the working session.</div></details>
           </div>
         </div>
       </div>

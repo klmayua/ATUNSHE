@@ -4,16 +4,21 @@ import { lots, tempLog, thawLog, reconciliation, devices, deviceUseLog } from '.
 import { products } from '../../data/protocol.mjs';
 const { role, view } = Astro.props;
 const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
 ---
 
 {view === 'product' && (
   <div class="stack">
-    <div class="note stop">
-      <span class="lbl">Live release block</span>
-      Lot <b>EXP-140B-2608A</b> is quarantined after a cold-chain excursion on 24 August. Because the
-      Gate A readiness check reads lot state from this register rather than from a paper log,
-      <b> ATN-0003's session at 11:00 today cannot start</b>. No clinician had to remember the excursion;
-      the release simply is not available.
+    <div class="actbar stop">
+      <div class="actbar-body">
+        <div class="actbar-k">Blocking · lot EXP-140B-2608A · §5.2 A</div>
+        <div class="actbar-t">Quarantined lot is holding the 11:00 session</div>
+        <div class="actbar-s">A released substitute with six vials in date is available below.</div>
+        <details class="why"><summary>Why</summary><div class="why-body">Cold-chain excursion on 24 August. The Gate A readiness check reads lot state from this
+          register rather than from a paper log, so ATN-0003's session cannot start. No clinician had to
+          remember the excursion; the release simply is not available.</div></details>
+      </div>
+      {can('session') ? <a class="btn primary" href={`${R}/session/`}>See the held session</a> : null}
     </div>
 
     <div class="stats g4">
@@ -108,10 +113,7 @@ const R = `/${role.id}`;
               </tbody>
             </table>
           </div>
-          <div class="card-note">
-            Gate E re-checks the window at the moment of intranasal delivery, not at the start of the day.
-            A session that overruns cannot quietly deliver out-of-window product.
-          </div>
+          <div class="card-note">Re-checked by Gate E at delivery, not at release</div>
         </div>
 
         <div class="card">
@@ -143,12 +145,14 @@ const R = `/${role.id}`;
 
 {view === 'device' && (
   <div class="stack">
-    <div class="note">
-      <span class="lbl">The device is a protocol input, not an accessory</span>
-      Gate A will not close without a passed performance check, and Gate E will not close without the
-      device serial, the IFU version and the volume actually delivered. Appendix F is written by those
-      two gates rather than filled in afterwards.
-    </div>
+    <details class="why">
+      <summary>The device is a protocol input, not an accessory</summary>
+      <div class="why-body">
+        Gate A will not close without a passed performance check, and Gate E will not close without the
+        device serial, the IFU version and the volume actually delivered. Appendix F is written by those
+        two gates rather than filled in afterwards.
+      </div>
+    </details>
 
     <div class="grid g2">
       {devices.map((d) => (
@@ -193,9 +197,8 @@ const R = `/${role.id}`;
         </table>
       </div>
       <div class="card-note">
-        The 12 Aug row records a delivery that <em>did not happen</em>. ATN-0002's session stopped after
-        the IV route when a stopping rule fired, so the intranasal route was never administered — and the
-        device log says so rather than being left blank.
+        <details class="why"><summary>The 12 Aug row records a delivery that did not happen</summary><div class="why-body">ATN-0002's session stopped after the IV route when a stopping rule fired, so the intranasal
+        route was never administered — and the device log says so rather than being left blank.</div></details>
       </div>
     </div>
 

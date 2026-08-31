@@ -40,9 +40,14 @@ const chips = suggestions.length
 
   {!compact && (
     <div class="card-note">
-      This is a live connection to OGAMI using Atunse Health's own public key. The assistant answers
-      from the business profile held against the client record — the same profile that drives the
-      WhatsApp channel, so the web and WhatsApp front doors cannot drift apart.
+      <details class="why">
+        <summary>Live connection · Atunse Health's public key</summary>
+        <div class="why-body">
+          The assistant answers from the business profile held against the client record — the same
+          profile that drives the WhatsApp channel, so the web and WhatsApp front doors cannot drift
+          apart.
+        </div>
+      </details>
     </div>
   )}
 </div>

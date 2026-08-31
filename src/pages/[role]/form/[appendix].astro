@@ -33,10 +33,10 @@ const demo = patientById('ATN-0004');
 >
   <div class="stack">
     <div class="note live">
-      <span class="lbl">Bound to the protocol, not stored beside it</span>
-      This form is written by <b>{a.boundTo}</b>. The fields the engine can assert — consent state, lot
-      identity, cold-chain status, thaw window, timestamps, signatures — are filled from the record of
-      execution. The fields a clinician must judge stay blank until a clinician judges them.
+      Written by <b>{a.boundTo}</b>. Asserted fields are filled; judged fields stay blank.
+      <details class="why"><summary>Which is which</summary><div class="why-body">The engine asserts consent state, lot identity, cold-chain status, thaw window, timestamps
+        and signatures from the record of execution. The fields a clinician must judge stay blank until
+        a clinician judges them.</div></details>
     </div>
 
     <div class="form-sheet">
@@ -324,12 +324,15 @@ const demo = patientById('ATN-0004');
                 </div>
               ))}
             </div>
-            <div class="note" style="margin-top:14px">
-              <b>Electronic signature, not a typed name.</b> A signature here binds the authenticated
-              identity, the role held at that moment, the exact record version and a server timestamp,
-              and appends to the governance ledger. It cannot be applied retrospectively or by another
-              user — which is what 21 CFR Part 11 principles and ALCOA+ attributability actually require.
-            </div>
+            <details class="why" style="margin-top:14px">
+              <summary>Electronic signature, not a typed name</summary>
+              <div class="why-body">
+                A signature here binds the authenticated identity, the role held at that moment, the exact
+                record version and a server timestamp, and appends to the governance ledger. It cannot be
+                applied retrospectively or by another user — which is what 21 CFR Part 11 principles and
+                ALCOA+ attributability actually require.
+              </div>
+            </details>
           </div>
         </div>
       ) : null}

@@ -5,15 +5,20 @@ import { ROLES } from '../../data/roles.mjs';
 import { adherence } from '../../data/ops.mjs';
 const { role } = Astro.props;
 const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
 ---
 
 <div class="stack">
-  <div class="note">
-    <span class="lbl">A form is a capture surface for a gate, not a document beside the record</span>
-    In the paper protocol these nine appendices are Word files someone prints, fills and files. Here each
-    one is bound to the gate that produces it: closing Gate C writes Appendix B; recording an observation
-    writes Appendix C; a fired stopping rule opens Appendix D with its clock already running. There is no
-    step where a person transcribes the work they just did onto a form.
+  <div class="actbar warn">
+    <div class="actbar-body">
+      <div class="actbar-k">Action · {adherence.documentation.rate}% filed</div>
+      <div class="actbar-t">Three forms outstanding</div>
+      <div class="actbar-s">ATN-0003 App. E · ATN-0005 App. H · ATN-0002 App. D.</div>
+      <details class="why"><summary>Why a form here is not a document</summary><div class="why-body">In the paper protocol these nine appendices are Word files someone prints, fills and files.
+        Here each one is bound to the gate that produces it: closing Gate C writes Appendix B; recording
+        an observation writes Appendix C; a fired stopping rule opens Appendix D with its clock already
+        running. There is no step where a person transcribes the work they just did onto a form.</div></details>
+    </div>
   </div>
 
   <div class="stats g4">
@@ -86,9 +91,9 @@ const R = `/${role.id}`;
       ))}
     </div>
     <div class="card-note">
-      "Missing paperwork" is not a category here. Each open item names the patient, the form, the reason
-      it is open and the person it is assigned to — because §7 requires 100 % of forms filed, and a
-      number without a worklist behind it cannot be acted on.
+      <details class="why"><summary>Why there is no "missing paperwork" category</summary><div class="why-body">Each open item names the patient, the form, the reason it is open and the person it is
+        assigned to — because §7 requires 100 % of forms filed, and a number without a worklist behind
+        it cannot be acted on.</div></details>
     </div>
   </div>
 </div>

@@ -84,10 +84,13 @@ myEvents.forEach((e) => timeline.push({ when: e.onset.split(' · ')[0], what: `$
     </div>
 
     {p.blockReason ? (
-      <div class="note stop">
-        <span class="lbl">{p.status === 'halted' ? 'Course halted' : p.status === 'excluded' ? 'Not eligible' : 'Held'}</span>
-        {p.blockReason}
-        <div style="margin-top:8px"><span class="chip ref">{p.blockRef}</span></div>
+      <div class="actbar stop">
+        <div class="actbar-body">
+          <div class="actbar-k">{p.status === 'halted' ? 'Course halted' : p.status === 'excluded' ? 'Not eligible' : 'Held'} · {p.blockRef}</div>
+          <div class="actbar-t">{p.blockShort || p.blockReason.split('. ')[0] + '.'}</div>
+          <details class="why"><summary>Why</summary><div class="why-body">{p.blockReason}</div></details>
+        </div>
+        {p.blockGoto && role.allow.includes(p.blockGoto) ? <a class="btn primary" href={`${R}/${p.blockGoto}/`}>{p.blockDo}</a> : null}
       </div>
     ) : null}
 
@@ -223,7 +226,7 @@ myEvents.forEach((e) => timeline.push({ when: e.onset.split(' · ')[0], what: `$
               </tbody>
             </table>
           </div>
-          <div class="card-note">{p.latest ? `Latest: ${p.latest.at}` : 'No post-baseline assessment yet.'} Exploratory only — open-label, no control arm.</div>
+          <div class="card-note">{p.latest ? `Latest: ${p.latest.at}` : 'No post-baseline assessment yet.'} · exploratory only</div>
         </div>
 
         <div class="card">
@@ -243,7 +246,7 @@ myEvents.forEach((e) => timeline.push({ when: e.onset.split(' · ')[0], what: `$
               </tbody>
             </table>
           </div>
-          <div class="card-note">Results arrive over HL7 FHIR from the reference laboratory, not by re-keying.</div>
+          <div class="card-note">HL7 FHIR from the reference laboratory · not re-keyed</div>
         </div>
 
         <div class="card">

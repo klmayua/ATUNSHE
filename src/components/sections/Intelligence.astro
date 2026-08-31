@@ -5,6 +5,7 @@ import { protocolVersions, qualityMetrics } from '../../data/protocol.mjs';
 import { deviations, deviationReasonCodes } from '../../data/safety.mjs';
 const { role, view } = Astro.props;
 const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
 ---
 
 {view === 'learning' && (
@@ -24,10 +25,10 @@ const R = `/${role.id}`;
             </>
           ))}
         </div>
-        <div class="note warn" style="margin-top:16px">
-          <span class="lbl">The guardrail</span>
-          {learningLoop.guardrail}
-        </div>
+        <details class="why" style="margin-top:16px">
+          <summary>The guardrail</summary>
+          <div class="why-body">{learningLoop.guardrail}</div>
+        </details>
       </div>
     </div>
 
@@ -53,13 +54,15 @@ const R = `/${role.id}`;
       </div>
     ))}
 
-    <div class="note">
-      <span class="lbl">Why a rejected insight is kept</span>
-      INS-002 was rejected, and the reasoning is stored with it. That matters twice over: an auditor can
-      see that a proposal to narrow a safety parameter was considered and refused on statistical grounds,
-      and the engine will not re-raise the same signal as though it were new. A learning loop that only
-      keeps its wins is not an evidence trail.
-    </div>
+    <details class="why">
+      <summary>Why a rejected insight is kept</summary>
+      <div class="why-body">
+        INS-002 was rejected, and the reasoning is stored with it. That matters twice over: an auditor can
+        see that a proposal to narrow a safety parameter was considered and refused on statistical grounds,
+        and the engine will not re-raise the same signal as though it were new. A learning loop that only
+        keeps its wins is not an evidence trail.
+      </div>
+    </details>
 
     <div class="card">
       <div class="card-head"><h3>What the loop produced</h3></div>
@@ -83,10 +86,7 @@ const R = `/${role.id}`;
           </tbody>
         </table>
       </div>
-      <div class="card-note">
-        v1.1 came out of INS-004. It is drafted, it has two of four approvals, and it is
-        <b> not running</b>. The clinic is still executing v1.0 today, exactly as it should be.
-      </div>
+      <div class="card-note">v1.1 · 2 of 4 approvals · <b>not running</b></div>
     </div>
   </div>
 )}
@@ -121,9 +121,8 @@ const R = `/${role.id}`;
         </table>
       </div>
       <div class="card-note">
-        A gate that held a session is counted as held, not as a failure. Gate A's 95.5 % is the engine
-        working: it refused to release quarantined product. Adherence measures whether the protocol was
-        followed, and refusing to proceed <em>is</em> following it.
+        <details class="why"><summary>Why a held gate is not a failure</summary><div class="why-body">Gate A's 95.5 % is the engine working: it refused to release quarantined product. Adherence
+        measures whether the protocol was followed, and refusing to proceed <em>is</em> following it.</div></details>
       </div>
     </div>
 
@@ -146,10 +145,7 @@ const R = `/${role.id}`;
             </tbody>
           </table>
         </div>
-        <div class="card-note">
-          Drift is measured because it is measurable. The single late 120-minute observation produced
-          DEV-0011, which produced a roster change, which produced nineteen on-time observations since.
-        </div>
+        <div class="card-note">DEV-0011 → roster change → 19 on-time observations since</div>
       </div>
 
       <div class="card">
@@ -166,10 +162,9 @@ const R = `/${role.id}`;
           ))}
         </div>
         <div class="card-note">
-          Two codes have never fired: <span class="mono">PRODUCT-HOLD</span> and
-          <span class="mono"> CONSENT-LAPSE</span>. Both nearly did today — and in each case the gate
-          stopped the session <em>before</em> a deviation could occur. A prevented deviation is a better
-          outcome than a well-documented one.
+          <details class="why"><summary>Two codes have never fired</summary><div class="why-body"><span class="mono">PRODUCT-HOLD</span> and <span class="mono">CONSENT-LAPSE</span>. Both
+          nearly did today — and in each case the gate stopped the session <em>before</em> a deviation
+          could occur. A prevented deviation is a better outcome than a well-documented one.</div></details>
         </div>
       </div>
     </div>
@@ -195,11 +190,14 @@ const R = `/${role.id}`;
             </tbody>
           </table>
         </div>
-        <div class="note" style="margin-top:14px">
-          <b>Every number here ships with its caveat attached.</b> This is an open-label study of an
-          investigational regimen with n=8 and no control arm. A platform that displayed these as clean
-          "outcomes" would be doing the programme a disservice — and would not survive an ethics review.
-        </div>
+        <details class="why" style="margin-top:14px">
+          <summary>Every number here ships with its caveat attached</summary>
+          <div class="why-body">
+            This is an open-label study of an investigational regimen with n=8 and no control arm. A
+            platform that displayed these as clean "outcomes" would be doing the programme a disservice —
+            and would not survive an ethics review.
+          </div>
+        </details>
       </div>
     </div>
 

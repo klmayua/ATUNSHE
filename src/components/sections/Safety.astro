@@ -3,6 +3,7 @@ import { events, deviations, deviationReasonCodes } from '../../data/safety.mjs'
 import { stoppingRules, additionalStopTriggers, reportingClocks } from '../../data/protocol.mjs';
 const { role } = Astro.props;
 const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
 
 function clockPct(e) {
   return Math.min(100, Math.round((e.elapsedHours / e.windowHours) * 100));
@@ -23,12 +24,17 @@ function fmtElapsed(h) {
     <div class="stat is-ok"><div class="k">Late reports</div><div class="v">0</div><div class="n">Of {events.length} reportable events</div></div>
   </div>
 
-  <div class="note">
-    <span class="lbl">Why the clock matters</span>
-    A reporting window that starts when someone opens a form is not a control. Every clock here
-    starts at <b>recorded event onset</b> and keeps running until transmission is acknowledged, so
-    a late entry makes lateness <em>more</em> visible rather than less. That is the pharmacovigilance
-    requirement (ICH E2A) implemented as behaviour rather than as a policy document.
+  <div class="actbar stop">
+    <div class="actbar-body">
+      <div class="actbar-k">Open 14 days · ATN-0002 · §6.3</div>
+      <div class="actbar-t">SAE-0002 awaits the PI determination</div>
+      <div class="actbar-s">Course halted since 12 Aug. Ethics reviewed 27 Aug. Nothing reported late.</div>
+      <details class="why"><summary>Why the clock matters</summary><div class="why-body">A reporting window that starts when someone opens a form is not a control. Every clock here
+        starts at <b>recorded event onset</b> and keeps running until transmission is acknowledged, so a
+        late entry makes lateness <em>more</em> visible rather than less. That is the pharmacovigilance
+        requirement (ICH E2A) implemented as behaviour rather than as a policy document.</div></details>
+    </div>
+    {can('cohort') ? <a class="btn primary" href={`${R}/patient/ATN-0002/`}>Open the record</a> : null}
   </div>
 
   <div class="card">
@@ -147,8 +153,8 @@ function fmtElapsed(h) {
           ))}
         </div>
         <div class="card-note">
-          Reason codes are the reason deviation data is analysable at all. Free text would have told
-          us three sessions ran late; codes told us <em>why</em>, and produced a roster change.
+          <details class="why"><summary>Why codes, not free text</summary><div class="why-body">Free text would have told us three sessions ran late; codes told us <em>why</em>, and
+          produced a roster change.</div></details>
         </div>
       </div>
     </div>

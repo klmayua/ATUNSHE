@@ -7,6 +7,7 @@ import { ogamiConfig, ogamiBoundaries as ogBounds } from '../../data/ogami.mjs';
 import OgamiChat from '../OgamiChat.astro';
 const { role, view } = Astro.props;
 const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
 const naira = (n) => '₦' + n.toLocaleString('en-NG');
 ---
 
@@ -32,9 +33,9 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
         </table>
       </div>
       <div class="card-note">
-        A held appointment is not a cancellation. The patient is still expected, the clinical reason is
-        recorded, and the blocker is assigned to the role that can clear it — the custodian for ATN-0003,
-        the coordinator for ATN-0005.
+        <details class="why"><summary>Held is not cancelled</summary><div class="why-body">A held appointment is not a cancellation. The patient is still expected, the clinical reason is
+          recorded, and the blocker is assigned to the role that can clear it — the custodian for ATN-0003,
+          the coordinator for ATN-0005.</div></details>
       </div>
     </div>
 
@@ -65,10 +66,7 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
             </tbody>
           </table>
         </div>
-        <div class="card-note">
-          Recall visits are generated from the protocol, not booked by memory. ATN-0001's 12-week
-          assessment appeared on the schedule the day the course completed.
-        </div>
+        <div class="card-note">Generated from §5.3, not booked by memory</div>
       </div>
     </div>
   </div>
@@ -132,9 +130,9 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
             ))}
           </div>
           <div class="card-note">
-            An assistant in a clinical setting is defined by what it declines to do. These are not hopes
+            <details class="why"><summary>Where these boundaries live</summary><div class="why-body">An assistant in a clinical setting is defined by what it declines to do. These are not hopes
             about model behaviour — they are stored on the Atunse client record at OGAMI, in the same
-            profile that answers on WhatsApp, and the Principal Investigator can review and change them.
+            profile that answers on WhatsApp, and the Principal Investigator can review and change them.</div></details>
           </div>
         </div>
 
@@ -153,10 +151,7 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
               <span class="mono" style="font-size:11px;word-break:break-all">&lt;script src="{ogamiConfig.widget}" data-key="{ogamiConfig.publicKey}"&gt;&lt;/script&gt;</span>
             </div>
           </div>
-          <div class="card-note">
-            That single line puts the same front office on Atunse's public website. The key is a public
-            identifier, not a secret — it is designed to sit in a script tag.
-          </div>
+          <div class="card-note">The key is a public identifier, not a secret</div>
         </div>
 
         <div class="card">
@@ -180,10 +175,14 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
 
 {view === 'billing' && (
   <div class="stack">
-    <div class="note ok">
-      <span class="lbl">Charge capture is bound to gate closure</span>
-      {revenue.note} Two rows below show it working in the awkward direction: a held session that raised
-      no charge, and a halted course holding a credit rather than an invoice.
+    <div class="actbar ok">
+      <div class="actbar-body">
+        <div class="actbar-k">Charge capture</div>
+        <div class="actbar-t">Bound to gate closure, not to coding afterwards</div>
+        <div class="actbar-s">Nothing aged. Unbilled delivered activity is zero.</div>
+        <details class="why"><summary>Why</summary><div class="why-body">{revenue.note} Two rows below show it working in the awkward direction: a held session that raised
+          no charge, and a halted course holding a credit rather than an invoice.</div></details>
+      </div>
     </div>
 
     <div class="stats g4">
@@ -264,11 +263,15 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
 
 {view === 'people' && (
   <div class="stack">
-    <div class="note warn">
-      <span class="lbl">Credentials gate the roster, not just a list</span>
-      Two credentials are expiring. On expiry the platform removes the person from roster eligibility for
-      the roles that require them — a nurse without current registration cannot be assigned to administer,
-      and the gate that needs their signature will not accept it.
+    <div class="actbar warn">
+      <div class="actbar-body">
+        <div class="actbar-k">Action · MDCN/R/39114 · NMCN/RN/220441</div>
+        <div class="actbar-t">Two credentials expiring</div>
+        <div class="actbar-s">Dr. I. Okeke in 20 days; Nurse A. Bello in 96 days.</div>
+        <details class="why"><summary>What expiry does</summary><div class="why-body">On expiry the platform removes the person from roster eligibility for the roles that require
+          them — a nurse without current registration cannot be assigned to administer, and the gate
+          that needs their signature will not accept it.</div></details>
+      </div>
     </div>
 
     <div class="card">
@@ -298,8 +301,8 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
         </table>
       </div>
       <div class="card-note">
-        Protocol training is tracked <em>by version</em>. When v1.1 becomes effective, everyone shows as
-        trained on v1.0 and untrained on v1.1 until they are — which is what an inspector asks about.
+        <details class="why"><summary>Training is tracked by version</summary><div class="why-body">When v1.1 becomes effective, everyone shows as trained on v1.0 and untrained on v1.1 until
+        they are — which is what an inspector asks about.</div></details>
       </div>
     </div>
 
@@ -344,7 +347,10 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
         </table>
       </div>
       <div class="card-note">
-        <b>Migration rules:</b> {migration.rules.join(' · ')}.
+        <details class="why">
+          <summary>Migration rules</summary>
+          <div class="why-body">{migration.rules.join(' · ')}.</div>
+        </details>
       </div>
     </div>
   </div>
@@ -352,11 +358,14 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
 
 {view === 'mobile' && (
   <div class="stack">
-    <div class="note">
-      <span class="lbl">The rule the platform applies</span>
-      {offlineScope.principle} That single line is the whole offline design, and it is why the answer to
-      "does it work offline?" is <b>"for these things, yes; for these, deliberately not"</b> rather than a
-      blanket yes that falls apart in an audit.
+    <div class="actbar">
+      <div class="actbar-body">
+        <div class="actbar-k">The rule</div>
+        <div class="actbar-t">{offlineScope.principle}</div>
+        <div class="actbar-s">For these things yes; for these, deliberately not.</div>
+        <details class="why"><summary>Why not a blanket yes</summary><div class="why-body">A blanket "works offline" falls apart in an audit: it cannot say which clinical operations
+          were permitted to proceed without the record, and which were not.</div></details>
+      </div>
     </div>
 
     <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
@@ -418,8 +427,8 @@ const naira = (n) => '₦' + n.toLocaleString('en-NG');
             ))}
           </div>
           <div class="card-note">
-            The proposal's own wording: offline is "applied selectively to appropriate workflows, because
-            not every clinical operation should permit unrestricted offline access."
+            <details class="why"><summary>The proposal’s wording</summary><div class="why-body">Offline is "applied selectively to appropriate workflows, because not every clinical
+            operation should permit unrestricted offline access." </div></details>
           </div>
         </div>
 

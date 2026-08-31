@@ -9,12 +9,14 @@ const can = (s) => role.allow.includes(s);
 
 {view === 'architecture' && (
   <div class="stack">
-    <div class="note">
-      <span class="lbl">This page is the proposal, and every element links to the working thing</span>
-      Sections 1, 2, 10 and 11 of the High-Level Technical Proposal describe the platform as a lifecycle,
-      five layers, six domains and an operating cycle. Below, each one carries a link into this
-      demonstration where that capability is actually running against a real protocol.
-    </div>
+    <details class="why">
+      <summary>This page is the proposal, and every element links to the working thing</summary>
+      <div class="why-body">
+        Sections 1, 2, 10 and 11 of the High-Level Technical Proposal describe the platform as a lifecycle,
+        five layers, six domains and an operating cycle. Below, each one carries a link into this
+        demonstration where that capability is actually running against a real protocol.
+      </div>
+    </details>
 
     <div class="sec-title">§1 — The patient lifecycle</div>
     <div class="card">
@@ -34,8 +36,8 @@ const can = (s) => role.allow.includes(s);
         </div>
       </div>
       <div class="card-note">
-        "Each stage feeds the next… Governance and intelligence run across every stage, so that the record
-        stays accurate, trusted, and continuously improving."
+        <details class="why"><summary>§1, in the proposal’s words</summary><div class="why-body">"Each stage feeds the next… Governance and intelligence run across every stage, so that the
+        record stays accurate, trusted, and continuously improving." </div></details>
       </div>
     </div>
 
@@ -126,11 +128,11 @@ const can = (s) => role.allow.includes(s);
           ))}
         </div>
         <div class="note" style="margin-top:14px">
-          "Data from every stage feeds intelligence; intelligence improves protocols and workflows;
-          improved workflows produce better care, and the cycle repeats." In this demo that is not a
-          diagram — it is INS-004, which came from execution data, went to human review, and became
-          protocol v1.1 now sitting in the approval workflow.
+          <b>INS-004 is this cycle, once round.</b> Execution data → human review → protocol v1.1, now in
+          the approval workflow.
           {can('learning') ? <> <a href={`${R}/learning/`} style="color:var(--navy-600);font-weight:600">Follow it →</a></> : null}
+          <details class="why"><summary>The proposal’s wording</summary><div class="why-body">"Data from every stage feeds intelligence; intelligence improves protocols and workflows;
+            improved workflows produce better care, and the cycle repeats." </div></details>
         </div>
       </div>
     </div>
@@ -190,10 +192,10 @@ const can = (s) => role.allow.includes(s);
         </table>
       </div>
       <div class="card-note">
-        The sequence follows the patient lifecycle — registration → consent → scheduling → clinical care →
-        billing → follow-up — rather than building six isolated modules. Week 04's exit gate,
-        <b> "first agreed Atunse protocol executable"</b>, is the thing this demonstration is showing you
-        already working.
+        <details class="why"><summary>Why the weeks are ordered this way</summary><div class="why-body">The sequence follows the patient lifecycle — registration → consent → scheduling → clinical
+        care → billing → follow-up — rather than building six isolated modules. Week 04's exit gate,
+        <b>"first agreed Atunse protocol executable"</b>, is the thing this demonstration is showing you
+        already working.</div></details>
       </div>
     </div>
 
@@ -235,11 +237,10 @@ const can = (s) => role.allow.includes(s);
 
     <div class="sec-title">Decisions that are yours, not ours</div>
     <div class="note warn">
-      <span class="lbl">From the Background Brief</span>
-      "These are not gaps in our understanding of the standards — they are decisions that are properly
-      yours, and that good practice says we confirm with you rather than assume." Each one below runs in
-      this demo on a stated assumption, so the mechanism is visible and the decision is easy to make in
-      the room.
+      <b>Each one below runs on a stated assumption</b>, so the mechanism is visible and the decision is
+      easy to make in the room.
+      <details class="why"><summary>From the Background Brief</summary><div class="why-body">"These are not gaps in our understanding of the standards — they are decisions that are
+        properly yours, and that good practice says we confirm with you rather than assume." </div></details>
     </div>
     <div class="card">
       <div class="tbl-wrap">
