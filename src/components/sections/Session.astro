@@ -10,8 +10,40 @@ import { ROLES } from '../../data/roles.mjs';
 
 const { role } = Astro.props;
 const R = `/${role.id}`;
+const can = (s) => role.allow.includes(s);
 
 const running = patients.filter((p) => p.live);
+
+// One line saying what the day is actually waiting on, so the person reading
+// does not have to work it out from six gates and forty-two checks.
+function nextAction(p) {
+  const g = gates.find((x) => x.key === p.live.currentGate);
+  if (!g) return 'Waiting.';
+  const st = p.live.gateState[g.key] || {};
+  const ev = evaluateGate(g, st);
+  const sigs = g.signatures || [];
+  const unsigned = sigs.filter((s) => !(st.signatures || {})[s.key]);
+  if (ev.satisfied < ev.required) {
+    return `${ev.required - ev.satisfied} of ${ev.required} checks outstanding.`;
+  }
+  if (unsigned.length) {
+    return `Checks complete. Waiting on ${unsigned.length === 1 ? 'one signature' : unsigned.length + ' signatures'}: ${unsigned.map((s) => s.label).join(', ')}.`;
+  }
+  return 'Ready to close.';
+}
+
+// A check that is already satisfied is not information the operator needs on
+// screen; it is evidence they may want to open. Outstanding items stay visible.
+function splitChecks(s) {
+  const done = [];
+  const open = [];
+  for (const c of s.g.checks) {
+    const mark = (s.st.checks || {})[c.key];
+    const blocker = (s.st.blockers || {})[c.key];
+    (mark === true && !blocker ? done : open).push({ c, mark, blocker });
+  }
+  return { done, open };
+}
 
 function gateStatus(p, g) {
   const st = p.live.gateState[g.key] || {};
@@ -33,13 +65,15 @@ function thawRemaining(t) {
 ---
 
 <div class="stack">
-  <div class="note live">
-    <span class="lbl">How to read this screen</span>
-    A treatment day is not a form to complete in any order. It is <b>six gates</b>, each with
-    blocking checks, each owned by a named role, each writing a signed ledger entry when it closes.
-    A gate that cannot close stops the day — and the reason is recorded against the clause it enforces.
-    <b>Two of the three sessions below are stopped right now</b>, for two entirely different reasons.
-  </div>
+  <details class="why">
+    <summary>How to read this screen</summary>
+    <div class="why-body">
+      A treatment day is not a form to complete in any order. It is <b>six gates</b>, each with
+      blocking checks, each owned by a named role, each writing a signed ledger entry when it closes.
+      A gate that cannot close stops the day — and the reason is recorded against the clause it enforces.
+      <b>Two of the three sessions below are stopped right now</b>, for two entirely different reasons.
+    </div>
+  </details>
 
   <!-- Session switcher -->
   <div class="card">
@@ -113,24 +147,36 @@ function thawRemaining(t) {
           </div>
 
           {p.status === 'blocked' ? (
-            <div class="note stop">
-              <span class="lbl">Session held — gate {p.live.currentGate} cannot close</span>
-              {p.blockReason}
-              <div style="margin-top:8px"><span class="chip ref">{p.blockRef}</span> <span class="chip">Owner: {ROLES.find((r) => r.id === p.blockOwner)?.roleFull}</span></div>
+            <div class="actbar stop">
+              <div class="actbar-body">
+                <div class="actbar-k">Held at Gate {p.live.currentGate} · {p.blockRef}</div>
+                <div class="actbar-t">{p.blockShort}</div>
+                <div class="actbar-s">Owned by {ROLES.find((r) => r.id === p.blockOwner)?.roleFull}</div>
+                <details class="why"><summary>Why</summary><div class="why-body">{p.blockReason}</div></details>
+              </div>
+              {p.blockGoto && can(p.blockGoto) ? <a class="btn primary" href={`${R}/${p.blockGoto}/`}>{p.blockDo}</a> : null}
             </div>
           ) : (
-            <div class="note live">
-              <span class="lbl">Session running · started {p.live.startedAt} · {p.live.chair}</span>
-              Gates A and B closed and ledger-recorded. The day is currently at
-              <b> Gate {p.live.currentGate} — {gates.find((g) => g.key === p.live.currentGate).name}</b>.
+            <div class="actbar live">
+              <div class="actbar-body">
+                <div class="actbar-k">Running · started {p.live.startedAt} · {p.live.chair}</div>
+                <div class="actbar-t">Gate {p.live.currentGate} — {gates.find((g) => g.key === p.live.currentGate).name.split(' — ')[0]}</div>
+                <div class="actbar-s">{nextAction(p)}</div>
+                <details class="why"><summary>Why</summary><div class="why-body">
+                  Gates A and B are closed and ledger-recorded. The day cannot advance past
+                  Gate {p.live.currentGate} until every blocking check under {gates.find((g) => g.key === p.live.currentGate).ref} is
+                  satisfied and each required signature is recorded by a role entitled to give it.
+                </div></details>
+              </div>
+              <a class="btn primary" href={`#gate-${p.id}-${p.live.currentGate}`} data-jump={`${p.id}-${p.live.currentGate}`}>Go to Gate {p.live.currentGate}</a>
             </div>
           )}
 
           <div class="grid g-2-1">
             <!-- Gate detail panels -->
             <div>
-              {statuses.map((s) => (
-                <div class="gate-detail" data-gate-panel={`${p.id}-${s.g.key}`} style={s.g.key === current.g.key ? '' : 'display:none'}>
+              {statuses.map((s) => { const parts = splitChecks(s); return (
+                <div class="gate-detail" id={`gate-${p.id}-${s.g.key}`} data-gate-panel={`${p.id}-${s.g.key}`} style={s.g.key === current.g.key ? '' : 'display:none'}>
                   <div class="card">
                     <div class="card-head">
                       <div>
@@ -143,35 +189,6 @@ function thawRemaining(t) {
                         {s.ev.satisfied}/{s.ev.required} blocking checks
                       </span>
                     </div>
-                    <div class="card-body" style="padding:13px 16px;border-bottom:1px solid var(--line)">
-                      <p class="tiny" style="margin:0;color:var(--ink-2);line-height:1.6">{s.g.summary}</p>
-                    </div>
-                    <div class="checks">
-                      {s.g.checks.map((c) => {
-                        const mark = (s.st.checks || {})[c.key];
-                        const why = (s.st.blockers || {})[c.key];
-                        const cls = mark === true ? 'yes' : why ? 'no' : 'open';
-                        return (
-                          <div class={`check ${cls}`}>
-                            <span class="box">{mark === true ? '✓' : why ? '✕' : ''}</span>
-                            <span>
-                              <span class="cl">{c.label}</span>
-                              <span class="cm">
-                                <span class="chip ref">{c.ref}</span>
-                                <span class={`src ${c.source}`}>{c.source === 'system' ? 'SYSTEM-ASSERTED' : 'OPERATOR'}</span>
-                                {c.role ? <span class="muted">{ROLES.find((r) => r.id === c.role)?.role}</span> : <span class="muted">Any clinical role</span>}
-                                <span class="muted">· records: {c.evidence}</span>
-                              </span>
-                              {why ? <span class="why"><b>Why this is blocking</b>{why}</span> : null}
-                            </span>
-                            <span class={`chip ${c.blocking ? 'stop' : 'held'}`} style={c.blocking ? 'background:var(--surface-sunk);color:var(--ink-3);border-color:var(--line)' : ''}>
-                              {c.blocking ? 'Blocking' : 'Advisory'}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-
                     {s.g.signatures && s.g.signatures.length ? (
                       <div class="card-body" style="border-top:1px solid var(--line)">
                         <div class="sec-title" style="margin-top:0">Signatures required to close</div>
@@ -184,9 +201,9 @@ function thawRemaining(t) {
                                   <div class="sl">{sig.label}</div>
                                   <div class="sv">{val || '— not signed —'}</div>
                                   {sig.mustDifferFrom ? (
-                                    <div class="sw">Must be a different authenticated user from the verifier. The platform compares identities, not initials on paper.</div>
+                                    <div class="sw">Must be a different user from the verifier.</div>
                                   ) : sig.requires === 'canAuthorise' ? (
-                                    <div class="sw">Requires a role with physician authorisation (Principal Investigator).</div>
+                                    <div class="sw">Principal Investigator only.</div>
                                   ) : null}
                                 </div>
                                 {!val && s.g.key === 'C' ? (
@@ -206,6 +223,54 @@ function thawRemaining(t) {
                       </div>
                     ) : null}
 
+                    {parts.open.length ? (
+                      <div class="checks">
+                        {parts.open.map((x) => (
+                          <div class={`check ${x.mark === true ? 'yes' : x.blocker ? 'no' : 'open'}`}>
+                            <span class="box">{x.mark === true ? '✓' : x.blocker ? '✕' : ''}</span>
+                            <span>
+                              <span class="cl">{x.c.label}</span>
+                              <span class="cm">
+                                <span class="chip ref">{x.c.ref}</span>
+                                <span class={`src ${x.c.source}`}>{x.c.source === 'system' ? 'SYSTEM' : 'OPERATOR'}</span>
+                              </span>
+                              {x.blocker ? <span class="why"><b>Why this is blocking</b>{x.blocker}</span> : null}
+                            </span>
+                            {x.c.blocking ? <span class="chip held">Blocking</span> : null}
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {parts.done.length ? (
+                      <details class="checks-fold">
+                        <summary>{parts.done.length} checks verified</summary>
+                        <div class="checks">
+                        {parts.done.map((x) => (
+                          <div class={`check ${x.mark === true ? 'yes' : x.blocker ? 'no' : 'open'}`}>
+                            <span class="box">{x.mark === true ? '✓' : x.blocker ? '✕' : ''}</span>
+                            <span>
+                              <span class="cl">{x.c.label}</span>
+                              <span class="cm">
+                                <span class="chip ref">{x.c.ref}</span>
+                                <span class={`src ${x.c.source}`}>{x.c.source === 'system' ? 'SYSTEM' : 'OPERATOR'}</span>
+                              </span>
+                              {x.blocker ? <span class="why"><b>Why this is blocking</b>{x.blocker}</span> : null}
+                            </span>
+                            {x.c.blocking ? <span class="chip held">Blocking</span> : null}
+                          </div>
+                        ))}
+                        </div>
+                      </details>
+                    ) : null}
+
+                    <div class="card-note">
+                      <details class="why">
+                        <summary>What this gate is for</summary>
+                        <div class="why-body">{s.g.summary}</div>
+                      </details>
+                    </div>
+
                     {s.g.key === 'D' ? (
                       <div class="card-body" style="border-top:1px solid var(--line)">
                         <div class="sec-title" style="margin-top:0">Increment schedule — §5.2 D</div>
@@ -218,11 +283,11 @@ function thawRemaining(t) {
                             </tbody>
                           </table>
                         </div>
-                        <div class="note" style="margin-top:12px">
+                        <details class="why"><summary>Why the timing is enforced</summary><div class="why-body">
                           <b>Not a bolus.</b> The engine timestamps each increment. If the two increments are recorded
                           less than 30 seconds apart, or the total push falls outside 10–15 minutes, the gate records a
                           deviation with a reason code rather than silently accepting it.
-                        </div>
+                        </div></details>
                       </div>
                     ) : null}
 
@@ -262,16 +327,16 @@ function thawRemaining(t) {
                             </tbody>
                           </table>
                         </div>
-                        <div class="note warn" style="margin-top:12px">
+                        <details class="why"><summary>Why the windows are enforced</summary><div class="why-body">
                           <b>The timepoints are windows, not suggestions.</b> An observation recorded outside its window
                           creates a deviation with a reason code — that is exactly how DEV-0011 was detected, and the
                           roster change that followed came from the learning loop, not from someone noticing.
-                        </div>
+                        </div></details>
                       </div>
                     ) : null}
                   </div>
                 </div>
-              ))}
+              ); })}
             </div>
 
             <!-- Right column: live context -->
@@ -289,11 +354,11 @@ function thawRemaining(t) {
                       <span class="of">remaining of {p.live.thaw.windowHours} h</span>
                     </div>
                     <div class="meter"><i class="live" style={`width:${thaw.pct}%`}></i></div>
-                    <div class="tiny muted">
-                      Thawed {p.live.thaw.thawedAt} · {p.live.thaw.method}. Gate E re-checks this window at the moment of
-                      delivery, not at the start of the day — a session that overruns cannot quietly deliver
-                      out-of-window product.
-                    </div>
+                    <div class="tiny muted">Thawed {p.live.thaw.thawedAt} · {p.live.thaw.method}</div>
+                    <details class="why"><summary>When this is checked</summary><div class="why-body">
+                      Gate E re-checks this window at the moment of delivery, not at the start of the day — a
+                      session that overruns cannot quietly deliver out-of-window product.
+                    </div></details>
                   </div>
                 </div>
               ) : null}
@@ -362,6 +427,27 @@ function thawRemaining(t) {
   tabs.forEach((t) => t.addEventListener('click', () => showSess(t.dataset.sess)));
   if (tabs.length) showSess(tabs[0].dataset.sess);
 
+  // The action bar's button selects the gate rather than jumping to an anchor,
+  // so the panel is open when the page settles there.
+  function selectGate(key, sess) {
+    document.querySelectorAll(`[data-gate-panel^="${sess}-"]`).forEach((el) => {
+      el.style.display = el.dataset.gatePanel === key ? '' : 'none';
+    });
+    document.querySelectorAll(`.chain-node[data-sess="${sess}"]`).forEach((x) => {
+      const on = x.dataset.gate === key;
+      x.style.outline = on ? '2px solid var(--navy-600)' : '';
+      x.style.outlineOffset = on ? '-2px' : '';
+    });
+  }
+  document.querySelectorAll('[data-jump]').forEach((b) => {
+    b.addEventListener('click', (e) => {
+      e.preventDefault();
+      const key = b.dataset.jump;
+      selectGate(key, key.split('-').slice(0, 2).join('-'));
+      document.getElementById('gate-' + key)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
   // Gate selection within a session
   document.querySelectorAll('.chain-node').forEach((n) => {
     n.addEventListener('click', () => {
@@ -387,21 +473,28 @@ function thawRemaining(t) {
       let ok = true;
       let msg = '';
 
+      // Verdict in one line; the clause and the reasoning fold underneath it.
+      const fold = (label, body) =>
+        '<details class="why"><summary>' + label + '</summary><div class="why-body">' + body + '</div></details>';
+
       if (needs === 'canAuthorise' && !me.canAuthorise) {
         ok = false;
-        msg = '<b>Signature refused.</b> Physician authorisation under §5.2 C may only be recorded by a role holding authorisation authority. §3 Table 4 reserves that to the Principal Investigator, Dr. Sola. You are signed in as ' + me.short + ' (' + me.role + '), who may examine, review and witness but may not authorise an administration. Nothing has been written to the record; the refusal itself is logged to the audit trail.';
+        msg = 'Only the Principal Investigator may authorise an administration.' +
+          fold('Why §5.2 C', '§3 Table 4 reserves authorisation to Dr. Sola. You are signed in as ' + me.short + ' (' + me.role + '), who may examine, review and witness but may not authorise. Nothing has been written to the record; the refusal itself is logged to the audit trail.');
       } else if (differs && me.id === ALREADY_VERIFIER) {
         ok = false;
-        msg = '<b>Signature refused — two-person verification.</b> You (' + me.short + ') are already recorded as the verifier at 09:34. §5.2 C requires the witness to be an independent second person. The platform compares authenticated identities, so one person cannot satisfy both halves of a timeout, however the paper form is filled in. A second signed-in clinical user must witness — Dr. Adesanya (Sub-Investigator) is on the unit and can.';
+        msg = 'You verified at 09:34. The witness must be someone else.' +
+          fold('Why §5.2 C', 'The platform compares authenticated identities, so one person cannot satisfy both halves of a timeout, however the paper form is filled in. A second signed-in clinical user must witness — Dr. Adesanya (Sub-Investigator) is on the unit and can.');
       } else if (!me.canWitness) {
         ok = false;
-        msg = '<b>Signature refused.</b> Your role is not permitted to witness a pre-dose timeout.';
+        msg = 'Your role may not witness a pre-dose timeout.';
       } else {
-        msg = '<b>Signature recorded.</b> ' + me.short + ' (' + me.role + ') witnessed the timeout at ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ', as a different authenticated identity from the verifier. A ledger entry has been appended — who / did what / when / authority / to what / what next — and Gate C now waits only on physician authorisation from Dr. Sola.';
+        msg = 'Witnessed by ' + me.short + ' at ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + '. Gate C now waits on Dr. Sola.' +
+          fold('What was written', 'A ledger entry has been appended — who / did what / when / authority / to what / what next — recording ' + me.short + ' (' + me.role + ') as a different authenticated identity from the verifier.');
       }
 
       out.className = 'sig-result note ' + (ok ? 'ok' : 'stop');
-      out.innerHTML = '<span class="lbl">' + (ok ? 'Recorded' : 'Refused by the engine') + '</span>' + msg;
+      out.innerHTML = '<span class="lbl">' + (ok ? 'Recorded' : 'Refused') + '</span>' + msg;
       out.style.display = 'block';
       out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
@@ -415,13 +508,13 @@ function thawRemaining(t) {
       out.className = 'note stop';
       out.innerHTML =
         '<span class="lbl">Event capture opened — Appendix D</span>' +
-        'Recording an event does four things at once, none of which depends on anyone remembering to do them:' +
-        '<ul style="margin:8px 0 0;padding-left:18px;line-height:1.7">' +
+        'Form pre-filled. Stopping rules evaluated. Clock started at onset. PI notified.' +
+        '<details class="why"><summary>What each of those means</summary><div class="why-body"><ul>' +
         '<li>Opens <b>Appendix D</b> pre-filled with this patient, session, gate and timepoint.</li>' +
         '<li>Evaluates the event against the <b>seven stopping rules in §6.3</b>. If one matches, the session halts at the current gate — the operator does not get to continue.</li>' +
         '<li>Starts the <b>reporting clock</b> at recorded onset time: 24 hours for an SAE, 7 days for an AE. The clock runs from onset, not from when the form was opened, so a late entry cannot hide lateness.</li>' +
         '<li>Writes a ledger entry and notifies the Principal Investigator.</li>' +
-        '</ul>';
+        '</ul></div></details>';
       out.style.display = 'block';
     });
   }

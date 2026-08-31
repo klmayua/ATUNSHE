@@ -1224,3 +1224,97 @@ table { border-collapse: collapse; width: 100%; }
   .stat .k { font-size: 10.5px; }
   .stat .v { font-size: 19px; }
 }
+
+/* ==========================================================================
+   ACTION LAYER
+   The screen has one job: get the signed-in person to the next action without
+   making them read. Three rules hold this section together.
+     1. One loudest thing per screen — .actbar. Nothing else competes with it.
+     2. Every item that can be acted on carries a verb in a button, not a
+        paragraph ending in a link.
+     3. The reasoning is never deleted, only folded — .why. Leadership can open
+        the clause; the clinician on the unit never has to.
+   ========================================================================== */
+
+/* ---- The single next action ------------------------------------------- */
+.actbar {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  background: var(--surface); border: 1px solid var(--line-strong);
+  border-left: 4px solid var(--held); border-radius: var(--r-lg);
+  padding: 15px 18px; box-shadow: var(--shadow);
+}
+.actbar.stop { border-left-color: var(--stop); background: linear-gradient(90deg, var(--stop-bg) 0%, var(--surface) 42%); }
+.actbar.live { border-left-color: var(--live); background: linear-gradient(90deg, var(--live-bg) 0%, var(--surface) 42%); }
+.actbar.ok   { border-left-color: var(--ok);   background: linear-gradient(90deg, var(--ok-bg) 0%, var(--surface) 42%); }
+.actbar-body { flex: 1 1 320px; min-width: 0; }
+.actbar-k {
+  font-size: 10px; font-weight: 750; letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.actbar.stop .actbar-k { color: var(--stop); }
+.actbar.live .actbar-k { color: var(--live); }
+.actbar.ok   .actbar-k { color: var(--ok); }
+.actbar-t { font-size: 19px; font-weight: 660; letter-spacing: -0.022em; line-height: 1.25; margin-top: 5px; }
+.actbar-s { font-size: 12.5px; color: var(--ink-3); margin-top: 5px; line-height: 1.45; }
+.actbar .btn { flex: none; }
+
+/* ---- Folded reasoning -------------------------------------------------- */
+.why { margin-top: 8px; }
+.why > summary {
+  display: inline-flex; align-items: center; gap: 5px; cursor: pointer;
+  font-size: 11px; font-weight: 640; color: var(--ink-3);
+  list-style: none; padding: 2px 0; user-select: none;
+}
+.why > summary::-webkit-details-marker { display: none; }
+.why > summary::before {
+  content: "›"; font-size: 13px; line-height: 1; transition: transform 0.14s;
+  display: inline-block; color: var(--ink-4);
+}
+.why[open] > summary::before { transform: rotate(90deg); }
+.why > summary:hover { color: var(--ink); }
+.why-body {
+  font-size: 12px; line-height: 1.6; color: var(--ink-2);
+  margin-top: 7px; padding-left: 12px; border-left: 2px solid var(--line);
+}
+.why-body b { color: var(--ink); font-weight: 640; }
+.why-body ul { margin: 6px 0 0; padding-left: 17px; line-height: 1.65; }
+/* card-note folded into the card foot */
+.card-note .why { margin-top: 0; }
+
+/* ---- Worklist, action-first ------------------------------------------- */
+.wl-act {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 9px;
+}
+.wl-line { font-size: 12.5px; color: var(--ink-2); margin-top: 3px; line-height: 1.45; }
+.wl-t { font-size: 15px; font-weight: 650; letter-spacing: -0.012em; }
+/* A row that is only a link still has to look like one. */
+.wl .btn { flex: none; }
+
+/* ---- Check list: blockers first, verified folded ----------------------- */
+.checks-fold { border-top: 1px solid var(--line); }
+.checks-fold > summary {
+  display: flex; align-items: center; gap: 6px; cursor: pointer; list-style: none;
+  padding: 9px 16px; font-size: 11.5px; font-weight: 620; color: var(--ink-3);
+  background: var(--surface-2);
+}
+.checks-fold > summary::-webkit-details-marker { display: none; }
+.checks-fold > summary::before { content: "›"; color: var(--ink-4); font-size: 13px; transition: transform 0.14s; }
+.checks-fold[open] > summary::before { transform: rotate(90deg); }
+.checks-fold > summary:hover { color: var(--ink); }
+
+/* Check meta collapses to one quiet line; the chips no longer shout. */
+.check .cm { font-size: 11px; color: var(--ink-4); gap: 4px 8px; }
+.check .cm .chip.ref { border-color: transparent; background: transparent; padding: 0; color: var(--ink-4); }
+.check .cm .src { background: transparent !important; color: var(--ink-4) !important; padding: 0; font-weight: 600; }
+
+/* ---- Quieter chips: colour is reserved for genuine blockers ------------ */
+.chip.ok   { font-weight: 600; }
+.chip.held { font-weight: 600; }
+
+@media (max-width: 640px) {
+  .actbar { padding: 13px 14px; gap: 12px; }
+  .actbar-t { font-size: 16px; }
+  .actbar .btn { width: 100%; }
+  .wl-t { font-size: 14px; }
+}

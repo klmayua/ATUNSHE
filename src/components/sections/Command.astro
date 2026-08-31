@@ -51,48 +51,78 @@ const maxSessions = Math.max(...sessionsPerWeek.map((s) => s.n + (s.held || 0)))
 // ---------------------------------------------------------------------------
 const WORK = {
   pi: [
-    { p: 'pri', t: 'SAE-0002 — your determination is the gate', s: 'ATN-0002 halted since 12 Aug under §6.3 (neurologic worsening). CT clear, event resolved, NfL raised versus baseline. Ethics review 27 Aug. Resume, withdraw, or amend the protocol.', m: 'Open 14 days · patient suspended · ethics informed', href: can('safety') ? `${R}/safety/` : null, tag: 'Blocking', tone: 'stop' },
-    { p: 'now', t: 'ATN-0004 Session 4 — physician authorisation outstanding', s: 'Gates A and B closed and ledger-recorded. Timeout holds one of two witness signatures. Yours is the authorising third.', m: 'Chair 2 · started 09:31 · thaw window closes 20:40', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live' },
-    { p: 'act', t: 'Protocol v1.1 — two approvals still required', s: 'Raised by the learning loop from three Session-1 dizziness events. You and the Clinical Director have signed; Medical Director and Ethics have not. v1.0 remains in force until they do.', m: 'INS-004 · drafted 24 Aug · not executing', href: can('protocols') ? `${R}/protocols/` : null, tag: 'Approval', tone: 'warn' },
-    { p: 'act', t: 'ATN-0006 eligibility determination — held', s: 'Nasal eligibility examination found significant right-sided obstruction, an exclusion criterion under §5.1. ENT review Friday 28 Aug, then your determination.', m: 'Screening open 4 days · consent not yet sought', href: can('cohort') ? `${R}/cohort/` : null, tag: 'Decision', tone: 'warn' },
+    { p: 'pri', t: 'Determine the SAE-0002 outcome', line: 'ATN-0002 halted 14 days. Ethics reviewed 27 Aug.', m: 'Resume · withdraw · amend', do: 'Open the event', href: can('safety') ? `${R}/safety/` : null, tag: 'Blocking', tone: 'stop',
+      why: 'ATN-0002 has been halted since 12 Aug under §6.3 (neurologic worsening). CT is clear and the event has resolved, but NfL is raised against baseline. Ethics were informed and reviewed on 27 Aug. The determination — resume, withdraw, or amend the protocol — is reserved to the Principal Investigator by §3 Table 4.' },
+    { p: 'now', t: 'Authorise ATN-0004 Session 4', line: 'Gate C holds. Yours is the authorising signature.', m: 'Chair 2 · thaw closes 20:40', do: 'Open the runner', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live',
+      why: 'Gates A and B are closed and ledger-recorded. The pre-dose timeout holds one of its two witness signatures. §5.2 C then requires physician authorisation, which §3 Table 4 reserves to you alone — the Sub-Investigator can witness but will be refused on the authorisation line.' },
+    { p: 'act', t: 'Protocol v1.1 — two approvals outstanding', line: 'You have signed. Medical Director and Ethics have not.', m: 'INS-004 · not executing', do: 'Review the draft', href: can('protocols') ? `${R}/protocols/` : null, tag: 'Approval', tone: 'warn',
+      why: 'Raised by the learning loop from three Session-1 dizziness events: a mandatory 24 h caregiver call after Session 1. You and the Clinical Director have signed; the Medical Director and Ethics have not. v1.0 remains in force and is what the engine is executing until all four approvals land.' },
+    { p: 'act', t: 'Decide ATN-0006 eligibility', line: 'Nasal obstruction found — an exclusion under §5.1.', m: 'ENT review Fri 28 Aug', do: 'Open screening', href: can('cohort') ? `${R}/cohort/` : null, tag: 'Decision', tone: 'warn',
+      why: 'The nasal eligibility examination found significant right-sided obstruction, which is an exclusion criterion under §5.1. Screening has been open four days and consent has not yet been sought. ENT review is Friday 28 Aug, and the determination is then yours.' },
   ],
   attending: [
-    { p: 'now', t: 'ATN-0004 Session 4 — your witness signature will close the timeout', s: 'Nurse Bello is recorded as verifier at 09:34. §5.2 C needs an independent second person and you are one. Sign as witness, and the gate then waits on Dr. Sola for the authorisation.', m: 'Chair 2 · Gate C · 7 of 7 verified, 1 of 2 signatures', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live' },
-    { p: 'act', t: 'Pre-session safety reviews you may perform', s: 'You can examine, review interval symptoms and record a safety review under §5.2 B. What you cannot do is determine eligibility, authorise an administration or stop a course — §3 Table 4 reserves those three to the Principal Investigator.', m: 'Delegated scope · canAuthorise = false', href: can('protocols') ? `${R}/protocols/` : null, tag: 'Scope', tone: 'warn' },
-    { p: 'pri', t: 'ATN-0002 remains on study hold', s: 'Course halted since 12 Aug after a neurologic-worsening stopping rule. You can review the record and the SAE, but the determination on 27 Aug is Dr. Sola’s to make.', m: 'SAE-0002 · open 14 days', href: can('safety') ? `${R}/safety/` : null, tag: 'Read only', tone: 'stop' },
-    { p: 'act', t: 'Protocol v1.1 in review', s: 'A mandatory 24 h caregiver call after Session 1, raised by the learning loop. You are trained on v1.0; you will need to be trained on v1.1 before it becomes effective.', m: 'INS-004 · 2 of 4 approvals', href: can('protocols') ? `${R}/protocols/` : null, tag: 'Approval', tone: 'warn' },
+    { p: 'now', t: 'Sign the ATN-0004 timeout as witness', line: 'Nurse Bello verified at 09:34 and cannot also witness.', m: 'Chair 2 · 1 of 2 signatures', do: 'Sign as witness', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live',
+      why: '§5.2 C requires the witness to be an independent second person from the verifier. Nurse Bello is recorded as verifier at 09:34, so the platform will refuse her a second time. You are a different authenticated identity and will be accepted. The gate then waits on Dr. Sola for the authorisation line.' },
+    { p: 'act', t: 'Your scope: examine, review, witness', line: 'Not yours: eligibility, authorisation, stopping a course.', m: 'canAuthorise = false', do: 'View my scope', href: can('protocols') ? `${R}/protocols/` : null, tag: 'Scope', tone: 'warn',
+      why: 'You can examine, review interval symptoms and record a safety review under §5.2 B. §3 Table 4 reserves determining eligibility, authorising an administration and stopping a course to the Principal Investigator. The platform enforces this at the signature, not in a policy document.' },
+    { p: 'pri', t: 'ATN-0002 remains on study hold', line: 'Read only — the 27 Aug determination is Dr. Sola’s.', m: 'SAE-0002 · open 14 days', do: 'Open the record', href: can('safety') ? `${R}/safety/` : null, tag: 'Read only', tone: 'stop',
+      why: 'The course was halted on 12 Aug after a neurologic-worsening stopping rule fired. You can review the record and the SAE in full, but the determination on 27 Aug is the Principal Investigator’s to make.' },
+    { p: 'act', t: 'Protocol v1.1 in review', line: 'You are trained on v1.0. v1.1 will need retraining.', m: 'INS-004 · 2 of 4 approvals', do: 'Read the draft', href: can('protocols') ? `${R}/protocols/` : null, tag: 'Approval', tone: 'warn',
+      why: 'A mandatory 24 h caregiver call after Session 1, raised by the learning loop. Two of four approvals are in. Training on v1.1 is a precondition of it becoming effective for you — the roster reads the training record, not an attendance sheet.' },
   ],
   nurse: [
-    { p: 'now', t: 'ATN-0004 Session 4 — you are the verifier, not the witness', s: 'You signed the timeout at 09:34. §5.2 C requires an independent second person before Gate D opens. Ask a second signed-in clinical user; the platform will refuse you.', m: 'Chair 2 · Gate C · 7 of 7 items verified, 1 of 2 signatures', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live' },
-    { p: 'pri', t: 'Do not prepare Chair 1 for 11:00', s: 'ATN-0003 is held at Gate A on quarantined product. The custodian owns clearing it. The patient is still expected — this is a hold, not a cancellation.', m: 'ATN-0003 · Session 3 of 6 · lot EXP-140B-2608A', href: can('session') ? `${R}/session/` : null, tag: 'Held', tone: 'stop' },
-    { p: 'act', t: 'Callback owed — Mrs. Bisi Adewale', s: 'Caregiver reported restlessness on Sunday evening through Ogami. Already in the diary for 23 Aug and attached to today’s interval review. She asked for a nurse call.', m: 'Raised 08:12 via WhatsApp · attached to ATN-0004 Gate B', href: can('cohort') ? `${R}/cohort/` : null, tag: 'Today', tone: 'warn' },
-    { p: 'act', t: 'Your NMCN registration expires in 96 days', s: 'NMCN/RN/220441 lapses 30 Nov 2026. On expiry the platform removes you from roster eligibility for administration, and gates requiring your signature will not accept it.', m: 'Renewal reminder issued', href: null, tag: 'Credential', tone: 'warn' },
+    { p: 'now', t: 'Find a second signatory for Chair 2', line: 'You verified at 09:34. The platform will refuse you.', m: 'ATN-0004 · Gate C · 7 of 7 verified', do: 'Open the runner', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live',
+      why: 'All seven timeout items are verified and you signed as verifier at 09:34. §5.2 C requires an independent second person before Gate D opens, and the platform compares authenticated identities rather than initials on paper. Dr. Adesanya is on the unit and can witness.' },
+    { p: 'pri', t: 'Do not prepare Chair 1 for 11:00', line: 'Held on quarantined product. Patient still expected.', m: 'ATN-0003 · lot EXP-140B-2608A', do: 'Open the runner', href: can('session') ? `${R}/session/` : null, tag: 'Held', tone: 'stop',
+      why: 'ATN-0003 is held at Gate A because the assigned lot is quarantined after a cold-chain excursion. Clearing it belongs to the Pharmacist / Product Custodian, not to you. This is a hold, not a cancellation — the patient is still expected at 11:00.' },
+    { p: 'act', t: 'Call Mrs. Bisi Adewale back', line: 'Restlessness reported Sunday. She asked for a nurse call.', m: 'Attached to ATN-0004 Gate B', do: 'Open the patient', href: can('cohort') ? `${R}/cohort/` : null, tag: 'Today', tone: 'warn',
+      why: 'The caregiver reported restlessness on Sunday evening through Ogami at 08:12 via WhatsApp. It is already in the diary for 23 Aug and is attached to today’s interval review, so the physician reads it at Gate B whether or not the call happens first.' },
+    { p: 'act', t: 'NMCN registration expires in 96 days', line: 'On expiry the platform stops accepting your signature.', m: 'NMCN/RN/220441 · 30 Nov 2026', do: null, href: null, tag: 'Credential', tone: 'warn',
+      why: 'Expiry removes you from roster eligibility for administration, and gates that require your signature will not accept it. This is a scheduling constraint the roster reads, not a filing note someone has to remember.' },
   ],
   pharmacist: [
-    { p: 'pri', t: 'Lot EXP-140B-2608A — 9 vials quarantined', s: 'Freezer 2 door seal failed on 24 Aug: −11.4 °C for 3 h 20 min against a ≤ −20 °C requirement. You raised PQC-0001 within 2 h 45 min. Sponsor determination outstanding.', m: 'Quarantine store · no patient exposure · KWE-PQC-2026-0009', href: can('product') ? `${R}/product/` : null, tag: 'Blocking', tone: 'stop' },
-    { p: 'pri', t: 'Release decision needed for ATN-0003, 11:00', s: 'EXP-140B-2607A is released, in date to 12 Jan 2027 and holds six vials. Substituting it clears Gate A. The decision is yours, and it is recorded as yours.', m: 'Session held 0 h 00 · patient expected 11:00', href: can('product') ? `${R}/product/` : null, tag: 'Decision', tone: 'warn' },
-    { p: 'now', t: 'Two thaw windows open', s: 'EXP-140B-2608B and RJV-70B-2608C thawed at 08:40 at room temperature. Both close at 20:40. Gate E re-checks the window at delivery, not at release.', m: '11 h 06 remaining of 12 h', href: can('product') ? `${R}/product/` : null, tag: 'Live now', tone: 'live' },
-    { p: 'done', t: 'Reconciliation balanced', s: `${reconciliation.discrepancies} discrepancies. 48 vials of each product received; 12 and 13 administered; 1 wasted, accounted to the ATN-0002 stopped session.`, m: reconciliation.lastReconciled, href: can('product') ? `${R}/product/` : null, tag: 'Clear', tone: 'ok' },
+    { p: 'pri', t: 'Lot EXP-140B-2608A — 9 vials quarantined', line: '−11.4 °C for 3 h 20 min against a ≤ −20 °C requirement.', m: 'PQC-0001 · no patient exposure', do: 'Open the lot', href: can('product') ? `${R}/product/` : null, tag: 'Blocking', tone: 'stop',
+      why: 'The Freezer 2 door seal failed on 24 Aug. You raised PQC-0001 within 2 h 45 min and the sponsor determination is outstanding under KWE-PQC-2026-0009. No patient was exposed, because Gate A reads the release state of the lot before a session can start.' },
+    { p: 'pri', t: 'Release a substitute lot for 11:00', line: 'EXP-140B-2607A is released, in date, six vials.', m: 'ATN-0003 · patient expected 11:00', do: 'Substitute the lot', href: can('product') ? `${R}/product/` : null, tag: 'Decision', tone: 'warn',
+      why: 'EXP-140B-2607A is released, in date to 12 Jan 2027 and holds six vials. Substituting it clears Gate A and the 11:00 session proceeds. The decision is yours, and it is recorded as yours in the ledger.' },
+    { p: 'now', t: 'Two thaw windows open', line: 'Both close at 20:40. 11 h 06 remaining of 12 h.', m: 'EXP-140B-2608B · RJV-70B-2608C', do: 'View the windows', href: can('product') ? `${R}/product/` : null, tag: 'Live now', tone: 'live',
+      why: 'Both thawed at 08:40 at room temperature. Gate E re-checks the window at the moment of delivery rather than at release, so a session that overruns cannot quietly deliver out-of-window product.' },
+    { p: 'done', t: 'Reconciliation balanced', line: `${reconciliation.discrepancies} discrepancies across both products.`, m: reconciliation.lastReconciled, do: 'Open the register', href: can('product') ? `${R}/product/` : null, tag: 'Clear', tone: 'ok',
+      why: '48 vials of each product received; 12 and 13 administered; 1 wasted, accounted to the ATN-0002 stopped session. Wastage is attributed to the session that caused it rather than written off at the end of a month.' },
   ],
   operator: [
-    { p: 'now', t: 'ATN-0004 Session 4 — Gate E not yet reached', s: 'VN-CPD-004417 passed its output check at 08:55 against IFU rev. 4.2. The session is at Gate C; intranasal delivery follows the IV route.', m: 'Chair 2 · lot EXP-140B-2608B · 3 mL, both nostrils', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live' },
-    { p: 'pri', t: '11:00 intranasal delivery cancelled upstream', s: 'ATN-0003 held at Gate A on product. No device preparation, no adapter drawn. The device log will record that no delivery occurred rather than being left blank.', m: 'ATN-0003 · Session 3 of 6', href: can('device') ? `${R}/device/` : null, tag: 'Held', tone: 'stop' },
-    { p: 'done', t: 'Both devices in service, zero malfunctions', s: '27 uses on VN-CPD-004417 and 4 on the reserve unit, with a single-use adapter and cartridge discarded after every one.', m: 'Last clean 25 Aug · IFU §7', href: can('device') ? `${R}/device/` : null, tag: 'Clear', tone: 'ok' },
+    { p: 'now', t: 'ATN-0004 — Gate E not yet reached', line: 'Device passed its output check at 08:55. Session at Gate C.', m: 'VN-CPD-004417 · 3 mL, both nostrils', do: 'Open the runner', href: can('session') ? `${R}/session/` : null, tag: 'Live now', tone: 'live',
+      why: 'VN-CPD-004417 passed its output check at 08:55 against IFU rev. 4.2 with lot EXP-140B-2608B loaded. Intranasal delivery follows the IV route, so the day has to clear Gates C and D before you are called.' },
+    { p: 'pri', t: '11:00 delivery cancelled upstream', line: 'ATN-0003 held at Gate A. No preparation required.', m: 'ATN-0003 · Session 3 of 6', do: 'Open the device log', href: can('device') ? `${R}/device/` : null, tag: 'Held', tone: 'stop',
+      why: 'The session is held on quarantined product before it reaches you, so no device preparation and no adapter is drawn. The device log will record that no delivery occurred rather than being left blank — an absence with a reason, not a gap.' },
+    { p: 'done', t: 'Both devices in service, zero malfunctions', line: '27 uses on the primary unit, 4 on the reserve.', m: 'Last clean 25 Aug · IFU §7', do: 'Open the full log', href: can('device') ? `${R}/device/` : null, tag: 'Clear', tone: 'ok',
+      why: 'A single-use adapter and cartridge were discarded after every one of the 31 uses, each recorded against the patient and lot it was used for.' },
   ],
   coordinator: [
-    { p: 'pri', t: 'ATN-0005 LAR consent v2.1 unsigned — a treatment is held on it', s: 'You issued it on 25 Aug to Mrs. Chioma Obi after the 24 Aug capacity re-assessment. Today’s 14:00 session sits at Gate B and will not proceed until it is executed.', m: 'Issued 17:44, 25 Aug · session held 14:00', href: can('consent') ? `${R}/consent/` : null, tag: 'Blocking', tone: 'stop' },
-    { p: 'act', t: 'Three forms outstanding', s: 'ATN-0003 Appendix E for the held session; ATN-0005 Appendix H interval review; ATN-0002 Appendix D outcome narrative, which cannot close until the PI determination lands.', m: `${adherence.documentation.rate}% filed · ${adherence.documentation.formsFiled} of ${adherence.documentation.formsRequired}`, href: can('forms') ? `${R}/forms/` : null, tag: 'Action', tone: 'warn' },
-    { p: 'act', t: 'Sponsor coded export runs Monday 31 Aug', s: 'Weekly cadence under the Data Processing Agreement — which is not yet executed. The Background Brief flags the DPA parameters as a decision for the working session.', m: 'Last run 10 Aug · 8 subjects · acknowledged', href: can('audit') ? `${R}/audit/` : null, tag: 'Scheduled', tone: 'warn' },
-    { p: 'done', t: 'ENQ-0142 captured, qualified and booked by Ogami', s: 'Mrs. Adaeze Uche, enquiring for her mother. Ogami answered eligibility framing, declined to determine eligibility, booked Thu 27 Aug 10:00 and escalated fees to you.', m: 'First response 4 min · 61% of enquiries handled without staff', href: can('crm') ? `${R}/crm/` : null, tag: 'Clear', tone: 'ok' },
+    { p: 'pri', t: 'Chase the ATN-0005 LAR consent', line: 'Unsigned since 25 Aug. Today’s 14:00 session is held on it.', m: 'v2.1 · Mrs. Chioma Obi', do: 'Open consent', href: can('consent') ? `${R}/consent/` : null, tag: 'Blocking', tone: 'stop',
+      why: 'You issued v2.1 at 17:44 on 25 Aug to Mrs. Chioma Obi following the 24 Aug capacity re-assessment. Gate B reads consent as live state, so the 14:00 session will not proceed until the consent is executed — not until it is filed.' },
+    { p: 'act', t: 'Three forms outstanding', line: 'ATN-0003 App. E · ATN-0005 App. H · ATN-0002 App. D.', m: `${adherence.documentation.rate}% filed · ${adherence.documentation.formsFiled} of ${adherence.documentation.formsRequired}`, do: 'Open forms', href: can('forms') ? `${R}/forms/` : null, tag: 'Action', tone: 'warn',
+      why: 'Appendix E is for the held session; Appendix H is the ATN-0005 interval review; Appendix D is the ATN-0002 outcome narrative, which cannot close until the PI determination lands. The form is blocked by the decision, not by you.' },
+    { p: 'act', t: 'Sponsor coded export runs Monday 31 Aug', line: 'The Data Processing Agreement is not yet executed.', m: 'Last run 10 Aug · 8 subjects', do: 'Open audit', href: can('audit') ? `${R}/audit/` : null, tag: 'Scheduled', tone: 'warn',
+      why: 'Weekly cadence under the Data Processing Agreement, which is not yet executed. The Background Brief flags the DPA parameters as a decision for the working session; the export currently runs on assumed parameters.' },
+    { p: 'done', t: 'ENQ-0142 captured and booked by Ogami', line: 'Booked Thu 27 Aug 10:00. Fees escalated to you.', m: 'First response 4 min', do: 'Open the enquiry', href: can('crm') ? `${R}/crm/` : null, tag: 'Clear', tone: 'ok',
+      why: 'Mrs. Adaeze Uche, enquiring for her mother. Ogami answered the eligibility framing, declined to determine eligibility, booked the appointment and escalated fees to you. 61% of enquiries are handled without staff involvement.' },
   ],
   administrator: [
-    { p: 'act', t: 'Two credentials expiring', s: 'Dr. I. Okeke MDCN in 20 days; Nurse A. Bello NMCN in 96 days. Expiry removes each person from roster eligibility for the roles that require them — this is a scheduling constraint, not a filing note.', m: 'MDCN/R/39114 · NMCN/RN/220441', href: can('people') ? `${R}/people/` : null, tag: 'Action', tone: 'warn' },
-    { p: 'act', t: 'KweHealth DPA still unexecuted', s: 'The supply agreement is in place; the data-processing agreement is not. It gates the weekly coded research export, which currently runs on assumed parameters.', m: 'Sponsor · flagged in the Background Brief', href: can('people') ? `${R}/people/` : null, tag: 'Contract', tone: 'warn' },
-    { p: 'done', t: `${naira(revenue.outstanding)} outstanding, nothing aged`, s: 'ATN-0008 instalment 3 of 4 due 1 Sep. No 30, 60 or 90-day balances, and unbilled delivered activity is zero because charges are raised by gate closure.', m: `Collected ${naira(revenue.collected)} · credit held ${naira(revenue.creditHeld)}`, href: can('billing') ? `${R}/billing/` : null, tag: 'Clear', tone: 'ok' },
-    { p: 'done', t: 'Governance ledger intact', s: `Verified to entry #${ledgerIntegrity.verifiedTo} with ${ledgerIntegrity.breaks} breaks. One break-glass access in 90 days, reviewed and accepted.`, m: ledgerIntegrity.lastVerification, href: can('custody') ? `${R}/custody/` : null, tag: 'Clear', tone: 'ok' },
+    { p: 'act', t: 'Two credentials expiring', line: 'Dr. I. Okeke in 20 days; Nurse A. Bello in 96 days.', m: 'MDCN/R/39114 · NMCN/RN/220441', do: 'Open the register', href: can('people') ? `${R}/people/` : null, tag: 'Action', tone: 'warn',
+      why: 'Expiry removes each person from roster eligibility for the roles that require them. This is a scheduling constraint the roster reads directly, not a filing note that depends on someone noticing a date.' },
+    { p: 'act', t: 'KweHealth DPA still unexecuted', line: 'It gates the weekly coded research export.', m: 'Flagged in the Background Brief', do: 'Open partners', href: can('people') ? `${R}/people/` : null, tag: 'Contract', tone: 'warn',
+      why: 'The supply agreement is in place; the data-processing agreement is not. The weekly coded research export currently runs on assumed parameters, which is a decision the working session needs to close.' },
+    { p: 'done', t: `${naira(revenue.outstanding)} outstanding, nothing aged`, line: 'ATN-0008 instalment 3 of 4 due 1 Sep.', m: `Collected ${naira(revenue.collected)}`, do: 'Open billing', href: can('billing') ? `${R}/billing/` : null, tag: 'Clear', tone: 'ok',
+      why: `No 30, 60 or 90-day balances, and unbilled delivered activity is zero because charges are raised by gate closure rather than by someone coding an encounter afterwards. Credit held ${naira(revenue.creditHeld)}.` },
+    { p: 'done', t: 'Governance ledger intact', line: `Verified to entry #${ledgerIntegrity.verifiedTo}, ${ledgerIntegrity.breaks} breaks.`, m: ledgerIntegrity.lastVerification, do: 'Open the ledger', href: can('custody') ? `${R}/custody/` : null, tag: 'Clear', tone: 'ok',
+      why: 'One break-glass access in 90 days, reviewed and accepted. The chain is hash-linked, so a break would be arithmetic rather than an opinion.' },
   ],
 };
-const work = WORK[role.id] || [];
+const all = WORK[role.id] || [];
+// The loudest thing on the screen: the one item this role should act on first.
+const lead = all[0] || null;
+const work = all.slice(1);
 ---
 
 <div class="stack">
@@ -102,7 +132,6 @@ const work = WORK[role.id] || [];
       <div style="min-width:0">
         <div class="hero-k">{focus.kicker} · {TODAY}</div>
         <h2>{focus.headline}</h2>
-        <p>{focus.line}</p>
       </div>
       <div class="hero-metrics">
         <div class="hero-metric live"><div class="hm-v">1</div><div class="hm-k">Session running</div></div>
@@ -123,16 +152,34 @@ const work = WORK[role.id] || [];
             </span>
           ))}
         </div>
-        <p style="margin-top:10px;font-size:12px">
-          <b style="color:#fff">{live.name}</b> · {live.id} · Session {live.live.session} of 6 · {live.live.chair} ·
-          started {live.live.startedAt} —
-          <a href={`${R}/session/`} style="color:var(--gold-400);font-weight:640"> open the runner →</a>
-        </p>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:relative">
+          <a class="btn sm primary" href={`${R}/session/`}>Open the runner</a>
+          <span style="font-size:12px;color:#a8bad4">
+            <b style="color:#fff">{live.name}</b> · Session {live.live.session} of 6 · {live.live.chair} · started {live.live.startedAt}
+          </span>
+        </div>
       </>
     ) : null}
   </div>
 
   <!-- ================= BAND 2 — YOUR DESK ================= -->
+  <!-- One action, stated as an action. Everything below this is secondary by
+       construction: the lead item is lifted out of the worklist, not repeated. -->
+  {lead && (
+    <div class={`actbar ${lead.tone}`}>
+      <div class="actbar-body">
+        <div class="actbar-k">{lead.tag} · {lead.m}</div>
+        <div class="actbar-t">{lead.t}</div>
+        <div class="actbar-s">{lead.line}</div>
+        <details class="why">
+          <summary>Why</summary>
+          <div class="why-body">{lead.why}</div>
+        </details>
+      </div>
+      {lead.href && lead.do ? <a class="btn primary" href={lead.href}>{lead.do}</a> : null}
+    </div>
+  )}
+
   <div class="grid g-2-1">
     <div class="stack">
       <div class="card">
@@ -141,26 +188,35 @@ const work = WORK[role.id] || [];
           <span class="hint">{role.roleFull}</span>
         </div>
         <div class="card-body flush">
-          {work.map((w) => {
-            const inner = (
-              <>
-                <div class="wl-top">
-                  <div style="min-width:0">
-                    <div class="wl-t">{w.t}</div>
-                    <div class="wl-s">{w.s}</div>
-                    <div class="wl-m">{w.m}</div>
-                  </div>
-                  <span class={`chip ${w.tone}`}>{w.tag}</span>
+          {work.map((w) => (
+            <div class={`wl ${w.p}`}>
+              <div class="wl-top">
+                <div style="min-width:0">
+                  <div class="wl-t">{w.t}</div>
+                  <div class="wl-line">{w.line}</div>
                 </div>
-              </>
-            );
-            return w.href ? <a class={`wl ${w.p}`} href={w.href}>{inner}</a> : <div class={`wl ${w.p}`}>{inner}</div>;
-          })}
+                <span class={`chip ${w.tone}`}>{w.tag}</span>
+              </div>
+              <div class="wl-act">
+                {w.href && w.do ? <a class="btn sm primary" href={w.href}>{w.do}</a> : null}
+                <span class="wl-m">{w.m}</span>
+              </div>
+              <details class="why">
+                <summary>Why</summary>
+                <div class="why-body">{w.why}</div>
+              </details>
+            </div>
+          ))}
         </div>
         <div class="card-note">
-          This list is different for every role signed in, because the protocol assigns the duty to a
-          named role. Nothing here is a notification someone chose to send — each item is a gate, a
-          clock or a credential that is genuinely blocking.
+          <details class="why">
+            <summary>Why this list differs by role</summary>
+            <div class="why-body">
+              The protocol assigns each duty to a named role, so the worklist is generated per role
+              rather than filtered. Nothing here is a notification someone chose to send — each item
+              is a gate, a clock or a credential that is genuinely blocking.
+            </div>
+          </details>
         </div>
       </div>
 
@@ -211,7 +267,7 @@ const work = WORK[role.id] || [];
               </tbody>
             </table>
           </div>
-          <div class="card-note">Gate A reads this table directly. A lot that is not released here cannot start a session anywhere in the clinic.</div>
+          <div class="card-note"><details class="why"><summary>How Gate A uses this</summary><div class="why-body">Gate A reads this table directly. A lot that is not released here cannot start a session anywhere in the clinic.</div></details></div>
         </div>
       )}
 
@@ -256,7 +312,7 @@ const work = WORK[role.id] || [];
               </tbody>
             </table>
           </div>
-          <div class="card-note">Verified at every Gate B. The register is not a filing cabinet — it is the thing the gate queries.</div>
+          <div class="card-note"><details class="why"><summary>How Gate B uses this</summary><div class="why-body">Verified at every Gate B. The register is not a filing cabinet — it is the thing the gate queries.</div></details></div>
         </div>
       )}
 
@@ -298,10 +354,10 @@ const work = WORK[role.id] || [];
               <span class="tiny" style="color:var(--stop);font-weight:640">−11.4 °C · 24 Aug</span>
               <span class="tiny muted mono">26 Aug</span>
             </div>
-            <div class="tiny muted" style="margin-top:9px;line-height:1.55">
+            <details class="why"><summary>Reading this trace</summary><div class="why-body">
               Dashed line is the ≤ −20 °C storage requirement. The two points above it are the door-seal
               failure that quarantined lot EXP-140B-2608A and is holding a session this morning.
-            </div>
+            </div></details>
             {can('product') ? <a class="btn sm" style="margin-top:11px" href={`${R}/product/`}>Cold-chain log →</a> : null}
           </div>
         </div>
@@ -320,10 +376,10 @@ const work = WORK[role.id] || [];
             ))}
           </div>
           <div class="bars-x">{sessionsPerWeek.map((s) => <span>{s.w.split(' ')[1]}</span>)}</div>
-          <div class="tiny muted" style="margin-top:9px;line-height:1.55">
+          <details class="why"><summary>Reading these bars</summary><div class="why-body">
             22 sessions delivered. Red segments are the stopped session in Aug week 2 (SAE-0002) and the
             two held this week — shown rather than smoothed out of the count.
-          </div>
+          </div></details>
         </div>
       </div>
 
@@ -346,7 +402,7 @@ const work = WORK[role.id] || [];
             </div>
           ))}
         </div>
-        <div class="card-note">Protocol §7 quality metrics, computed from execution records rather than entered by hand.</div>
+        <div class="card-note">§7 quality metrics · computed, not entered</div>
       </div>
 
       {(role.id === 'coordinator' || role.id === 'administrator') && (
@@ -397,8 +453,8 @@ const work = WORK[role.id] || [];
       return can(p.where) ? <a class="roi-item" href={`${R}/${p.where}/`}>{inner}</a> : <div class="roi-item">{inner}</div>;
     })}
   </div>
-  <div class="note">
-    <span class="lbl">Why this band exists</span>
-    {preventedNote}
-  </div>
+  <details class="why" style="margin-top:2px">
+    <summary>Why this band exists</summary>
+    <div class="why-body">{preventedNote}</div>
+  </details>
 </div>
